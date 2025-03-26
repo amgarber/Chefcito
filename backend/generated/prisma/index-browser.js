@@ -125,6 +125,28 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role'
 };
 
+exports.Prisma.RecipeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  difficulty: 'difficulty',
+  preparation_time: 'preparation_time',
+  imageUrl: 'imageUrl',
+  UserId: 'UserId'
+};
+
+exports.Prisma.FavouriteScalarFieldEnum = {
+  id_user: 'id_user',
+  id_recipe: 'id_recipe'
+};
+
+exports.Prisma.IngredientsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  images: 'images'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -134,13 +156,21 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
 exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',
   USER: 'USER'
 };
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Recipe: 'Recipe',
+  Favourite: 'Favourite',
+  Ingredients: 'Ingredients'
 };
 
 /**

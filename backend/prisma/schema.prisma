@@ -20,9 +20,43 @@ model User {
   email    String  @unique
   password String
   role     Role    @default(USER)
+  recipes Recipe[]
+  favourites Favourite[]
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+model Recipe {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  difficulty String
+  preparation_time Int
+  //id_approval_admin
+  imageUrl String?
+  //approval_status
+  //Privacy_settings
+  UserId Int
+  user User @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  favourites Favourite[]
+}
+
+model Favourite{
+  id_user Int
+  id_recipe Int
+  user User @relation(fields: [id_user], references: [id])
+  recipe Recipe @relation(fields: [id_recipe], references: [id])
+
+  @@unique([id_user, id_recipe])
+
+}
+
+model Ingredients{
+  id Int @id @default(autoincrement())
+  name String
+  type String
+  images String?
 }
