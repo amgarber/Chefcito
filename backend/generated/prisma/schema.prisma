@@ -15,13 +15,15 @@ datasource db {
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  username   String      @unique
-  email      String      @unique
+  id         Int             @id @default(autoincrement())
+  username   String          @unique
+  email      String          @unique
   password   String
-  role       Role        @default(USER)
+  role       Role            @default(USER)
   recipes    Recipe[]
   favourites Favourite[]
+  lists      Shopping_List[]
+  planner    Planner?
 }
 
 enum Role {
@@ -30,7 +32,7 @@ enum Role {
 }
 
 model Recipe {
-  id               Int         @id @default(autoincrement())
+  id               Int                 @id @default(autoincrement())
   name             String
   description      String
   difficulty       String
@@ -40,8 +42,11 @@ model Recipe {
   //approval_status
   //Privacy_settings
   UserId           Int
-  user             User        @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  user             User                @relation(fields: [UserId], references: [id], onDelete: Cascade)
   favourites       Favourite[]
+  ingredients      Recipe_Ingredient[]
+  instructions     Instructions[]
+  recipeTypes      Recipe_Type[]
 }
 
 model Favourite {
@@ -54,8 +59,75 @@ model Favourite {
 }
 
 model Ingredients {
-  id     Int     @id @default(autoincrement())
-  name   String
-  type   String
-  images String?
+  id      Int                        @id @default(autoincrement())
+  name    String
+  type    String
+  images  String?
+  recipes Recipe_Ingredient[]
+  list    Shopping_List_Ingredient[]
+}
+
+model Recipe_Ingredient {
+  id_recipe        Int
+  id_ingredient    Int
+  measurement_unit String
+  quantity         Float
+
+  recipe     Recipe      @relation(fields: [id_recipe], references: [id])
+  ingredient Ingredients @relation(fields: [id_ingredient], references: [id])
+
+  @@unique([id_recipe, id_ingredient])
+}
+
+model Instructions {
+  id                Int    @id @default(autoincrement())
+  id_recipe         Int
+  steps_numerations String
+  Description       String
+  recipe            Recipe @relation(fields: [id_recipe], references: [id], onDelete: Cascade)
+}
+
+model Recipe_Type {
+  id_RecipeType   Int @id @default(autoincrement())
+  id_recipe       Int
+  id_recipeFilter Int
+
+  recipe Recipe        @relation(fields: [id_recipe], references: [id])
+  filter Recipe_Filter @relation(fields: [id_recipeFilter], references: [id_RecipeFilter], onDelete: Cascade)
+
+  @@unique([id_recipe, id_recipeFilter])
+}
+
+model Recipe_Filter {
+  id_RecipeFilter Int    @id @default(autoincrement())
+  Name            String
+
+  recipe Recipe_Type[]
+}
+
+model Shopping_List {
+  id      Int @id @default(autoincrement())
+  id_user Int
+
+  ingredients Shopping_List_Ingredient[]
+
+  user User @relation(fields: [id_user], references: [id])
+}
+
+model Shopping_List_Ingredient {
+  id_ShoppingList Int
+  id_Ingredients  Int
+  quantity        String
+  bought          Boolean
+
+  list       Shopping_List @relation(fields: [id_ShoppingList], references: [id])
+  ingredient Ingredients   @relation(fields: [id_Ingredients], references: [id])
+
+  @@unique([id_ShoppingList, id_Ingredients])
+}
+
+model Planner {
+  id      Int  @id @default(autoincrement())
+  id_user Int  @unique
+  user    User @relation(fields: [id_user], references: [id], onDelete: Cascade)
 }

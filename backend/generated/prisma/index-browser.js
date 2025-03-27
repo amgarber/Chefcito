@@ -147,6 +147,48 @@ exports.Prisma.IngredientsScalarFieldEnum = {
   images: 'images'
 };
 
+exports.Prisma.Recipe_IngredientScalarFieldEnum = {
+  id_recipe: 'id_recipe',
+  id_ingredient: 'id_ingredient',
+  measurement_unit: 'measurement_unit',
+  quantity: 'quantity'
+};
+
+exports.Prisma.InstructionsScalarFieldEnum = {
+  id: 'id',
+  id_recipe: 'id_recipe',
+  steps_numerations: 'steps_numerations',
+  Description: 'Description'
+};
+
+exports.Prisma.Recipe_TypeScalarFieldEnum = {
+  id_RecipeType: 'id_RecipeType',
+  id_recipe: 'id_recipe',
+  id_recipeFilter: 'id_recipeFilter'
+};
+
+exports.Prisma.Recipe_FilterScalarFieldEnum = {
+  id_RecipeFilter: 'id_RecipeFilter',
+  Name: 'Name'
+};
+
+exports.Prisma.Shopping_ListScalarFieldEnum = {
+  id: 'id',
+  id_user: 'id_user'
+};
+
+exports.Prisma.Shopping_List_IngredientScalarFieldEnum = {
+  id_ShoppingList: 'id_ShoppingList',
+  id_Ingredients: 'id_Ingredients',
+  quantity: 'quantity',
+  bought: 'bought'
+};
+
+exports.Prisma.PlannerScalarFieldEnum = {
+  id: 'id',
+  id_user: 'id_user'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -170,7 +212,14 @@ exports.Prisma.ModelName = {
   User: 'User',
   Recipe: 'Recipe',
   Favourite: 'Favourite',
-  Ingredients: 'Ingredients'
+  Ingredients: 'Ingredients',
+  Recipe_Ingredient: 'Recipe_Ingredient',
+  Instructions: 'Instructions',
+  Recipe_Type: 'Recipe_Type',
+  Recipe_Filter: 'Recipe_Filter',
+  Shopping_List: 'Shopping_List',
+  Shopping_List_Ingredient: 'Shopping_List_Ingredient',
+  Planner: 'Planner'
 };
 
 /**
