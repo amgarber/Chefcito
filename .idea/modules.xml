@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/Laboratorio1.iml" filepath="$PROJECT_DIR$/.idea/Laboratorio1.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend.iml" filepath="$PROJECT_DIR$/backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/fronted.iml" filepath="$PROJECT_DIR$/fronted.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/routes/routes.iml" filepath="$PROJECT_DIR$/backend/routes/routes.iml" />
     </modules>
   </component>
 </project>
