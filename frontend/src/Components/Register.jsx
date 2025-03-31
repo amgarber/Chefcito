@@ -1,81 +1,57 @@
-import { useState } from "react";
+import {useState} from "react";
 
-function Register() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleRegister = async (e) => {
+function  Register( { MdOutlineMail, AiFillLock, FormHandle }) {
+
+    const [Email, setEmail] = useState('');
+    const [Password, setPassword] = useState('');
+
+    function handleRegister(e){
         e.preventDefault();
 
-        if (!username || !email || !password) {
-            alert("Por favor completá todos los campos");
+        if(!Email || !Password){
             return;
         }
-
-        try {
-            const response = await fetch('http://localhost:3001/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                alert(data.message || 'Error al registrar');
-                return;
-            }
-
-            alert("¡Registro exitoso!");
-            setUsername('');
-            setEmail('');
-            setPassword('');
-        } catch (error) {
-            console.error('Error en el registro:', error);
-            alert("Ocurrió un error inesperado");
-        }
-    };
+        console.log(Email, Password);
+        setEmail('');
+        setPassword('');
+    }
 
     return (
-        <div style={{ padding: "20px", maxWidth: "400px", margin: "0 auto" }}>
-            <h2>Crear cuenta</h2>
-            <form onSubmit={handleRegister}>
-                <input
-                    type="text"
-                    placeholder="Nombre de usuario"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    style={{ display: "block", marginBottom: "10px", width: "100%" }}
-                />
+        <div className="form-container">
+            <h2>Register <br /> now</h2>
+            <h3> Sign in with your email and password to continue </h3>
+            <form onSubmit={ handleRegister }>
+                <div className="form-control">
+                    <input
+                        type="text"
+                        placeholder = "Enter your email"
+                        onChange={ (e) => setEmail(e.target.value) } />
+                    <MdOutlineMail className="Mail Icon"/>
+                </div>
 
-                <input
-                    type="email"
-                    placeholder="Correo electrónico"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={{ display: "block", marginBottom: "10px", width: "100%" }}
-                />
+                <div className="form-control">
+                    <input
+                        type="password"
+                           placeholder = "Confirm your password"
+                        onChange={(e) =>  setPassword(e.target.value)} />
+                    <AiFillLock className = "Password Icon" />
+                </div>
 
-                <input
-                    type="password"
-                    placeholder="Contraseña"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={{ display: "block", marginBottom: "10px", width: "100%" }}
-                />
+                <div className="form-control">
+                    <input
+                        type="password"
+                        placeholder = "Confirm your password"
+                        onChange={(e) =>  setPassword(e.target.value)} />
+                    <AiFillLock className = "Password Icon" />
+                </div>
 
-                <button type="submit" style={{ width: "100%" }}>
-                    Registrarme
-                </button>
+                <button onClick={handleRegister}>Sign Up</button>
+
             </form>
+            <p onClick = {() => FormHandle('Login')}> Already have an account? Sign up here.</p>
         </div>
+
     );
 }
 

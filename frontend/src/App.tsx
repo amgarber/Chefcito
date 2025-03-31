@@ -9,10 +9,10 @@ import {useState} from "react";
 function App(){
   const [Form, setForm] = useState('Login');
   return (<>
-    {Form == "Login" ? (
+    {Form === "Login" ? (
         <Login MdOutlineMail={MdOutlineMail} AiFillLock = {AiFillLock} FormHandle={setForm} />
     ) : (
-        <Register />
+        <Register MdOutlineMail={MdOutlineMail} AiFillLock = {AiFillLock} FormHandle={setForm} />
     )}
   </>
   );
