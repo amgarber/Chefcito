@@ -1,29 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import {RegisterPage} from "./RegisterPage";
+import Login from "./Components/Login.jsx";
+import Register from  "./Components/Register.jsx";
+import { MdOutlineMail } from "react-icons/md";
+import { AiFillLock } from "react-icons/ai";
+import {useState} from "react";
 
-function App() {
-  return (
-     /* <>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo"/>
-            <p>
-              Edit <code>src/App.tsx</code> and save to reload.
-            </p>
-            <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header>
-        </div>*/
-        <RegisterPage/>
+
+
+function App(){
+  const [Form, setForm] = useState('Login');
+  return (<>
+    {Form == "Login" ? (
+        <Login MdOutlineMail={MdOutlineMail} AiFillLock = {AiFillLock} FormHandle={setForm} />
+    ) : (
+        <Register MdOutlineMail={MdOutlineMail} AiFillLock = {AiFillLock} FormHandle={setForm} />
+    )}
+  </>
   );
 }
+
 
 export default App;
