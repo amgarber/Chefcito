@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2016",                                // Specifies the ECMAScript target version
-    "module": "commonjs",                              // Specifies the module system
+    "type": "module",                              // Specifies the module system
     "esModuleInterop": true,                            // Enables interoperability between ES modules and CommonJS
     "forceConsistentCasingInFileNames": true,           // Ensures that file names are case-sensitive
     "strict": true,                                     // Enables strict type-checking options

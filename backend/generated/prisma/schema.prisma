@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -20,15 +14,10 @@ model User {
   email      String          @unique
   password   String
   role       Role            @default(USER)
-  recipes    Recipe[]
   favourites Favourite[]
-  lists      Shopping_List[]
   planner    Planner?
-}
-
-enum Role {
-  ADMIN
-  USER
+  recipes    Recipe[]
+  lists      Shopping_List[]
 }
 
 model Recipe {
@@ -37,23 +26,20 @@ model Recipe {
   description      String
   difficulty       String
   preparation_time Int
-  //id_approval_admin
   imageUrl         String?
-  //approval_status
-  //Privacy_settings
   UserId           Int
-  user             User                @relation(fields: [UserId], references: [id], onDelete: Cascade)
   favourites       Favourite[]
-  ingredients      Recipe_Ingredient[]
   instructions     Instructions[]
+  user             User                @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  ingredients      Recipe_Ingredient[]
   recipeTypes      Recipe_Type[]
 }
 
 model Favourite {
   id_user   Int
   id_recipe Int
-  user      User   @relation(fields: [id_user], references: [id])
   recipe    Recipe @relation(fields: [id_recipe], references: [id])
+  user      User   @relation(fields: [id_user], references: [id])
 
   @@unique([id_user, id_recipe])
 }
@@ -72,9 +58,8 @@ model Recipe_Ingredient {
   id_ingredient    Int
   measurement_unit String
   quantity         Float
-
-  recipe     Recipe      @relation(fields: [id_recipe], references: [id])
-  ingredient Ingredients @relation(fields: [id_ingredient], references: [id])
+  ingredient       Ingredients @relation(fields: [id_ingredient], references: [id])
+  recipe           Recipe      @relation(fields: [id_recipe], references: [id])
 
   @@unique([id_recipe, id_ingredient])
 }
@@ -88,30 +73,26 @@ model Instructions {
 }
 
 model Recipe_Type {
-  id_RecipeType   Int @id @default(autoincrement())
+  id_RecipeType   Int           @id @default(autoincrement())
   id_recipe       Int
   id_recipeFilter Int
-
-  recipe Recipe        @relation(fields: [id_recipe], references: [id])
-  filter Recipe_Filter @relation(fields: [id_recipeFilter], references: [id_RecipeFilter], onDelete: Cascade)
+  filter          Recipe_Filter @relation(fields: [id_recipeFilter], references: [id_RecipeFilter], onDelete: Cascade)
+  recipe          Recipe        @relation(fields: [id_recipe], references: [id])
 
   @@unique([id_recipe, id_recipeFilter])
 }
 
 model Recipe_Filter {
-  id_RecipeFilter Int    @id @default(autoincrement())
+  id_RecipeFilter Int           @id @default(autoincrement())
   Name            String
-
-  recipe Recipe_Type[]
+  recipe          Recipe_Type[]
 }
 
 model Shopping_List {
-  id      Int @id @default(autoincrement())
-  id_user Int
-
+  id          Int                        @id @default(autoincrement())
+  id_user     Int
+  user        User                       @relation(fields: [id_user], references: [id])
   ingredients Shopping_List_Ingredient[]
-
-  user User @relation(fields: [id_user], references: [id])
 }
 
 model Shopping_List_Ingredient {
@@ -119,9 +100,8 @@ model Shopping_List_Ingredient {
   id_Ingredients  Int
   quantity        String
   bought          Boolean
-
-  list       Shopping_List @relation(fields: [id_ShoppingList], references: [id])
-  ingredient Ingredients   @relation(fields: [id_Ingredients], references: [id])
+  ingredient      Ingredients   @relation(fields: [id_Ingredients], references: [id])
+  list            Shopping_List @relation(fields: [id_ShoppingList], references: [id])
 
   @@unique([id_ShoppingList, id_Ingredients])
 }
@@ -130,4 +110,9 @@ model Planner {
   id      Int  @id @default(autoincrement())
   id_user Int  @unique
   user    User @relation(fields: [id_user], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  ADMIN
+  USER
 }
