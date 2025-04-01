@@ -36,11 +36,7 @@ function  Login( { MdOutlineMail, AiFillLock, FormHandle}) {
                 <button onClick={handleLogin}>Sign In</button>
 
             </form>
-            <div className="component">
-                <div className="dontHaveAnContainer">
-                    Don't have an account? <b onClick={() => FormHandle('Register')}>Sign up here</b>.
-                </div>
-            </div>
+            <p onClick = {() => FormHandle('Register')}> Don’t have an account? Sign up here.</p>
         </div>
 
     );

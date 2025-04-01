@@ -38,11 +38,52 @@ const register = async (req, res) => {
         res.status(500).json({ message: 'Error al registrar el usuario' });
     }
 };
-module.exports = { register };
 
 //const register = async (req, res) => {
     // l--eer datos de req.body
     // validar usuario
     // guardar en la base de datos
     // responder con éxito o error
-//}; //el controlador se encarga de la lógica de negocio: validar, guardar, responder, etc.
+//}; //el controlador se encarga de la lógica de negocio: validar, guardar, responder, etc.ç
+
+const login = async (req, res) => {
+    try {
+        const {username,email, password} = req.body;
+
+        // 1. Verificar si el usuario existe en la base de datos
+        const user = await prisma.User.findFirst({
+            where: {
+                OR: [
+                    { email },
+                    { username }
+                ]
+            }
+        });
+
+        if (!user) {
+            return res.status(401).json({error: "Usuario o contraseña incorrectos"});
+        }
+
+        // 2. Comparar la contraseña ingresada con la almacenada (hash)
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({error: "Usuario o contraseña incorrectos"});
+        }
+
+        // 3. Generar un token JWT
+        const token = jwt.sign(
+            {userId: user.id, username: user.username, role: user.role},
+            process.env.JWT_SECRET,
+            {expiresIn: "1h"}
+        );
+
+        // 4. Enviar el token al frontend
+        res.json({token, user: {username: user.username, role: user.role}});
+
+    } catch (error) {
+        console.error("Error en login:", error);
+        res.status(500).json({error: "Error del servidor"});
+    }
+};
+
+module.exports = { register, login };
