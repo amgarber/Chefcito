@@ -1,7 +1,8 @@
 import { useState } from "react";
 import '../css/Register.css'; // Asegurate de que esta ruta sea correcta según tu estructura
 
-function Register() {
+function Register({FormHandle}) {
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -47,7 +48,7 @@ function Register() {
                 </b>
 
                 <div className="signInWithYourEmailAndPaWrapper">
-                    Sign in with your email and password to continue
+                    Sign up with your email and password to continue
                 </div>
 
                 <form onSubmit={handleRegister}>
@@ -102,7 +103,7 @@ function Register() {
 
                 <div className="component">
                     <div className="dontHaveAnContainer">
-                        Already have an account? <b>Sign in here</b>.
+                        Already have an account? <b onClick={() => FormHandle('Login')}>Sign in here</b>.
                     </div>
                 </div>
             </div>

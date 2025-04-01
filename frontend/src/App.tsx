@@ -12,7 +12,7 @@ function App(){
     {Form === "Login" ? (
         <Login MdOutlineMail={MdOutlineMail} AiFillLock = {AiFillLock} FormHandle={setForm} />
     ) : (
-        <Register/>
+        <Register FormHandle={setForm}/>
     )}
   </>
   );
