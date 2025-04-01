@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-* {
+*{
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -15,67 +13,66 @@ body {
     min-height: 100vh;
     background: #FFFFFF;
     font-family: 'Plus Jakarta Sans', serif;
-    padding: 1rem;
-}
 
-.form-container {
-    width: 100%;
-    max-width: 450px;
+}
+.form-container{
+    background-color: aqua;
+    width: 450px;
     padding: 2rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    border-radius: 5px;
 
 }
-
-.form-container h2 {
-    text-align: left;
-    font-size: clamp(32px, 6vw, 45px);
-    line-height: 1.1;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+.form-container h2{
+    display: block;
+    text-align: center;
+    width: 343px;
+    position: relative;
+    font-size: 45px;
+    line-height: 50px;
+    font-family: 'Plus Jakarta Sans';
     color: #000;
-    margin-bottom: 1rem;
-    height: auto;
-    max-width: 100%;
+    text-align: left;
+    height: 105px;
 }
-
-.form-container h3 {
-    font-size: clamp(11px, 2.5vw, 12px);
+.form-container h3{
+    width: 279px;
+    position: relative;
+    font-size: 12px;
     letter-spacing: 0.01em;
-    line-height: 1.5;
-    font-family: 'Inter', sans-serif;
+    line-height: 20px;
+    font-family: Inter;
     color: #49454f;
     text-align: left;
-    display: block;
-    max-width: 100%;
-    margin-bottom: 1rem;
+    display: inline-block;
 }
 
-.form-container form {
-    margin: 1.5rem 0;
+.form-container form{
+    margin: 2rem 0;
 }
 
-.form-control {
+.form-control{
     position: relative;
-    margin-bottom: 1rem;
 }
 
-.form-control input {
+.form-control input{
     width: 100%;
     border: 1px solid #ddd;
     font-family: inherit;
-    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    font-size: 1.2rem;
     padding: 0.75rem 2rem;
+    margin-bottom:  1rem;
     border-radius: 5px;
-    margin-bottom: 0;
 }
 
-.form-control .Icon {
+.form-control .Icon{
     position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.3rem;
+    left: 06px;
+    top: 12px;
+    font-size: 1.5rem;
 }
 
-form button {
+form button{
     width: 100%;
     position: relative;
     border-radius: 50px;
@@ -85,87 +82,58 @@ form button {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: clamp(8px, 2vw, 10px);
+    padding: 10px;
     box-sizing: border-box;
-    text-align: center;
-    font-size: clamp(14px, 2.5vw, 15px);
+    text-align: left;
+    font-size: 15px;
     color: #000;
-    font-family: 'Inter', sans-serif;
+    font-family: Inter;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s;
-    margin-top: 1rem;
 }
-
-form button:active {
+form button:active{
     transform: scale(0.98);
 }
 
-form button:hover {
-    background-color: #c8c8c8;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
+body {
+    margin: 0; line-height: normal;
 }
+:root {
 
-.error-message,
-.success-message {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 14px;
-}
+    /* Fonts */
+    --font-roboto: Roboto;
+    --font-plus-jakarta-sans: 'Plus Jakarta Sans';
+    --font-inter: Inter;
 
-.error-message {
-    background-color: #ffe6e6;
-    color: #d8000c;
-}
+    /* font sizes */
+    --font-size-xs: 12px;
 
-.success-message {
-    background-color: #e6ffe6;
-    color: #006400;
-}
+    /* Colors */
+    --color-black: #000;
+    --color-darkslategray: #49454f;
+    --color-gainsboro: #d9d9d9;
+    --color-white: #fff;
 
-p {
-    text-align: center;
-    margin-top: 25rem;
-    color: #000;
-    cursor: pointer;
-    font-size: 14px;
-}
+    /* Gaps */
+    --gap-5xs: 8px;
+    --gap-95xl: 114px;
 
-p:hover {
-    text-decoration: underline;
-}
+    /* Paddings */
+    --padding-12xs: 1px;
+    --padding-10xs: 3px;
+    --padding-5xs: 8px;
+    --padding-3xs: 10px;
 
-/* Media Queries para Responsive Design */
-@media screen and (max-width: 480px) {
-    .form-container {
-        padding: 1.5rem;
-    }
+    /* Border radiuses */
+    --br-31xl: 50px;
 
-    .form-control .Icon {
-        font-size: 1.2rem;
-    }
-}
+    /* Figma Variables */
 
-@media screen and (max-width: 350px) {
-    .form-container {
-        padding: 1rem;
-    }
+    /* Number Variables */
+    --title-small-tracking: 0.10000000149011612px;
+    --title-small-size: 14px;
+    --title-small-line-height: 20px;
 
-    .form-control input {
-        padding: 0.6rem 1.8rem;
-    }
-}
-
-/* Estilos para inputs cuando tienen foco */
-.form-control input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-/* Estilos para el botón deshabilitado */
-form button:disabled {
-    background-color: #f0f0f0;
-    cursor: not-allowed;
-    opacity: 0.7;
 }
