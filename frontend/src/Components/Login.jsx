@@ -3,6 +3,7 @@ import {useState} from "react";
 
 function  Login( { MdOutlineMail, AiFillLock, FormHandle}) {
 
+
     const [Email, setEmail] = useState('');
     const [Password, setPassword] = useState('');
 
@@ -33,7 +34,7 @@ function  Login( { MdOutlineMail, AiFillLock, FormHandle}) {
                     <AiFillLock className = "Password Icon" />
                 </div>
 
-                <button onClick={handleLogin}>Sign In</button>
+                <button onClick={() => FormHandle('HomePage')} >Sign In</button>
 
             </form>
             <p onClick = {() => FormHandle('Register')}> Don’t have an account? Sign up here.</p>
