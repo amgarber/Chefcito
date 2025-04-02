@@ -1,45 +1,93 @@
-import {useState} from "react";
+import React, { useState } from 'react';
+import '../css/Login.css';
 
+const Login = ({ FormHandle }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-function  Login( { MdOutlineMail, AiFillLock, FormHandle}) {
-
-
-    const [Email, setEmail] = useState('');
-    const [Password, setPassword] = useState('');
-
-    function handleLogin(e){
+    const handleLogin = async (e) => {
         e.preventDefault();
-        console.log(Email, Password);
-        setEmail('');
-        setPassword('');
-    }
+
+        try {
+            const response = await fetch('http://localhost:3001/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message || 'Login fallido');
+                return;
+            }
+
+            alert('Login exitoso');
+            setEmail('');
+            setPassword('');
+            // Si querés redirigir a otro lado podés hacerlo acá
+        } catch (error) {
+            console.error('Error al hacer login:', error);
+            alert('Ocurrió un error inesperado');
+        }
+    };
 
     return (
-        <div className="form-container">
-            <h2>Welcome <br /> back!</h2>
-            <h3> Access your account securely by using your email and password</h3>
-            <form onSubmit={ handleLogin }>
-                <div className="form-control">
+        <div className="login-container">
+            <h1 className="login-title">
+                Welcome <br/> back!
+            </h1>
+            <p className="login-subtitle">
+                Access your account securely by using your email and password
+            </p>
+
+            <form onSubmit={handleLogin} className="login-form">
+                <div className="input-group">
+                    <img src="/EnvelopeSimple.svg" alt="Email icon"/>
                     <input
-                        type="text"
-                        placeholder = "Email"
-                        onChange={(e) => setEmail(e.target.value)} />
-                    <MdOutlineMail className="Mail Icon"/>
+                        type="email"
+                        placeholder="Email Address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
                 </div>
 
-                <div className="form-control">
+                <div className="input-group">
+                    <img src="/Lock.svg" alt="Lock icon"/>
                     <input
                         type="password"
-                        placeholder = "Password" onChange={(e) => setPassword(e.target.value)} />
-                    <AiFillLock className = "Password Icon" />
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
                 </div>
 
-                <button onClick={() => FormHandle('HomePage')} >Sign In</button>
-
+                <button type="submit" className="login-button">
+                    Sign In
+                </button>
             </form>
-            <p onClick = {() => FormHandle('Register')}> Don’t have an account? Sign up here.</p>
-        </div>
 
+            <div className="login-divider">
+                <div className="line"/>
+                <span className="or">Or continue with</span>
+                <div className="line"/>
+            </div>
+
+            <div className="login-google">
+                <img src="/Clip path group.svg" alt="Google logo"/>
+                <img src="/VectorGoogle.svg" alt="Google text"/>
+            </div>
+
+            <div className="login-footer">
+                Don’t have an account?{' '}
+                <span className="link" onClick={() => FormHandle("Register")}>
+          Sign up here.
+        </span>
+            </div>
+        </div>
     );
-}
-export default Login
+};
+
+export default Login;

@@ -136,4 +136,34 @@ body {
     --title-small-size: 14px;
     --title-small-line-height: 20px;
 
+}@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap');
+body {
+    margin: 0; line-height: normal;
+}
+:root {
+
+    /* Fonts */
+    --font-plus-jakarta-sans: 'Plus Jakarta Sans';
+    --font-inter: Inter;
+
+    /* font sizes */
+    --font-size-2xs: 11px;
+    --font-size-xs: 12px;
+
+    /* Colors */
+    --color-black: #000;
+    --color-gainsboro: #d9d9d9;
+    --color-white: #fff;
+
+    /* Gaps */
+    --gap-5xs: 8px;
+
+    /* Paddings */
+    --padding-5xs: 8px;
+    --padding-3xs: 10px;
+
+    /* Border radiuses */
+    --br-31xl: 50px;
+
 }

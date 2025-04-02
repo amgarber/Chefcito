@@ -10,7 +10,7 @@ function App(){
   const [Form, setForm] = useState('Login');
   return (<>
     {Form === "Login" ? (
-        <Login MdOutlineMail={MdOutlineMail} AiFillLock = {AiFillLock} FormHandle={setForm} />
+        <Login  FormHandle={setForm} />
     ) : (
         <Register FormHandle={setForm}/>
     )}
