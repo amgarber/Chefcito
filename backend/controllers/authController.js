@@ -51,14 +51,15 @@ const login = async (req, res) => {
         const {username,email, password} = req.body;
 
         // 1. Verificar si el usuario existe en la base de datos
-        const user = await prisma.User.findFirst({
+        const user = await prisma.user.findFirst({
             where: {
                 OR: [
                     { email },
-                    { username }
+                    { username: email } // por si puso el username
                 ]
             }
         });
+
 
         if (!user) {
             return res.status(401).json({error: "Usuario o contraseña incorrectos"});
