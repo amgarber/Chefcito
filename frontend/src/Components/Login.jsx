@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import '../css/Login.css';
+import {useNavigate} from "react-router-dom";
 
 const Login = ({ FormHandle }) => {
+    const navigate = useNavigate();
+
+
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+
     const handleLogin = async (e) => {
         e.preventDefault();
+        console.log("Login exitoso, redirigiendo a HomePage...");
+
+        // Cambia el estado a HomePage y navega
+        FormHandle("HomePage");
+        navigate("/home");
 
         try {
             const response = await fetch('http://localhost:3001/api/login', {
@@ -64,7 +75,7 @@ const Login = ({ FormHandle }) => {
                     />
                 </div>
 
-                <button type="submit" className="login-button">
+                <button onClick={handleLogin} type="button" className="login-button">
                     Sign In
                 </button>
             </form>
