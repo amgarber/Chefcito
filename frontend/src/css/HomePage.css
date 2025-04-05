@@ -1,5 +1,109 @@
 
-.welcome-container {
+.MainContainer {
+    width: 393px;
+    height: 852px;
+    margin: 0 auto; /* centra horizontalmente */
+    background-color: #f0f0f0;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+.search-bar {
+    margin-top: 102px;
+    padding: 12px;
     width: 100%;
-    background-color: aqua;
+    box-sizing: border-box;
+    position: relative; /* Añadir posicionamiento relativo al contenedor */
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.search-bar-icon { /* Corregir el nombre de la clase que usas en el HTML */
+    position: absolute;
+    left: 22px; /* Ajustar según el padding del contenedor y el input */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px; /* Definir tamaño del icono */
+    height: 16px;
+    pointer-events: none; /* Evita que el icono interfiera con clics en el input */
+}
+
+.welcome-user{
+    position: absolute;
+    margin-left: 25px;
+    margin-top: 60px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+}
+.ingredients-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0.5rem;
+    padding: 1rem;
+    scrollbar-width: none; /* Firefox */
+}
+
+.ingredients-carousel::-webkit-scrollbar {
+    display: none; /* Chrome */
+}
+
+.ingredient {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ingredient-icon {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+.recipe-grid {
+
+    height: 573px;
+    width: fit-content;
+    display: grid;
+    grid-template-columns: repeat(2, 166px); /* o el ancho que te funcione mejor */
+    grid-auto-rows: 1px; /* base para que los spans funcionen */
+    gap: 8px;
+    overflow-y: auto;
+    margin: 0 auto;
+}
+/*.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 166px); !* Dos columnas fijas *!
+    grid-auto-rows: 1px;
+    gap: 16px;
+    width: fit-content;
+    margin: 0 auto; !* Esto lo centra horizontalmente *!
+}*/
+
+
+.notification-img{
+    position: absolute;
+    margin-left: 200px;
+    margin-top: -4px;
+    width: 32px;
+    height: 32px;
+    overflow: hidden;
+
+
+
 }
