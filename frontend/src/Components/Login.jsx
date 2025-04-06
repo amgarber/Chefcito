@@ -1,23 +1,14 @@
 import React, { useState } from 'react';
 import '../css/Login.css';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ FormHandle }) => {
     const navigate = useNavigate();
-
-
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log("Login exitoso, redirigiendo a HomePage...");
-
-        // Cambia el estado a HomePage y navega
-        FormHandle("HomePage");
-        navigate("/home");
 
         try {
             const response = await fetch('http://localhost:3001/api/login', {
@@ -36,7 +27,14 @@ const Login = ({ FormHandle }) => {
             alert('Login exitoso');
             setEmail('');
             setPassword('');
-            // Si querés redirigir a otro lado podés hacerlo acá
+
+            // Guardar login persistente
+            localStorage.setItem("isLoggedIn", "true");
+
+            // Cambiar estado y redirigir
+            FormHandle("HomePage");
+            navigate("/home");
+
         } catch (error) {
             console.error('Error al hacer login:', error);
             alert('Ocurrió un error inesperado');
@@ -45,16 +43,14 @@ const Login = ({ FormHandle }) => {
 
     return (
         <div className="login-container">
-            <h1 className="login-title">
-                Welcome <br/> back!
-            </h1>
+            <h1 className="login-title">Welcome <br/> back!</h1>
             <p className="login-subtitle">
                 Access your account securely by using your email and password
             </p>
 
             <form onSubmit={handleLogin} className="login-form">
                 <div className="input-group">
-                    <img src="/EnvelopeSimple.svg" alt="Email icon"/>
+                    <img src="/EnvelopeSimple.svg" alt="Email icon" />
                     <input
                         type="email"
                         placeholder="Email Address"
@@ -65,7 +61,7 @@ const Login = ({ FormHandle }) => {
                 </div>
 
                 <div className="input-group">
-                    <img src="/Lock.svg" alt="Lock icon"/>
+                    <img src="/Lock.svg" alt="Lock icon" />
                     <input
                         type="password"
                         placeholder="Password"
@@ -75,27 +71,25 @@ const Login = ({ FormHandle }) => {
                     />
                 </div>
 
-                <button onClick={handleLogin} type="button" className="login-button">
-                    Sign In
-                </button>
+                <button type="submit" className="login-button">Sign In</button>
             </form>
 
             <div className="login-divider">
-                <div className="line"/>
+                <div className="line" />
                 <span className="or">Or continue with</span>
-                <div className="line"/>
+                <div className="line" />
             </div>
 
             <div className="login-google">
-                <img src="/Clip path group.svg" alt="Google logo"/>
-                <img src="/VectorGoogle.svg" alt="Google text"/>
+                <img src="/Clip path group.svg" alt="Google logo" />
+                <img src="/VectorGoogle.svg" alt="Google text" />
             </div>
 
             <div className="login-footer">
                 Don’t have an account?{' '}
                 <span className="link" onClick={() => FormHandle("Register")}>
-          Sign up here.
-        </span>
+                    Sign up here.
+                </span>
             </div>
         </div>
     );

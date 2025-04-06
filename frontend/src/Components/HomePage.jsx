@@ -4,6 +4,8 @@ import {useState} from "react";
 import MultipleTagSelection from "./MultipleSelectionTag";
 import '../css/MultipleSelectionTag.css';
 import PinterestLayout from "./PinterestLayout";
+import NavigationBar from './NavigationBar';
+
 
 
 function HomePage({FormHandle}) {
@@ -13,20 +15,18 @@ function HomePage({FormHandle}) {
 
     const handleLogout = () => {
         console.log("Saliendo...");
-
-        // Cambiar estado a "Login"
+        localStorage.removeItem("isLoggedIn");
         FormHandle("Login");
-
-        // Redirigir a /login
         navigate("/login");
     };
+
 
     return (
         <div className="MainContainer">
             <div className="welcome-user">
                 <text>Welcome User!</text>
 
-                    <img src="/assets/notification.svg" alt="Notification" className="notification-img"/>
+                <img src="/assets/notification.svg" alt="Notification" className="notification-img"/>
 
 
             </div>
@@ -66,6 +66,9 @@ function HomePage({FormHandle}) {
                 <div>
                     <PinterestLayout/>
                 </div>
+            </div>
+            <div>
+                <NavigationBar />
             </div>
 
 

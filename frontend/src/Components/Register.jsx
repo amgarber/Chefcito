@@ -1,6 +1,5 @@
 import { useState } from "react";
-import '../css/Register.css'; // Asegurate de que esta ruta sea correcta según tu estructura
-
+import '../css/Register.css'; //
 function Register({FormHandle}) {
 
     const [username, setUsername] = useState('');
@@ -112,3 +111,4 @@ function Register({FormHandle}) {
 }
 
 export default Register;
+

@@ -3,7 +3,7 @@
     display: flex;
     gap: 6px;
     overflow-x: auto;
-    padding: 0.5rem 0;
+    padding: 0.8rem 0;
     margin: 5px;
     scrollbar-width: none; /* Firefox */
 }
@@ -27,6 +27,6 @@
 }
 
 .tag.selected {
-    background-color: #333;
-    color: white;
+    background-color: #3f3c3c;
+    color: rgb(241, 240, 240);
 }
