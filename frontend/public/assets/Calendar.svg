@@ -1,9 +1,3 @@
-<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Calendar">
-<g id="icons">
-<g id="Calendar">
-<path id="Icon" d="M33.3333 21V25M25.6667 21V25M20.875 29H38.125M22.7917 23H36.2083C37.2669 23 38.125 23.8954 38.125 25V39C38.125 40.1046 37.2669 41 36.2083 41H22.7917C21.7331 41 20.875 40.1046 20.875 39V25C20.875 23.8954 21.7331 23 22.7917 23Z" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-</g>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.3333 6V10M12.6667 6V10M7.875 14H25.125M9.79167 8H23.2083C24.2669 8 25.125 8.89543 25.125 10V24C25.125 25.1046 24.2669 26 23.2083 26H9.79167C8.73312 26 7.875 25.1046 7.875 24V10C7.875 8.89543 8.73312 8 9.79167 8Z" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
