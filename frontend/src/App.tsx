@@ -28,6 +28,7 @@ function App() {
                 </>
             ) : (
                 <Routes>
+                    <Route path="/" element={<LayoutWithNav><HomePage FormHandle={setForm} /></LayoutWithNav>} />
                     <Route path="/home" element={<LayoutWithNav><HomePage FormHandle={setForm} /></LayoutWithNav>} />
                     <Route path="/planner" element={<LayoutWithNav><Planner /></LayoutWithNav>} />
                     <Route path="/plus" element={<LayoutWithNav><Plus /></LayoutWithNav>} />
