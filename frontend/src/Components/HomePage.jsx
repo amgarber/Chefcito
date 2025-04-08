@@ -5,11 +5,7 @@ import MultipleTagSelection from "./MultipleSelectionTag";
 import '../css/MultipleSelectionTag.css';
 import PinterestLayout from "./PinterestLayout";
 import NavigationBar from './NavigationBar';
-
-import {jwtDecode} from "jwt-decode";
-// hola
-
-
+import { jwtDecode } from "jwt-decode";
 
 function HomePage({FormHandle}) {
     const navigate = useNavigate();
@@ -19,6 +15,7 @@ function HomePage({FormHandle}) {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        if(!token) return
         const decoded = jwtDecode(token);
         setToken(decoded);
     }, []);
