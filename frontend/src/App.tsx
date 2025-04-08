@@ -4,7 +4,8 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 import HomePage from "./Components/HomePage";
 import LayoutWithNav from "./Components/LayoutWithNav";
-import Profile from "./Components/Profile"; // 👈 nuevo import
+import Profile from "./Components/Profile";
+import Recipe from "./Components/Recipe"; // 👈 nuevo import
 
 const Planner = () => <div style={{ padding: '20px' }}><h1>Planes</h1></div>;
 const Plus = () => <div style={{ padding: '20px' }}><h1>Agregar receta</h1></div>;
@@ -34,6 +35,8 @@ function App() {
                     <Route path="/planner" element={<LayoutWithNav><Planner /></LayoutWithNav>} />
                     <Route path="/plus" element={<LayoutWithNav><Plus /></LayoutWithNav>} />
                     <Route path="/profile" element={<LayoutWithNav><Profile FormHandle={setForm} /></LayoutWithNav>} />
+                    <Route path="/recipe" element={<Recipe/>} />
+
                 </Routes>
             )}
         </Router>

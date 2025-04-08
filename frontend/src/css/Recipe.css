@@ -1,0 +1,6 @@
+.Chicken-Curry {
+    width: 300px;
+    height: auto; /* mantiene la proporción */
+    object-fit: cover; /* opcional: recorta si el contenedor es fijo */
+    border-radius: 10px; /* opcional */
+}

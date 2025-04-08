@@ -1,8 +1,8 @@
-.MainContainer {
+.Main-container {
     width: 393px;
     height: 852px;
     margin: 0 auto; /* centra horizontalmente */
-    background-color: #ffffff;
+    background-color: #f0f0f0;
     overflow: hidden;
     border: 1px solid #ffffff;
     border-radius: 20px;

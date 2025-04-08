@@ -68,7 +68,7 @@ function HomePage({FormHandle}) {
                 </div>
             </div>
             <div>
-                <NavigationBar />
+                <NavigationBar className="NavBar" />
             </div>
 
 

@@ -8,7 +8,7 @@ function PinterestLayout(){
 
         <div className="recipe-grid">
             <Recipes size="small" image="creamy-soup.svg" title="Creamy Soup" />
-            <Recipes size="medium" image="chicken-curry.svg" title="Chicken Curry" />
+            <Recipes size="medium" image="Indian-Curry-Chicken-2.jpg" title="Chicken Curry" />
             <Recipes size="large" image="greek-salad.svg" title="Greek Salad" />
             <Recipes size="medium" image="lasagna.svg" title="Lasagna" />
             <Recipes size="large" image="pasta.svg" title="Pasta" />
