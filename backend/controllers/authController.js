@@ -22,7 +22,7 @@ const register = async (req, res) => {
             return res.status(400).json({ message: 'El nombre de usuario o el email ya están registrados' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10); //hashear contra
 
         const newUser = await prisma.User.create({
             data: {
@@ -34,7 +34,6 @@ const register = async (req, res) => {
 
         res.status(201).json({ message: 'Usuario registrado exitosamente', userId: newUser.id });
     } catch (error) {
-        console.error(error); // 👈 asegurate que esté esto
         res.status(500).json({ message: 'Error al registrar el usuario' });
     }
 };

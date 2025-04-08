@@ -7,10 +7,10 @@ const NavigationBar = () => {
     const currentPath = location.pathname;
 
     const navItems = [
-        { icon: '/assets/home.svg', label: 'Home', path: '/home', color: '#f5e899', textColor: '#e38a18' },
-        { icon: '/assets/calendar.svg', label: 'Planner', path: '/planner', color: '#e5a2e4', textColor: '#ad35b8' },
-        { icon: '/assets/plus.svg', label: 'Plus', path: '/plus', color: '#97adf2', textColor: '#3f4dc3' },
-        { icon: '/assets/user.svg', label: 'Profile', path: '/profile', color: '#a2e29a', textColor: '#3a902c' }
+        { icon: '/assets/Home.svg', label: 'Home', path: '/home', color: '#f5e899', textColor: '#e38a18' },
+        { icon: '/assets/Calendar.svg', label: 'Planner', path: '/planner', color: '#e5a2e4', textColor: '#ad35b8' },
+        { icon: '/assets/Plus.svg', label: 'Plus', path: '/plus', color: '#97adf2', textColor: '#3f4dc3' },
+        { icon: '/assets/User.svg', label: 'Profile', path: '/profile', color: '#a2e29a', textColor: '#3a902c' }
     ];
 
     return (

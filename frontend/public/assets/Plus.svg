@@ -1,0 +1,9 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Plus">
+<g id="icons">
+<path id="Rectangle 6" d="M19.75 21.75H29C34.6609 21.75 39.25 26.3391 39.25 32V32.5C39.25 37.8848 34.8848 42.25 29.5 42.25C24.1152 42.25 19.75 37.8848 19.75 32.5V21.75Z" stroke="black" stroke-width="1.5"/>
+<line id="Line 3" x1="29.75" y1="27" x2="29.75" y2="38" stroke="black" stroke-width="1.5"/>
+<line id="Line 4" x1="24" y1="32.5" x2="35" y2="32.5" stroke="black"/>
+</g>
+</g>
+</svg>
