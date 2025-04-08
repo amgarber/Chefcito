@@ -13,14 +13,6 @@ function HomePage({FormHandle}) {
     const [query, setQuery] = useState('');
 
 
-    const handleLogout = () => {
-        console.log("Saliendo...");
-        localStorage.removeItem("isLoggedIn");
-        FormHandle("Login");
-        navigate("/login");
-    };
-
-
     return (
         <div className="MainContainer">
             <div className="welcome-user">
