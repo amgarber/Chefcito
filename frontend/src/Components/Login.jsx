@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../css/Login.css';
 import { useNavigate } from "react-router-dom";
 
+
 const Login = ({ FormHandle }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -24,12 +25,15 @@ const Login = ({ FormHandle }) => {
                 return;
             }
 
+
             alert('Login exitoso');
             setEmail('');
             setPassword('');
 
             // Guardar login persistente
             localStorage.setItem("isLoggedIn", "true");
+
+            localStorage.setItem("token", data.token);
 
             // Cambiar estado y redirigir
             FormHandle("HomePage");

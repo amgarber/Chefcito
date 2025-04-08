@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import '../css/HomePage.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import MultipleTagSelection from "./MultipleSelectionTag";
 import '../css/MultipleSelectionTag.css';
 import PinterestLayout from "./PinterestLayout";
 import NavigationBar from './NavigationBar';
+
+import {jwtDecode} from "jwt-decode";
 
 
 
@@ -12,11 +14,19 @@ function HomePage({FormHandle}) {
     const navigate = useNavigate();
     const [query, setQuery] = useState('');
 
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const decoded = jwtDecode(token);
+        setToken(decoded);
+    }, []);
+
 
     return (
         <div className="MainContainer">
             <div className="welcome-user">
-                <text>Welcome User!</text>
+                <text>Welcome {token.username}!</text>
 
                 <img src="/assets/notification.svg" alt="Notification" className="notification-img"/>
 

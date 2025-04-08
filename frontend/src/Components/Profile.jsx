@@ -7,8 +7,14 @@ function Profile({FormHandle}) {
     const handleLogout = () => {
         console.log("Saliendo...");
 
+
+
+        // Guardar login persistente
+        localStorage.setItem("isLoggedIn", "false");
+
         // Cambiar estado a "Login"
         FormHandle("Login");
+
 
         // Redirigir a /login
         navigate("/login");
