@@ -1,0 +1,227 @@
+.recipe-box{
+    width: 396px;
+    position: relative;
+    height: auto;
+    object-fit: contain;
+
+}
+.background-image{
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    transform: scaleY(-1);
+
+}
+.Bottom-sheet {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    touch-action: none; /* Importante para el arrastre móvil */
+    overflow-y: auto; /* Para contenido desplazable */
+    bottom : 0
+}
+
+/* Barra indicadora de arrastre */
+.drag-handle {
+    height: 4px;
+    width: 40px;
+    background: #ddd;
+    border-radius: 2px;
+    margin: 12px auto;
+}
+.Sheet-Content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    text-align: center;
+    padding: 20px;
+    gap: 16px; /* espacio entre elementos */
+
+}
+
+.recipe-title2{
+        width: 236px;
+        position: relative;
+        font-size: 25px;
+        line-height: 50px;
+        display: inline-block;
+        font-family: var(--font-plus-jakarta-sans);
+        color: #000;
+        text-align: center;
+        height: 50px;
+    text-shadow: none
+}
+.info-bar{
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+}
+.item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    color: #555;
+}
+.Icon {
+    width: 20px;
+    height: 20px;
+}
+
+.NatigateOption{
+    margin: 20px auto;
+    width: 320px;
+    position: relative;
+    border-radius: 25px;
+    background-color: #eaeaea;
+    height: 35px;
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+
+}
+.ingredients{
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 50px;
+    display: inline-block;
+    font-family: var(--font-plus-jakarta-sans);
+    color: #000;
+    flex: 1;
+    text-align: center;
+    border-radius: 25px;
+    padding: 6px 0;
+    ransition: background-color 0.3s ease;
+    cursor: pointer;
+}
+.directions{
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 50px;
+    display: inline-block;
+    font-family: var(--font-plus-jakarta-sans);
+    color: #000;
+    ransition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.about-section{
+    top: 42px;
+    left: 0px;
+    line-height: 20px;
+    width: 327px;
+    height: 127px;
+}
+.about-title{
+    width: 117px;
+    font-size: 15px;
+    line-height: 20px;
+    font-family: var(--font-plus-jakarta-sans);
+    color: #000;
+    text-align: left;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.about-description{
+    width: 327px;
+    position: relative;
+    font-size: 13px;
+    line-height: 20px;
+    font-family: var(--font-plus-jakarta-sans);
+    color: #757575;
+    text-align: left;
+    height: 127px;
+
+}
+
+
+.tab-bottom {
+    padding: 6px 16px;
+    font-weight: 600;
+    font-size: 13px;
+    font-family: var(--font-plus-jakarta-sans);
+    background-color: transparent;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+.active-tab {
+    color: #000000;
+    border-bottom: 2px solid #facc15;
+}
+.inactive-tab {
+    color: #525050;
+}
+.inactive-tab:hover {
+    color: #f3ab2e;
+}
+.neutral-tab {
+    color: #000;
+}
+
+
+
+.accordion-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.accordion-item {
+    width: 100%;
+    position: relative;
+    border-radius: 21px;
+    background-color: #fff;
+    border: 1px solid rgba(117, 117, 117, 0.28);
+    box-sizing: border-box;
+    height: 42px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-family: var(--font-plus-jakarta-sans);
+}
+
+.accordion-item.expanded {
+    height: auto;
+    padding: 16px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(117, 117, 117, 0.28);
+    display: block;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.accordion-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #000;
+}
+
+.accordion-content {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+}

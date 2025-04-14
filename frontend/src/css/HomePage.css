@@ -1,11 +1,11 @@
 
 .MainContainer {
-    position: relative;
     width: 393px;
-    height: 900px;
-    background-color: #f0f0f0;
+    height: 750px;
+    margin: 0 auto; /* centra horizontalmente */
+    background-color: #ffffff;
     overflow: hidden;
-    border: 1px solid #ccc;
+    border: 1px solid #ffffff;
     border-radius: 20px;
 }
 .search-bar {
@@ -49,7 +49,7 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 0.5rem;
-    padding: 0.5rem;
+    padding: 1rem;
     scrollbar-width: none; /* Firefox */
 }
 
@@ -77,13 +77,13 @@
 }
 .recipe-grid {
 
-    height: 573px;
+    height: 570px;
     width: fit-content;
     display: grid;
     grid-template-columns: repeat(2, 166px); /* o el ancho que te funcione mejor */
     grid-auto-rows: 1px; /* base para que los spans funcionen */
     gap: 8px;
-    overflow-y: auto;
+    /*overflow-y: ;*/
     margin: 0 auto;
 }
 /*.recipe-grid {

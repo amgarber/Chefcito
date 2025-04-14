@@ -167,3 +167,60 @@ body {
     --br-31xl: 50px;
 
 }
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap');
+body {
+    margin: 0; line-height: normal;
+}
+:root {
+
+    /* Fonts */
+    --font-plus-jakarta-sans: 'Plus Jakarta Sans';
+
+    /* font sizes */
+    --font-size-smi: 13px;
+
+    /* Colors */
+    --color-black: #000;
+    --color-gray: #757575;
+    --color-white: #fff;
+
+}
+/* Estilo para los pasos */
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.step-number {
+    font-size: 14px;
+    font-weight: 600;
+    color: #FF6B6B;
+    min-width: 60px;
+}
+
+.step-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    flex-grow: 1;
+}
+
+.step-content {
+    padding: 12px 0 0 72px; /* Alineación con el título */
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+    border-left: 2px solid #eee;
+    margin-left: 28px;
+}
+
+/* Ajuste de alineación general */
+.accordion-item {
+    text-align: left;
+}
+
+.accordion-content p {
+    text-align: left;
+    padding-left: 0;
+}

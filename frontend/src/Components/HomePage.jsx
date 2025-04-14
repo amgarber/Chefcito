@@ -22,7 +22,7 @@ function HomePage({FormHandle}) {
 
 
     return (
-        <div className="MainContainer">
+        <div className="MainContainer" style={{overflowY: 'auto'}}>
             <div className="welcome-user">
                 <text>Welcome {token.username}!</text>
 
@@ -62,16 +62,10 @@ function HomePage({FormHandle}) {
                     <MultipleTagSelection/>
                 </div>
             </div>
-            <div className="recipe-grid">
-                <div>
-                    <PinterestLayout/>
-                </div>
+            <div className="recipe-grid-container">  {/* Nuevo contenedor para el grid */}
+                <PinterestLayout/>
             </div>
-            <div>
-                <NavigationBar className="NavBar" />
-            </div>
-
-
+            <NavigationBar className="NavBar"/>
         </div>
     );
 }

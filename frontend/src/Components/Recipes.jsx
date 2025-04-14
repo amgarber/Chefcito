@@ -20,7 +20,7 @@ function Recipes(props) {
 
 const styles = {
     recipe: {
-        width: '166px',
+        width: '100%', // Cambia a 100% para adaptarse al grid
         borderRadius: '16px',
         overflow: 'hidden',
         position: 'relative',
