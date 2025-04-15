@@ -1,19 +1,33 @@
-.main-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    padding: 0;
+/* Reset para el html y body */
+html, body {
     margin: 0;
-    /* 💥 importante: no usar flex con centrado aquí si querés posicionar elementos libremente */
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
 }
 
+/* Contenedor principal centrado */
+.main-container {
+    position: relative;
+    width: 100%;
+    max-width: 430px; /* Tamaño máximo tipo mobile */
+    margin: 0 auto;
+    height: 100vh;
+    padding: 0;
+    background-color: white;
+}
+
+/* Botón de logout arriba a la derecha */
 .logout-button {
     position: absolute;
     top: 30px;
     right: 30px;
     width: 44px;
     height: 44px;
-    background: white;
+    background: whitesmoke;
     border: none;
     border-radius: 50%;
     display: flex;
@@ -27,4 +41,97 @@
 .logout-button img {
     width: 26px;
     height: 26px;
+    object-fit: contain;
+}
+
+/* Info del usuario */
+.user-info {
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.Profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.userPhoto {
+    width: 158px;
+    height: 158px;
+    object-fit: cover;
+
+}
+
+.UserName {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    text-align: center;
+}
+
+/* Contenedor de botones */
+.Profile-Buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 0 24px;
+}
+
+/* Estilo de botón tipo Figma */
+.ProfileButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;         /* Ancho exacto */
+    height: 56px;         /* Alto exacto */
+    padding: 0 16px;
+    border: none;
+    border-radius: 50px;
+    background: #f5f5f5;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.ProfileButton:hover {
+    background: #ebebeb;
+}
+
+/* Ícono a la izquierda */
+.ProfileButton img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-right: 12px;
+}
+
+/* Texto del botón */
+.ProfileButton h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+    text-align: left;
+}
+
+/* Chevron a la derecha */
+.chevronIcon {
+    font-size: 24px;
+    color: #555;
+}
+.UserName h3{
+   margin-bottom: 10px;
 }
