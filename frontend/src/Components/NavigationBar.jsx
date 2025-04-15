@@ -21,7 +21,7 @@ const NavigationBar = () => {
                 return (
                     <div
                         key={index}
-                        className={`nav-item-wrapper ${isActive ? 'active-tab' : ''}`}
+                        className={`nav-item-wrapper ${isActive ? 'active-tab2' : ''}`}
                         onClick={() => window.location.href = item.path}
                     >
                         {isActive && (
