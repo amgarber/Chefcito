@@ -166,7 +166,7 @@
     color: #525050;
 }
 .inactive-tab:hover {
-    color: #f3ab2e;
+    color: #f3ba03;
 }
 .neutral-tab {
     color: #000;
@@ -263,4 +263,6 @@
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
+.accordion-icon{
+    color: darkmagenta;
+}
