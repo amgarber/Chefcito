@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import '../css/RecipeDetail.css';
 import { motion } from 'framer-motion';
+import FavoriteButton from "./FavoriteButton";
+
 function AccordionItem({title, content, isExpanded, onToggle}){
     return (
         <div className={`accordion-item ${isExpanded ? 'expanded' : ''}`}>
@@ -22,6 +24,8 @@ function RecipeDetail() {
     const [sheetPosition, setSheetPosition] = useState(240); // Mover arriba
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState(null)
+    const navigate = useNavigate();
+
 
 
     const allRecipes = [
@@ -215,7 +219,7 @@ function RecipeDetail() {
 
     const tabContent= {
         tab1:(
-            <div><h2>Ingredientes</h2></div>
+            <div><h2>Ingredients</h2></div>
 
         ),
         tab2: (
@@ -249,12 +253,17 @@ function RecipeDetail() {
         );
     }
 
+
     const handleDrag = (event, info) => {
         const newPosition = sheetPosition - info.delta.y;
         setSheetPosition(Math.max(120, Math.min(newPosition, window.innerHeight * 0.8)));
     };
     return (
         <div className="recipe-box">
+                <button type="submit" className="exit-button">
+                    <img className="exit" src="/assets/exit.svg" alt="exit" onClick={() => navigate("/home")} />
+                </button>
+                <FavoriteButton/>
             <img
                 className="background-image"
                 src={`/assets/${recipe.image}`}

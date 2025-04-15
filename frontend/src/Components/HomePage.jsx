@@ -4,8 +4,8 @@ import {useEffect, useState} from "react";
 import MultipleTagSelection from "./MultipleSelectionTag";
 import '../css/MultipleSelectionTag.css';
 import PinterestLayout from "./PinterestLayout";
-import NavigationBar from './NavigationBar';
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
+
 
 function HomePage({FormHandle}) {
     const navigate = useNavigate();
@@ -22,13 +22,11 @@ function HomePage({FormHandle}) {
 
 
     return (
-        <div className="MainContainer" style={{overflowY: 'auto'}}>
+        <div className="MainContainer">
             <div className="welcome-user">
                 <text>Welcome {token.username}!</text>
 
                 <img src="/assets/notification.svg" alt="Notification" className="notification-img"/>
-
-
             </div>
             <div className="search-bar">
                 <img src="/assets/search.svg" alt="Search icon" className="search-bar-icon"/>
@@ -62,10 +60,12 @@ function HomePage({FormHandle}) {
                     <MultipleTagSelection/>
                 </div>
             </div>
-            <div className="recipe-grid-container">  {/* Nuevo contenedor para el grid */}
-                <PinterestLayout/>
+            <div className="scrollable-recipes">
+
+                    <PinterestLayout/>
             </div>
-            <NavigationBar className="NavBar"/>
+
+
         </div>
     );
 }
