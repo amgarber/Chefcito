@@ -1,9 +1,30 @@
-.Main-container {
-    width: 393px;
-    height: 852px;
-    margin: 0 auto; /* centra horizontalmente */
-    background-color: #f0f0f0;
-    overflow: hidden;
-    border: 1px solid #ffffff;
-    border-radius: 20px;
+.main-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    /* 💥 importante: no usar flex con centrado aquí si querés posicionar elementos libremente */
+}
+
+.logout-button {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 44px;
+    height: 44px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logout-button img {
+    width: 26px;
+    height: 26px;
 }

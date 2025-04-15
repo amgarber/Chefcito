@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import '../css/Profile.css';
+import React from "react";
 
 function Profile({FormHandle}) {
     const navigate = useNavigate();
@@ -21,10 +22,10 @@ function Profile({FormHandle}) {
     };
 
     return (
-        <div className="Main-container">
-            <h1>Welcome, User!</h1>
-            <button onClick={handleLogout}>Logout</button>
-        </div>
+        <button type="button" className="logout-button" onClick={handleLogout}>
+            <img className="exit" src="/assets/logout.svg" alt="Logout" />
+        </button>
+
     );
 }
 
