@@ -19,6 +19,7 @@ model User {
   planner    Planner?
   recipes    Recipe[]
   lists      Shopping_List[]
+  picture    String?
 }
 
 model Recipe {
