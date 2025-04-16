@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import '../css/Register.css'; //
 function Register({FormHandle}) {
 
@@ -39,20 +39,17 @@ function Register({FormHandle}) {
     };
 
     return (
-        <div className="register-container">
-            <div className="register">
-                <b className="registerNow">
-                    <p>Register</p>
-                    <p>now</p>
-                </b>
+        <div className="register">
+            <div className="register-container">
+                <h1 className="register-title">Register <br /> now</h1>
 
-                <div className="signInWithYourEmailAndPaWrapper">
+                <div className="subtitle">
                     Sign up with your email and password to continue
                 </div>
 
-                <form onSubmit={handleRegister}>
+                <form className="register-form" onSubmit={handleRegister}>
                     <div className="inputGroup">
-                        <img src="EnvelopeSimple.svg" alt="Username Icon"/>
+                        <img src="EnvelopeSimple.svg" alt="Username Icon" />
                         <input
                             type="text"
                             placeholder="Username"
@@ -62,7 +59,7 @@ function Register({FormHandle}) {
                     </div>
 
                     <div className="inputGroup">
-                        <img src="EnvelopeSimple.svg" alt="Email Icon"/>
+                        <img src="EnvelopeSimple.svg" alt="Email Icon" />
                         <input
                             type="email"
                             placeholder="Email Address"
@@ -72,7 +69,7 @@ function Register({FormHandle}) {
                     </div>
 
                     <div className="lockParent">
-                        <img src="Lock.svg" alt="Lock Icon"/>
+                        <img src="Lock.svg" alt="Lock Icon" />
                         <input
                             type="password"
                             placeholder="Password"
@@ -80,7 +77,7 @@ function Register({FormHandle}) {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <div className="eyeslash">
-                            <img src="Vector.svg" alt="Hide Password"/>
+                            <img src="Vector.svg" alt="Hide Password" />
                         </div>
                     </div>
 
@@ -90,20 +87,20 @@ function Register({FormHandle}) {
                 </form>
 
                 <div className="lineParent">
-                    <div className="frameChild"/>
+                    <div className="frameChild" />
                     <b className="orContinueWith">Or continue with</b>
-                    <div className="frameChild"/>
+                    <div className="frameChild" />
                 </div>
 
                 <div className="clipPathGroupParent">
-                    <img src="Clip path group.svg" className="clipPathGroup" alt="Icon"/>
-                    <img src="VectorGoogle.svg" className="vectorGoogle" alt="Brand"/>
+                    <img src="Clip path group.svg" className="clipPathGroup" alt="Icon" />
+                    <img src="VectorGoogle.svg" className="vectorGoogle" alt="Brand" />
                 </div>
+            </div>
 
-                <div className="component">
-                    <div className="dontHaveAnContainer">
-                        Already have an account? <b onClick={() => FormHandle('Login')}>Sign in here</b>.
-                    </div>
+            <div className="component">
+                <div className="dontHaveAnContainer">
+                    Already have an account? <b onClick={() => FormHandle('Login')}>Sign in here</b>.
                 </div>
             </div>
         </div>
