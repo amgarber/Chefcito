@@ -1,3 +1,16 @@
+.general-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+
 .login-container {
     max-width: 400px;
     margin: 0 auto;
@@ -7,12 +20,11 @@
     color: black;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    min-height: 100vh;
+    gap: 40px;
 }
 
 .login-title {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: 700;
     font-family: 'Plus Jakarta Sans';
     line-height: 1.2;
@@ -20,11 +32,13 @@
 }
 
 .login-subtitle {
+    margin-top: -11px;
     text-align: left;
     color: #49454f;
     font-size: 14px;
 }
 .login-form {
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -37,7 +51,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 1px
+    margin-top: 20px
 }
 
 .input-group input {
@@ -51,7 +65,7 @@
 }
 
 .login-button {
-    margin-top: 20px;
+    margin-top: 40px;
     width: 100%;
     border: none;
     background-color: #000000;
@@ -70,6 +84,7 @@
     text-align: center;
     font-size: 12px;
     justify-content: center;
+    margin-top: 10px;
 }
 
 .line {
@@ -101,5 +116,29 @@
 .login-footer .link {
     font-weight: bold;
     cursor: pointer;
+    color: black;
+}
+.footer-div {
+    margin-bottom: 25px;
+    margin-top: auto;
+    text-align: center;
+    padding: 1rem 0;
+}
+.toggle-password-icon{
+    color: whitesmoke;
+}
+
+.remember-me {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 14px;
+    color: black; /* o el color que uses en el formulario */
+}
+.remember-me input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
     color: black;
 }
