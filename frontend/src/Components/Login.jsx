@@ -72,7 +72,7 @@ const Login = ({ FormHandle }) => {
                             <img src="/EnvelopeSimple.svg" alt="Email icon" />
                             <input
                                 type="email"
-                                placeholder="Email Address"
+                                placeholder="Enter email or username"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
