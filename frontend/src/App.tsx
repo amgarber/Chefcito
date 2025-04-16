@@ -33,7 +33,7 @@ function App() {
                     <Route path="/" element={<LayoutWithNav><HomePage FormHandle={setForm} /></LayoutWithNav>} />
                     <Route path="/home" element={<LayoutWithNav><HomePage FormHandle={setForm} /></LayoutWithNav>} />
                     <Route path="/planner" element={<LayoutWithNav><Planner /></LayoutWithNav>} />
-                    <Route path="/plus" element={<LayoutWithNav><Plus /></LayoutWithNav>} />
+                    <Route path="/plus" element={<LayoutWithNav><Plus  /></LayoutWithNav>} />
                     <Route path="/profile" element={<LayoutWithNav><Profile FormHandle={setForm} /></LayoutWithNav>} />
                     <Route path="/recipe/:id" element={<RecipeDetail />} />
 
