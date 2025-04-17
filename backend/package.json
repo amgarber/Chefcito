@@ -9,14 +9,14 @@
     "dev": "ts-node src/index.ts",
     "watch": "tsc --watch",
     "dev:watch": "nodemon --ext ts --exec ts-node src/index.ts",
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/createRecipe.js"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "framer-motion": "^7.6.16",
     "jsonwebtoken": "^9.0.2",

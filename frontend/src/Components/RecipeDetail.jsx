@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import '../css/RecipeDetail.css';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import axios from 'axios';
 import FavoriteButton from "./FavoriteButton";
+
 
 function AccordionItem({title, content, isExpanded, onToggle}){
     return (

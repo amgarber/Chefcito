@@ -9,7 +9,7 @@ function Recipe({ size, image, title, onClick }) {
         >
             <div className="recipe-image-container">
                 <img
-                    src={`/assets/${image}`}
+                    src={image}
                     alt={title}
                     className="recipe-image"
                 />

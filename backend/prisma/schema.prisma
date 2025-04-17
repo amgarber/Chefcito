@@ -12,14 +12,14 @@ model User {
   username   String          @unique
   email      String          @unique
   password   String
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
   role       Role            @default(USER)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  picture    String?
   favourites Favourite[]
   planner    Planner?
   recipes    Recipe[]
   lists      Shopping_List[]
-  picture    String?
 }
 
 model Recipe {
@@ -28,13 +28,20 @@ model Recipe {
   description      String
   difficulty       String
   preparation_time Int
-  imageUrl         String?
   UserId           Int
+  imageId          Int?                @unique
   favourites       Favourite[]
   instructions     Instructions[]
   user             User                @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  image            Image?              @relation(fields: [imageId], references: [id])
   ingredients      Recipe_Ingredient[]
   recipeTypes      Recipe_Type[]
+}
+
+model Image {
+  id     Int     @id @default(autoincrement())
+  url    String
+  recipe Recipe?
 }
 
 model Favourite {

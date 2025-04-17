@@ -7,7 +7,7 @@ function Recipes(props) {
             ...styles[props.size]
         }}>
             <img
-                src={`/assets/${props.image}`}
+                src={props.image}
                 alt={props.title}
                 style={styles.image}
             />

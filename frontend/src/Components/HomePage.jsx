@@ -5,13 +5,15 @@ import MultipleTagSelection from "./MultipleSelectionTag";
 import '../css/MultipleSelectionTag.css';
 import PinterestLayout from "./PinterestLayout";
 import {jwtDecode} from "jwt-decode";
+import axios from "axios";
 
 
 function HomePage({FormHandle}) {
     const navigate = useNavigate();
-    const [query, setQuery] = useState('');
 
+    const [query, setQuery] = useState('');
     const [token, setToken] = useState('');
+    const [recipes, setRecipes] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -20,6 +22,14 @@ function HomePage({FormHandle}) {
         setToken(decoded);
     }, []);
 
+    useEffect(() => {
+        axios.get('http://localhost:3001/api/recipes')
+            .then(res => {
+                console.log('Recetas:', res.data); // 👈 fijate si trae imageUrl
+                setRecipes(res.data);
+            })
+            .catch(err => console.error('Error al traer recetas:', err));
+    }, []);
 
     return (
         <div className="MainContainer">
@@ -62,7 +72,7 @@ function HomePage({FormHandle}) {
             </div>
             <div className="scrollable-recipes">
 
-                    <PinterestLayout/>
+                <PinterestLayout recipes={recipes}/>
             </div>
 
 
