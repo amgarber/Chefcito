@@ -1,0 +1,34 @@
+/* RecipeImageUploader.css */
+.image-uploader {
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 1/1;
+    background-color: #1e1e1e;
+    border-radius: 16px;
+    border: 2px dashed #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border 0.3s ease;
+}
+
+.image-uploader:hover {
+    border-color: #666;
+}
+
+.placeholder {
+    text-align: center;
+    color: #aaa;
+}
+
+.placeholder .icon {
+    font-size: 2rem;
+}
+
+.uploaded-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
