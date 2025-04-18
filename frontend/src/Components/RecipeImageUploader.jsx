@@ -17,7 +17,7 @@ const RecipeImageUploader = () => {
                 <img src={image} alt="Recipe Cover" className="uploaded-image" />
             ) : (
                 <div className="placeholder">
-                    <span className="icon">📷</span>
+                    <i className="bx bxs-image icon"></i>
                     <p>Add recipe cover image</p>
                 </div>
             )}

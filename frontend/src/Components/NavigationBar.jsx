@@ -9,7 +9,7 @@ const NavigationBar = () => {
     const navItems = [
         { icon: '/assets/Home.svg', label: 'Home', path: '/home', activePaths: ['/home'], color: '#f5e899', textColor: '#e38a18' },
         { icon: '/assets/Calendar.svg', label: 'Planner', path: '/planner', activePaths: ['/planner'], color: '#e5a2e4', textColor: '#ad35b8' },
-        { icon: '/assets/Plus.svg', label: 'Plus', path: '/plus', activePaths: ['/plus', '/plus2'], color: '#97adf2', textColor: '#3f4dc3' },
+        { icon: '/assets/Plus.svg', label: 'Plus', path: '/plus', activePaths: ['/plus', '/plus2', '/AddIngredients', '/CreateRecipe'], color: '#97adf2', textColor: '#3f4dc3' },
         { icon: '/assets/User.svg', label: 'Profile', path: '/profile', activePaths: ['/profile'], color: '#a2e29a', textColor: '#3a902c' }
     ];
 

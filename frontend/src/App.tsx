@@ -7,8 +7,9 @@ import LayoutWithNav from "./Components/LayoutWithNav";
 import Profile from "./Components/Profile";
 import RecipeDetail from './Components/RecipeDetail';
 import Plus from './Components/Plus';
-import CreateRecipe from "./Components/CreateRecipe";
 import Plus2 from "./Components/Plus2";
+import AddIngredients from "./Components/AddIngredients";
+import CreateRecipe from "./Components/CreateRecipe";
 
 const Planner = () => <div style={{ padding: '20px' }}><h1>Planes</h1></div>;
 //const Profile = () => <div style={{ padding: '20px' }}><h1>Mi perfil</h1></div>;
@@ -41,6 +42,8 @@ function App() {
                     <Route path="/profile" element={<LayoutWithNav><Profile FormHandle={setForm} /></LayoutWithNav>} />
                     <Route path="/recipe/:id" element={<RecipeDetail />} />
                     <Route path="/plus2" element={<LayoutWithNav><Plus2  /></LayoutWithNav>} />
+                    <Route path="/AddIngredients" element={<LayoutWithNav><AddIngredients  /></LayoutWithNav>} />
+                    <Route path="/CreateRecipe" element={<LayoutWithNav><CreateRecipe  /></LayoutWithNav>} />
 
 
                 </Routes>

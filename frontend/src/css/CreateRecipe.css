@@ -1,0 +1,58 @@
+.exit-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.exit {
+    width: 24px;
+    height: 24px;
+}
+
+.top-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 68px;
+    align-items: center; /* centra verticalmente */
+    padding-bottom: 12px;
+    gap: 10px; /* espacio entre el botón y el título */
+    padding-left: 65px;
+    padding-top: 13px;
+}
+
+.image-Uploader{
+    display: flex;
+    justify-content: center;
+    margin-top: inherit;
+    padding: 16px;
+}
+.image-uploader{
+    color: #49454f;
+}
+
+.save-button{
+    margin-top: 20px;
+    background-color: #9497cc;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+}
+.publish-button {
+    margin-top: 20px;
+    background-color: transparent;
+    color: #9497cc;
+    border: 2px solid #9497cc;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+}

@@ -1,8 +1,18 @@
 import React from "react";
 import '../css/Plus2.css';
+import { useNavigate } from "react-router-dom";
 
 
 function Plus2(){
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/AddIngredients")
+    };
+
+    const handleClick2 = () => {
+        navigate("/CreateRecipe")
+    };
 
 
     return (
@@ -19,11 +29,11 @@ function Plus2(){
                     <p>You don't have a story, learn a new recipe and say it</p>
                 </div>
                 <div className="button-wrapper">
-                    <button className="add-ingredient-button" >
+                    <button className="add-ingredient-button"  onClick={handleClick}>
                         <img src="/assets/plusIcon.svg" alt="PlusIcon" className="plus-icon" />
                         <span className="ingredient-text">Ingredients</span>
                     </button>
-                    <button className="add-recipe-button">
+                    <button className="add-recipe-button" onClick={handleClick2}>
                         <img src="/assets/plusIcon.svg" alt="PlusIcon" className="plus-icon" />
                         <span className="ingredient-text">Recipe</span>
                     </button>
