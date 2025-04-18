@@ -8,6 +8,7 @@ import Profile from "./Components/Profile";
 import RecipeDetail from './Components/RecipeDetail';
 import Plus from './Components/Plus';
 import CreateRecipe from "./Components/CreateRecipe";
+import Plus2 from "./Components/Plus2";
 
 const Planner = () => <div style={{ padding: '20px' }}><h1>Planes</h1></div>;
 //const Profile = () => <div style={{ padding: '20px' }}><h1>Mi perfil</h1></div>;
@@ -39,6 +40,8 @@ function App() {
                     <Route path="/plus" element={<LayoutWithNav><CreateRecipe  /></LayoutWithNav>} />
                     <Route path="/profile" element={<LayoutWithNav><Profile FormHandle={setForm} /></LayoutWithNav>} />
                     <Route path="/recipe/:id" element={<RecipeDetail />} />
+                    <Route path="/plus2" element={<LayoutWithNav><Plus2  /></LayoutWithNav>} />
+
 
                 </Routes>
             )}

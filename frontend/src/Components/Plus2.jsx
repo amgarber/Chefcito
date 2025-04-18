@@ -1,14 +1,9 @@
 import React from "react";
-import '../css/Plus.css';
-import { CiSquarePlus } from "react-icons/ci";
-import { useNavigate } from 'react-router-dom';
+import '../css/Plus2.css';
 
-function Plus() {
-    const navigate = useNavigate();
 
-    const handleClick = () => {
-        navigate('/plus2'); // esta ruta debe coincidir con la que definiste en tu <Route />
-    };
+function Plus2(){
+
 
     return (
         <div className="Main-container">
@@ -24,13 +19,19 @@ function Plus() {
                     <p>You don't have a story, learn a new recipe and say it</p>
                 </div>
                 <div className="button-wrapper">
-                    <button className="icon-button" onClick={handleClick}>
-                    <img src="/assets/plusIcon.svg" alt="PlusIcon" className="Icon" />
+                    <button className="add-ingredient-button" >
+                        <img src="/assets/plusIcon.svg" alt="PlusIcon" className="plus-icon" />
+                        <span className="ingredient-text">Ingredients</span>
+                    </button>
+                    <button className="add-recipe-button">
+                        <img src="/assets/plusIcon.svg" alt="PlusIcon" className="plus-icon" />
+                        <span className="ingredient-text">Recipe</span>
                     </button>
                 </div>
             </div>
         </div>
+
     );
 }
 
-export default Plus;
+export default Plus2

@@ -105,8 +105,49 @@ body, html {
 
 }
 
+.button-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    align-items: center;
+    margin-top:20px;
+}
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 120px;
+}
+.add-ingredient-button,
+.add-recipe-button{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    border: 2px solid #3b2e2e; /* Color marrón oscuro para el borde */
+    border-radius: 999px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 25px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.15);
+    transition: transform 0.1s ease;
+}
 
+.add-ingredient-button:hover,
+.add-recipe-button:hover{
+    transform: scale(1.02);
+}
 
+.plus-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.ingredient-text {
+    color: #000;
+}
 
 
 
