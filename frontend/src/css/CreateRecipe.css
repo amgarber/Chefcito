@@ -1,3 +1,15 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.general-div {
+    width: 100vw;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
 .exit-button {
     background: none;
     border: none;
@@ -16,25 +28,25 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 68px;
-    align-items: center; /* centra verticalmente */
-    padding-bottom: 12px;
-    gap: 10px; /* espacio entre el botón y el título */
-    padding-left: 65px;
-    padding-top: 13px;
+    margin-top: 48px;
+    align-items: center;
+    padding: 13px 0 12px 65px;
+    gap: 10px;
 }
 
-.image-Uploader{
+.image-Uploader {
     display: flex;
     justify-content: center;
-    margin-top: inherit;
-    padding: 16px;
-}
-.image-uploader{
-    color: #49454f;
+    padding: 16px 0;
 }
 
-.save-button{
+.image-uploader {
+    width: 700px; /* o el valor que quieras */
+}
+
+
+/* Botones */
+.save-button {
     margin-top: 20px;
     background-color: #9497cc;
     color: white;
@@ -45,6 +57,7 @@
     font-size: 14px;
     cursor: pointer;
 }
+
 .publish-button {
     margin-top: 20px;
     background-color: transparent;
@@ -55,4 +68,106 @@
     font-weight: bold;
     font-size: 14px;
     cursor: pointer;
+}
+
+/* Contenedor compartido centrado */
+.Input-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.input-content {
+    width: 100%;
+    max-width: 600px; /* mismo ancho que el uploader visual */
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Vertical: título + input */
+.RecipeTitle {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+}
+
+.RecipeTitle input {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+
+}
+.Description {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+    margin-top: 20px; /* separalo del input anterior */
+}
+
+.Description input {
+    margin-top: 3px;
+    padding: 10px;
+    height: 120px;
+    text-align: left;
+    resize: vertical;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+
+}
+.CookTime {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.CookTime-inputs {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.time-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.time-group input {
+    width: 60px;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+}
+.next-button{
+    background-color: #9497cc;
+    width: 100%;
+    height: 50px;
+    border-radius: 999px;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

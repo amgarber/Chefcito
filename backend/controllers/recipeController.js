@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const uploadToAzure = require("../services/azureUpload");
 
 const getAllRecipes = async (req, res) => {
     try {
@@ -62,7 +63,58 @@ const getRecipeById = async (req, res) => {
     }
 };
 
+const createRecipe = async (req, res) => {
+    try {
+        const {
+            recipeTitle,
+            recipeDescription,
+            cookTimeMinutes,
+            // cookTimeHours
+        } = req.body;
+
+        const imageFile = req.file;
+
+        if (!imageFile) {
+            return res.status(400).json({ message: "Image is required" });
+        }
+
+        const imageUrl = await uploadToAzure(imageFile);
+        const preparationTime = parseInt(cookTimeMinutes || 0);
+
+        const newRecipe = await prisma.recipe.create({
+            data: {
+                name: recipeTitle,
+                description: recipeDescription,
+                preparation_time: preparationTime,
+                difficulty: "easy", // podés tomarlo también desde req.body si querés
+
+                user: {
+                    connect: {
+                        id: req.user?.id || 1 // hay que agregar aca la autenticacion con el token para que guarde el verdadero id del usuario. ahora le puse 1 para que funcione
+                    }
+                },
+
+                image: {
+                    create: {
+                        url: imageUrl,
+                    }
+                },
+            },
+        });
+
+        console.log("✅ Receta creada:", newRecipe);
+        return res.status(201).json({ message: "Recipe created", data: newRecipe });
+
+    } catch (err) {
+        console.error("❌ Error al crear receta:", err);
+        return res.status(500).json({ message: "Error al crear receta" });
+    }
+};
+
+
+
 module.exports = {
     getAllRecipes,
-    getRecipeById
+    getRecipeById,
+    createRecipe
 };
