@@ -10,6 +10,7 @@ import Plus from './Components/Plus';
 import Plus2 from "./Components/Plus2";
 import AddIngredients from "./Components/AddIngredients";
 import CreateRecipe from "./Components/CreateRecipe";
+import SetRecipeStepsAndIngredients from "./Components/SetRecipeStepsAndIngredients";
 
 const Planner = () => <div style={{ padding: '20px' }}><h1>Planes</h1></div>;
 //const Profile = () => <div style={{ padding: '20px' }}><h1>Mi perfil</h1></div>;
@@ -44,7 +45,7 @@ function App() {
                     <Route path="/plus2" element={<LayoutWithNav><Plus2  /></LayoutWithNav>} />
                     <Route path="/AddIngredients" element={<LayoutWithNav><AddIngredients  /></LayoutWithNav>} />
                     <Route path="/CreateRecipe" element={<LayoutWithNav><CreateRecipe  /></LayoutWithNav>} />
-
+                    <Route path="/SetRecipeStepsAndIngredients" element={<LayoutWithNav><SetRecipeStepsAndIngredients  /></LayoutWithNav>} />
 
                 </Routes>
             )}

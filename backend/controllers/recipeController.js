@@ -111,10 +111,48 @@ const createRecipe = async (req, res) => {
     }
 };
 
+const addIngredientsAndSteps = async (recipeId, ingredients, steps) => {
+    try {
+        const recipe = await prisma.recipe.findUnique({
+            where: { id: recipeId },
+            include: { ingredients: true }
+        });
+
+        if (!recipe) {
+            throw new Error('Recipe not found');
+        }
+
+        // Add ingredients
+        for (const ingredient of ingredients) {
+            await prisma.recipeIngredient.create({
+                data: {
+                    recipeId,
+                    ingredientId: ingredient.id,
+                    quantity: ingredient.quantity
+                }
+            });
+        }
+
+        // Add steps
+        for (const step of steps) {
+            await prisma.instruction.create({
+                data: {
+                    recipeId,
+                    description: step
+                }
+            });
+        }
+
+    } catch (error) {
+        console.error('Error adding ingredients and steps:', error);
+    }
+}
+
 
 
 module.exports = {
     getAllRecipes,
     getRecipeById,
-    createRecipe
+    createRecipe,
+    addIngredientsAndSteps
 };

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "../css/CreateRecipe.css";
 import RecipeImageUploader from "./RecipeImageUploader";
+import {useNavigate} from "react-router-dom";
 
 function CreateRecipe() {
+    const navigate = useNavigate();
     const [imageFile, setImageFile] = useState(null);
     const [recipeTitle, setRecipeTitle] = useState("");
     const [recipeDescription, setRecipeDescription] = useState("");
@@ -41,6 +43,8 @@ function CreateRecipe() {
             if (response.ok) {
                 alert("Recipe saved successfully!");
                 console.log("✅ Receta enviada:", data);
+                console.log("Receta ID:", data.id);
+                navigate('/SetRecipeStepsAndIngredients', { state: { recipeId: data.data.id } });
                 // limpiar formulario si querés:
                 // setRecipeTitle(""); setRecipeDescription(""); etc.
             } else {
@@ -51,6 +55,7 @@ function CreateRecipe() {
             alert("Ocurrió un error al guardar la receta.");
         }
     };
+
 
     return (
         <div className="general-div">
@@ -115,7 +120,7 @@ function CreateRecipe() {
                     </div>
 
                     <div className="button">
-                        <button type="button" className="next-button" >
+                        <button type="button" className="next-button" onClick={() => navigate('/SetRecipeStepsAndIngredients')} >
                             Go to ingredients and steps
                         </button>
                     </div>

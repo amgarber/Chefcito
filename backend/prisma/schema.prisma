@@ -57,9 +57,15 @@ model Ingredients {
   id      Int                        @id @default(autoincrement())
   name    String
   type    String
-  images  String?
+  images  Ingredient_Image[]
   recipes Recipe_Ingredient[]
   list    Shopping_List_Ingredient[]
+}
+model Ingredient_Image {
+  id          Int        @id @default(autoincrement())    // ID de la imagen
+  url         String     // URL de la imagen
+  ingredient  Ingredients @relation(fields: [ingredientId], references: [id])    // Relación con el ingrediente
+  ingredientId Int      // ID del ingrediente asociado
 }
 
 model Recipe_Ingredient {
