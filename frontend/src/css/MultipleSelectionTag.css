@@ -1,32 +1,27 @@
 .tag-container {
-
     display: flex;
-    gap: 6px;
     overflow-x: auto;
-    padding: 0.8rem 0;
-    margin: 5px;
-    scrollbar-width: none; /* Firefox */
+    white-space: nowrap;
+    gap: 10px;
+    padding: 10px;
+    scrollbar-width: none; /* Oculta scrollbar en Firefox */
 }
 
 .tag-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none; /* Oculta scrollbar en Chrome */
 }
 
 .tag {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-radius: 8px;
+    flex: 0 0 auto; /* Evita que se ajusten y se mantengan en línea */
+    padding: 8px 14px;
     background-color: #e0e0e0;
-    color: #333;
-    font-weight: 500;
-    font-size: 14px;
+    border-radius: 20px;
     cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    user-select: none;
+    transition: 0.2s ease;
 }
 
 .tag.selected {
-    background-color: #3f3c3c;
-    color: rgb(241, 240, 240);
+    background-color: #007bff;
+    color: white;
 }

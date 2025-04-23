@@ -1,11 +1,13 @@
 import React from 'react'
+import MultipleTagSelection from "./MultipleSelectionTag";
+import MultipleSelectionTag from "./MultipleSelectionTag";
 
 
 function AddIngredients(){
     return (
       <div>
           <h1>
-              Hola!
+              hola
           </h1>
       </div>
     );

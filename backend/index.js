@@ -3,8 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const ingredientsRoutes = require('./routes/ingredientsRoutes');
-
 const recipeRoutes = require('./routes/recipes');
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -15,6 +15,9 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api/recipes', recipeRoutes); // sin multer acá
 app.use('/api/ingredients', ingredientsRoutes);
+
+const filterRoutes = require('./routes/filters');
+app.use('/api/filters', filterRoutes);
 
 
 

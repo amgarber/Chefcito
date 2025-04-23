@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import '../css/HomePage.css';
-import {useEffect, useState} from "react";
-import MultipleTagSelection from "./MultipleSelectionTag";
+import React, {useEffect, useState} from "react";
+import MultipleSelectionTag from "./MultipleSelectionTag";
 import '../css/MultipleSelectionTag.css';
 import PinterestLayout from "./PinterestLayout";
 import {jwtDecode} from "jwt-decode";
@@ -67,7 +67,7 @@ function HomePage({FormHandle}) {
             </div>
             <div className="foodType-carousel">
                 <div className="foodType">
-                    <MultipleTagSelection/>
+                    <MultipleSelectionTag></MultipleSelectionTag>
                 </div>
             </div>
             <div className="scrollable-recipes">

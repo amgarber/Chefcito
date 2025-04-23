@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import "../css/SetRecipeStepsAndIngredients.css";
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import MultipleSelectionTag from "./MultipleSelectionTag";
+
 
 function SetRecipeStepsAndIngredients() {
     const location = useLocation();
     const { recipeId } = location.state || {};
     const navigate = useNavigate();
 
+    const [selectedFilters, setSelectedFilters] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [steps, setSteps] = useState(['']);
     const [newIngredient, setNewIngredient] = useState('');
@@ -59,13 +62,16 @@ function SetRecipeStepsAndIngredients() {
             recipeId,
             ingredients,
             steps,
+            filters: selectedFilters  // ⬅️ agregás las tags seleccionadas
         };
+
         console.log('Recipe data to submit:', recipeData);
-        try{
+
+        try {
             axios.patch('/api/recipes', recipeData)
                 .then(response => {
                     console.log('Recipe updated successfully:', response.data);
-                    navigate('/some-other-page'); // Redirect after successful submission
+                    navigate('/some-other-page');
                 })
                 .catch(error => {
                     console.error('Error updating recipe:', error);
@@ -151,6 +157,7 @@ function SetRecipeStepsAndIngredients() {
                             onChange={(e) => handleStepChange(index, e.target.value)}
                         />
                         <button onClick={() => removeStep(index)}>Remove</button>
+                        <MultipleSelectionTag onChange={setSelectedFilters} />
                     </div>
                 ))}
             </div>

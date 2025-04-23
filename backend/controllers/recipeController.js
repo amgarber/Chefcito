@@ -110,45 +110,82 @@ const createRecipe = async (req, res) => {
         return res.status(500).json({ message: "Error al crear receta" });
     }
 };
+const addIngredientsAndSteps = async (req, res) => {
+    const { recipeId, ingredients, steps, filters } = req.body;
 
-const addIngredientsAndSteps = async (recipeId, ingredients, steps) => {
     try {
+        // Verificamos que la receta exista
         const recipe = await prisma.recipe.findUnique({
-            where: { id: recipeId },
-            include: { ingredients: true }
+            where: { id: recipeId }
         });
 
         if (!recipe) {
-            throw new Error('Recipe not found');
+            return res.status(404).json({ message: 'Recipe not found' });
         }
 
-        // Add ingredients
+        // 🧹 Borrar ingredientes previos (si estás actualizando)
+        await prisma.recipe_Ingredient.deleteMany({
+            where: { id_recipe: recipeId }
+        });
+
+        // ✅ Agregar ingredientes nuevos
         for (const ingredient of ingredients) {
-            await prisma.recipeIngredient.create({
+            await prisma.recipe_Ingredient.create({
                 data: {
-                    recipeId,
-                    ingredientId: ingredient.id,
-                    quantity: ingredient.quantity
+                    id_recipe: recipeId,
+                    id_ingredient: ingredient.id,
+                    quantity: ingredient.quantity,
+                    measurement_unit: 'g' // o podés hacerlo dinámico si lo necesitás
                 }
             });
         }
 
-        // Add steps
-        for (const step of steps) {
-            await prisma.instruction.create({
+        // 🧹 Borrar instrucciones previas (opcional)
+        await prisma.instructions.deleteMany({
+            where: { id_recipe: recipeId }
+        });
+
+        // ✅ Agregar pasos
+        for (let i = 0; i < steps.length; i++) {
+            await prisma.instructions.create({
                 data: {
-                    recipeId,
-                    description: step
+                    id_recipe: recipeId,
+                    steps_numerations: `Paso ${i + 1}`,
+                    Description: steps[i]
                 }
             });
         }
+
+        // 🧹 Borrar filtros previos (opcional si es edición)
+        await prisma.recipe_Type.deleteMany({
+            where: { id_recipe: recipeId }
+        });
+
+        // ✅ Asociar filtros (tags)
+        if (filters && filters.length > 0) {
+            for (const tagName of filters) {
+                const filter = await prisma.recipe_Filter.findFirst({
+                    where: { Name: tagName }
+                });
+
+                if (filter) {
+                    await prisma.recipe_Type.create({
+                        data: {
+                            id_recipe: recipeId,
+                            id_recipeFilter: filter.id_RecipeFilter
+                        }
+                    });
+                }
+            }
+        }
+
+        res.status(200).json({ message: 'Ingredients, steps, and filters updated successfully' });
 
     } catch (error) {
-        console.error('Error adding ingredients and steps:', error);
+        console.error('Error adding ingredients, steps or filters:', error);
+        res.status(500).json({ message: 'Failed to update recipe' });
     }
-}
-
-
+};
 
 module.exports = {
     getAllRecipes,
