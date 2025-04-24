@@ -70,7 +70,9 @@
     font-size: 15px;
     color: #555;
 }
-.Icon {
+.Icon-fire,
+.Icon-time,
+.Icon-star {
     width: 20px;
     height: 20px;
 }
@@ -263,4 +265,32 @@
 }
 .accordion-icon{
     color: darkmagenta;
+}
+.ingredient-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.ingredient-image {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.ingredient-name {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+.ingredient-quantity {
+    color: gray;
+    font-size: 0.9rem;
+    padding-left: 8px;
 }

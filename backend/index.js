@@ -15,6 +15,7 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api/recipes', recipeRoutes); // sin multer acá
 app.use('/api/ingredients', ingredientsRoutes);
+app.use('/api/ingredients', ingredientsRoutes);
 
 const filterRoutes = require('./routes/filters');
 app.use('/api/filters', filterRoutes);

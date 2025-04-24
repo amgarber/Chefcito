@@ -66,7 +66,7 @@ html, body {
     pointer-events: none;
 }
 
-.ingredients-carousel {
+/*.ingredients-carousel {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -97,7 +97,7 @@ html, body {
     width: 36px;
     height: 36px;
     object-fit: contain;
-}
+}*/
 
 .scrollable-recipes {
 

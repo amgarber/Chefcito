@@ -1,0 +1,40 @@
+.ingredient-carousel-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0.5rem;
+    padding: 1rem;
+    scrollbar-width: none;
+    flex-shrink: 0;
+}
+
+.ingredient-carousel-container::-webkit-scrollbar {
+    display: none;
+}
+
+.ingredient-icon-circle {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: border 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.ingredient-icon-circle.selected {
+    border-color: #E38A18FF; /* color al seleccionar */
+    background-color: #F5E899FF;
+}
+
+.ingredient-icon-circle img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}

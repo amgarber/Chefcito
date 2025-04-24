@@ -3,26 +3,78 @@ const prisma = new PrismaClient();
 const uploadToAzure = require("../services/azureUpload");
 
 const getAllRecipes = async (req, res) => {
+    const { query, filters, ingredients } = req.query;
+
     try {
         const recipes = await prisma.recipe.findMany({
-            include: { image: true }
+            where: {
+                AND: [
+                    // 🔍 Filtrar por nombre
+                    query
+                        ? {
+                            name: {
+                                contains: query,
+                                mode: 'insensitive'
+                            }
+                        }
+                        : {},
+
+                    // 🏷️ Filtrar por tags/filtros
+                    filters
+                        ? {
+                            recipeTypes: {
+                                some: {
+                                    filter: {
+                                        Name: {
+                                            in: filters.split(',')
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        : {},
+
+                    // 🧅 Filtrar por ingredientes
+                    ingredients
+                        ? {
+                            ingredients: {
+                                some: {
+                                    id_ingredient: {
+                                        in: ingredients.split(',').map(Number)
+                                    }
+                                }
+                            }
+                        }
+                        : {}
+                ]
+            },
+            include: {
+                image: true,
+                recipeTypes: {
+                    include: { filter: true }
+                }
+            }
         });
 
+        // ✅ Formatear como antes para mostrar en el front
         const formatted = recipes.map(recipe => ({
             id: recipe.id,
             name: recipe.name,
             description: recipe.description,
             difficulty: recipe.difficulty,
             preparation_time: recipe.preparation_time,
-            imageUrl: recipe.image?.url || null
+            imageUrl: recipe.image?.url || null,
+            filters: recipe.recipeTypes.map(rt => rt.filter.Name)
         }));
 
         res.json(formatted);
-    } catch (err) {
-        console.error('Error al obtener recetas:', err);
-        res.status(500).json({ message: 'Error al obtener recetas' });
+    } catch (error) {
+        console.error('Error al obtener recetas con filtros:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
     }
 };
+
+
 
 const getRecipeById = async (req, res) => {
     const { id } = req.params;
@@ -34,7 +86,13 @@ const getRecipeById = async (req, res) => {
                 image: true,
                 instructions: true,
                 ingredients: {
-                    include: { ingredient: true }
+                    include: {
+                        ingredient: {
+                            include: {
+                                images: true
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -55,7 +113,12 @@ const getRecipeById = async (req, res) => {
                 title: `Step ${i + 1}`,
                 content: step.Description
             })) || [],
-            ingredients: recipe.ingredients?.map(ri => ri.ingredient.name) || []
+            ingredients: recipe.ingredients?.map(ri => ({
+                name: ri.ingredient.name,
+                quantity: ri.quantity,
+                measurement_unit: ri.measurement_unit,
+                imageUrl: ri.ingredient.images[0]?.url || ''
+            })) || []
         });
     } catch (error) {
         console.error('Error al obtener la receta:', error);

@@ -1,14 +1,15 @@
 import React from 'react'
 import MultipleTagSelection from "./MultipleSelectionTag";
 import MultipleSelectionTag from "./MultipleSelectionTag";
+import IngredientsCarousel from "./IngredientsCarousel";
 
 
 function AddIngredients(){
     return (
       <div>
-          <h1>
-              hola
-          </h1>
+      <h1>
+          Hola
+      </h1>
       </div>
     );
 }

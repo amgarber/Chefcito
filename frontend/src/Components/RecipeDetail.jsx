@@ -5,6 +5,21 @@ import '../css/RecipeDetail.css';
 import { motion } from 'framer-motion';
 import FavoriteButton from "./FavoriteButton";
 
+
+function formatTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours > 0 && remainingMinutes > 0) {
+        return `${hours}h ${remainingMinutes}m`;
+    } else if (hours > 0) {
+        return `${hours} hora${hours > 1 ? 's' : ''}`;
+    } else {
+        return `${remainingMinutes} min`;
+    }
+}
+
+
 function AccordionItem({ title, content, isExpanded, onToggle }) {
     return (
         <div className={`accordion-item ${isExpanded ? 'expanded' : ''}`}>
@@ -110,15 +125,15 @@ function RecipeDetail() {
 
                     <div className="info-bar">
                         <div className="item">
-                            <img src="/icons/Time.svg" alt="tiempo" className="Icon" />
-                            <span>{recipe.preparation_time} min</span>
+                            <img src="/icons/Time.svg" alt="tiempo" className="Icon-time" />
+                            <span>{formatTime(recipe.preparation_time)}</span>
                         </div>
                         <div className="item">
-                            <img src="/icons/fire.svg" alt="calorías" className="Icon" />
+                            <img src="/icons/fire.svg" alt="calorías" className="Icon-fire" />
                             <span>{recipe.calories || 'N/A'}</span>
                         </div>
                         <div className="item">
-                            <img src="/icons/star.svg" alt="rating" className="Icon" />
+                            <img src="/icons/star.svg" alt="rating" className="Icon-star" />
                             <span>{recipe.rating || '4/5'}</span>
                         </div>
                     </div>
@@ -151,9 +166,23 @@ function RecipeDetail() {
 
                 {activeTab === "tab1" && (
                     <div className="accordion-wrapper">
-                        <h2>Ingredientes</h2>
+                        <h2>Ingredients</h2>
                         {recipe.ingredients?.map((ingredient, index) => (
-                            <p key={index}>{ingredient}</p>
+                            <div className="ingredient-row" key={index}>
+                                <img
+                                    src={ingredient.imageUrl}
+                                    alt={ingredient.name}
+                                    className="ingredient-image"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = "/assets/placeholder-food.jpg";
+                                    }}
+                                />
+                                <span className="ingredient-name">{ingredient.name}</span>
+                                <span className="ingredient-quantity">
+                                  {ingredient.quantity} {ingredient.measurement_unit}
+                                </span>
+                            </div>
                         ))}
                     </div>
                 )}
