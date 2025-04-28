@@ -3,18 +3,32 @@ import Recipe from './Recipe';
 import { useNavigate } from 'react-router-dom';
 import '../css/HomePage.css';
 
+
+const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Intercambiar elementos
+    }
+    return array;
+};
+
 function PinterestLayout({ recipes }) {
     const navigate = useNavigate();
 
+
     const assignSizes = (recipes) => {
         const sizes = ['small', 'medium', 'large'];
-        return recipes.map((recipe, index) => ({
+        return recipes.map((recipe) => ({
             ...recipe,
-            size: sizes[index % sizes.length]
+            size: sizes[Math.floor(Math.random() * sizes.length)] // Tamaño aleatorio
         }));
     };
 
-    const recipesWithSizes = assignSizes(recipes);
+    // Mezclar las recetas aleatoriamente
+    const shuffledRecipes = shuffleArray([...recipes]);
+
+    // Asignar tamaños aleatorios
+    const recipesWithSizes = assignSizes(shuffledRecipes);
 
     const handleRecipeClick = (recipe) => {
         navigate(`/recipe/${recipe.id}`);
