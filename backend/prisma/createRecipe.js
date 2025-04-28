@@ -5,41 +5,15 @@ const prisma = new PrismaClient();
 async function main() {
     const recipesData = [
         {
-            name: 'Greek Salad',
-            description: 'Fresh cucumbers, tomatoes, red onion, feta cheese, and Kalamata olives, ' +
-                'dressed with olive oil and oregano. A taste of the Mediterranean.',
+            name: 'Choclate Cookies',
+            description: '\'Chocolate crinkle cookies are a Christmas classic—and they\'re so good they should be popular all year. Their distinctive, variegated appearance hints at what lies within; deep, dark fissures of chocolate peak through their crispy, crackly confectioners',
             difficulty: 'Fácil',
             preparation_time: 15,
             userId: 1,
-            imageUrl: 'https://chefcito.blob.core.windows.net/photos/GreekSalad.jpeg'
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/chocolateCookies.jpg'
         },
-        {
-            name: 'Lasagna',
-            description: '"Layers of pasta, rich meat sauce, creamy béchamel, and melted cheese baked to' +
-                ' golden perfection. A classic Italian comfort food.',
-            difficulty: 'Media',
-            preparation_time: 45,
-            userId: 1,
-            imageUrl: 'https://chefcito.blob.core.windows.net/photos/Lasagna.jpeg'
-        },
-        {
-            name: 'Carbonara Pasta',
-            description: 'Authentic Roman pasta with crispy pancetta, eggs, pecorino cheese, and black pepper. ' +
-                'Creamy without using actual cream.',
-            difficulty: 'Difícil',
-            preparation_time: 60,
-            userId: 1,
-            imageUrl: 'https://chefcito.blob.core.windows.net/photos/Pasta.jpeg'
-        },
-        {
-            name: 'Mushroom Risotto',
-            description: 'Creamy arborio rice cooked with wild mushrooms, white wine, and parmesan cheese. ' +
-                'Stirred constantly to release the starches',
-            difficulty: 'Difícil',
-            preparation_time: 60,
-            userId: 1,
-            imageUrl: 'https://chefcito.blob.core.windows.net/photos/MushroomRisotto.jpg'
-        }
+
+
     ];
 
     try {

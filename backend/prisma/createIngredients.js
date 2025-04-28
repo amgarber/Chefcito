@@ -5,25 +5,61 @@ const prisma = new PrismaClient();
 async function main() {
     const ingredientsData = [
         {
-            name: 'Chocolate',
-            type: 'Sweets',
-            imageUrl: ''
+            name: 'Water',
+            type: 'Base Ingredients',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/Water.webp'
         },
         {
             name: 'Cocoa Powder',
             type: 'Powder',
-            imageUrl: ''
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/cocoapower.webp'
         },
         {
             name: 'Flour',
             type: 'Base Ingredients',
-            imageUrl: 'https://chefcito.blob.core.windows.net/photos/BellPepperGreen.webp'
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/flour.webp'
         },
         {
             name: 'Brown Sugar',
             type: 'Sweetener',
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/brownsugar.webp'
-        }
+        },
+        {
+            name: 'Jalapeño',
+            type: 'Vegetable',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/Jalapeño.webp'
+        },
+        {
+            name: 'Salt',
+            type: 'other',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/salt.webp'
+        },
+        {
+            name: 'Pepper',
+            type: 'Vegetable',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/Pepper.webp'
+        },
+        {
+            name: 'Milk',
+            type: 'Liquid',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/milk.webp'
+        },
+        {
+            name: 'Paprika',
+            type: 'Spicy',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/paprika.webp'
+        },
+        {
+            name: 'Mushroom',
+            type: 'Vegetable',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/mushroom.webp'
+        },
+        {
+            name: 'Olive Oil',
+            type: 'oil',
+            imageUrl: 'https://chefcito.blob.core.windows.net/photos/OliveOil.webp'
+        },
+
     ];
 
     try {
