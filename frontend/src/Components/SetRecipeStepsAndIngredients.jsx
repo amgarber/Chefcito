@@ -161,9 +161,7 @@ function SetRecipeStepsAndIngredients() {
 
                 ))}
             </div>
-            <div className="tag-section">
-                <MultipleSelectionTag onChange={setSelectedFilters} />
-            </div>
+            <MultipleSelectionTag onChange={setSelectedFilters} />
 
             <div className="action-buttons">
 
