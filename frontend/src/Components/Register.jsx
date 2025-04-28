@@ -10,6 +10,8 @@ function Register({ FormHandle }) {
     const [password, setPassword] = useState('');
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
+    const [confirmPassword, setConfirmPassword] = useState('');
+
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -76,7 +78,7 @@ function Register({ FormHandle }) {
                             <input
                                 type="email"
                                 placeholder="Email Address"
-                                value={username}
+                                value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
@@ -97,8 +99,8 @@ function Register({ FormHandle }) {
                             <input
                                 type={type}
                                 placeholder="Confirm Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
                                 <Icon icon={icon} size={20} color="white" />
