@@ -9,14 +9,15 @@ function Profile({FormHandle}) {
     const handleLogout = () => {
         console.log("Saliendo...");
 
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
 
-
-        // Guardar login persistente
-        localStorage.setItem("isLoggedIn", "false");
+        // También podrías hacer directamente:
+        // localStorage.clear();
+        // si no guardás más cosas que quieras conservar
 
         // Cambiar estado a "Login"
         FormHandle("Login");
-
 
         // Redirigir a /login
         navigate("/login");

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/Login.css';
-import { Link, useNavigate } from 'react-router-dom'; // Usar Link de react-router-dom
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
@@ -12,6 +12,17 @@ const Login = ({ FormHandle }) => {
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
     const [rememberMe, setRememberMe] = useState(false);
+    const [checkingAuth, setCheckingAuth] = useState(true); // NUEVO
+
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate('/home');
+        } else {
+            setCheckingAuth(false);
+        }
+    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -34,11 +45,10 @@ const Login = ({ FormHandle }) => {
             setEmail('');
             setPassword('');
 
-            // Guardar login persistente
+
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("token", data.token);
 
-            // Cambiar estado y redirigir
             FormHandle("HomePage");
             navigate("/home");
 
@@ -57,6 +67,10 @@ const Login = ({ FormHandle }) => {
             setType('password');
         }
     };
+
+    if (checkingAuth) {
+        return <div>Cargando...</div>;
+    }
 
     return (
         <div className="general-div">
@@ -82,7 +96,7 @@ const Login = ({ FormHandle }) => {
                         <div className="input-group">
                             <img src="/Lock.svg" alt="Lock icon" />
                             <input
-                                type={type} // "password" o "text"
+                                type={type}
                                 name="password"
                                 placeholder="Password"
                                 value={password}
@@ -94,6 +108,7 @@ const Login = ({ FormHandle }) => {
                                 <Icon icon={icon} size={20} color="white" />
                             </span>
                         </div>
+
                         <div className="remember-me">
                             <input
                                 type="checkbox"
