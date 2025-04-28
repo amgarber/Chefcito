@@ -5,18 +5,18 @@ const prisma = new PrismaClient();
 async function main() {
     const ingredientsData = [
         {
-            name: 'Garlic',
-            type: 'Vegetable',
-            imageUrl: 'https://chefcito.blob.core.windows.net/ingredients/Ajo.webp'
+            name: 'Chocolate',
+            type: 'Sweets',
+            imageUrl: ''
         },
         {
-            name: 'Baking Powder',
-            type: 'Leavening Agent',
-            imageUrl: 'https://chefcito.blob.core.windows.net/ingredients/bakingPower.webp'
+            name: 'Cocoa Powder',
+            type: 'Powder',
+            imageUrl: ''
         },
         {
-            name: 'Green Bell Pepper',
-            type: 'Vegetable',
+            name: 'Flour',
+            type: 'Base Ingredients',
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/BellPepperGreen.webp'
         },
         {

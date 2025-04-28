@@ -71,7 +71,7 @@ function SetRecipeStepsAndIngredients() {
             axios.patch('/api/recipes', recipeData)
                 .then(response => {
                     console.log('Recipe updated successfully:', response.data);
-                    navigate('/some-other-page');
+                    navigate('/home');
                 })
                 .catch(error => {
                     console.error('Error updating recipe:', error);
@@ -157,14 +157,16 @@ function SetRecipeStepsAndIngredients() {
                             onChange={(e) => handleStepChange(index, e.target.value)}
                         />
                         <button onClick={() => removeStep(index)}>Remove</button>
-                        <MultipleSelectionTag onChange={setSelectedFilters} />
                     </div>
+
                 ))}
             </div>
+            <MultipleSelectionTag onChange={setSelectedFilters} />
 
             <div className="action-buttons">
+
                 <button onClick={handleSubmit}>Save Recipe</button>
-                <button onClick={() => navigate('/some-other-page')}>Cancel</button>
+                <button onClick={() => navigate('/home')}>Cancel</button>
             </div>
         </div>
     );
