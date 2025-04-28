@@ -157,12 +157,16 @@ function SetRecipeStepsAndIngredients() {
                             onChange={(e) => handleStepChange(index, e.target.value)}
                         />
                         <button onClick={() => removeStep(index)}>Remove</button>
-                        <MultipleSelectionTag onChange={setSelectedFilters} />
                     </div>
+
                 ))}
+            </div>
+            <div className="tag-section">
+                <MultipleSelectionTag onChange={setSelectedFilters} />
             </div>
 
             <div className="action-buttons">
+
                 <button onClick={handleSubmit}>Save Recipe</button>
                 <button onClick={() => navigate('/some-other-page')}>Cancel</button>
             </div>
