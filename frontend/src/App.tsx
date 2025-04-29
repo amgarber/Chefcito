@@ -11,47 +11,64 @@ import Plus2 from "./Components/Plus2";
 import AddIngredients from "./Components/AddIngredients";
 import CreateRecipe from "./Components/CreateRecipe";
 import SetRecipeStepsAndIngredients from "./Components/SetRecipeStepsAndIngredients";
+import PrivateRoute from "./Components/PrivateRoute";
+import PublicRoute from "./Components/PublicRoute";
 
 const Planner = () => <div style={{ padding: '20px' }}><h1>Planes</h1></div>;
-//const Profile = () => <div style={{ padding: '20px' }}><h1>Mi perfil</h1></div>;
-
 
 function App() {
-    const [Form, setForm] = useState('Login');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const isLoggedIn = localStorage.getItem("isLoggedIn");
-        if (isLoggedIn === "true") {
-            setForm("HomePage");
-        }
+        setIsAuthenticated(isLoggedIn === "true");
     }, []);
+
+    // Función para login y logout
+    const handleAuthChange = (status: "login" | "logout") => {
+        if (status === "login") {
+            localStorage.setItem("isLoggedIn", "true");
+            setIsAuthenticated(true);
+        } else if (status === "logout") {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("token");
+            setIsAuthenticated(false);
+        }
+    };
+
 
     return (
         <Router>
-            {Form !== "HomePage" ? (
-                <>
-                    {Form === "Login" && <Login FormHandle={setForm} />}
-                    {Form === "Register" && <Register FormHandle={setForm} />}
-                </>
-            ) : (
-                <Routes>
-                    <Route path="/" element={<LayoutWithNav><HomePage FormHandle={setForm} /></LayoutWithNav>} />
-                    <Route path="/home" element={<LayoutWithNav><HomePage FormHandle={setForm} /></LayoutWithNav>} />
-                    <Route path="/planner" element={<LayoutWithNav><Planner /></LayoutWithNav>} />
-                    <Route path="/plus" element={<LayoutWithNav><Plus  /></LayoutWithNav>} />
-                    <Route path="/plus" element={<LayoutWithNav><CreateRecipe  /></LayoutWithNav>} />
-                    <Route path="/profile" element={<LayoutWithNav><Profile FormHandle={setForm} /></LayoutWithNav>} />
-                    <Route path="/recipe/:id" element={<RecipeDetail />} />
-                    <Route path="/plus2" element={<LayoutWithNav><Plus2  /></LayoutWithNav>} />
-                    <Route path="/AddIngredients" element={<LayoutWithNav><AddIngredients  /></LayoutWithNav>} />
-                    <Route path="/CreateRecipe" element={<LayoutWithNav><CreateRecipe  /></LayoutWithNav>} />
-                    <Route path="/SetRecipeStepsAndIngredients" element={<LayoutWithNav><SetRecipeStepsAndIngredients  /></LayoutWithNav>} />
+            <Routes>
+                {/* Public routes */}
+                <Route path="/login" element={
+                    <PublicRoute>
+                        <Login FormHandle={handleAuthChange} />
+                    </PublicRoute>
+                } />
+                <Route path="/register" element={
+                    <PublicRoute>
+                        <Register FormHandle={handleAuthChange} />
+                    </PublicRoute>
+                } />
 
-                </Routes>
-            )}
+                {/* Private routes */}
+                <Route path="/" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/home" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/planner" element={<PrivateRoute><LayoutWithNav><Planner /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/plus" element={<PrivateRoute><LayoutWithNav><Plus /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/plus2" element={<PrivateRoute><LayoutWithNav><Plus2 /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/profile" element={<PrivateRoute><LayoutWithNav><Profile FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/recipe/:id" element={<PrivateRoute><RecipeDetail /></PrivateRoute>} />
+                <Route path="/AddIngredients" element={<PrivateRoute><LayoutWithNav><AddIngredients /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/CreateRecipe" element={<PrivateRoute><LayoutWithNav><CreateRecipe /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/SetRecipeStepsAndIngredients" element={<PrivateRoute><LayoutWithNav><SetRecipeStepsAndIngredients /></LayoutWithNav></PrivateRoute>} />
+
+
+                <Route path="*" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
+            </Routes>
         </Router>
     );
 }
-
 
 export default App;

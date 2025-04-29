@@ -11,14 +11,14 @@ async function main() {
         { Name: 'Quick Lunch' },
         { Name: 'Keto' },
         { Name: 'Dessert' },
-        { Name : 'Dinner'},
-        { Name : 'Snack'},
-        { Name : 'Lunch'},
-        { Name : 'Spicy'},
-        { Name : 'Mediterranean'},
-        { Name : 'Italian'},
-        { Name : 'Japanase'}
-
+        { Name: 'Dinner' },
+        { Name: 'Snack' },
+        { Name: 'Lunch' },
+        { Name: 'Spicy' },
+        { Name: 'Indian' },
+        { Name: 'Mediterranean' },
+        { Name: 'Italian' },
+        { Name: 'Japanese' },
     ];
 
     try {
