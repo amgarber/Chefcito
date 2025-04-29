@@ -4,24 +4,23 @@ const prisma = new PrismaClient();
 
 async function main() {
     try {
-        // Borramos primero las tablas hijas para no violar constraints de Foreign Key
-         await prisma.recipe_Type.deleteMany({});
-         await prisma.recipe_Ingredient.deleteMany({});
-         await prisma.shopping_List_Ingredient.deleteMany({});
-         await prisma.ingredient_Image.deleteMany({});
-         await prisma.favourite.deleteMany({});
-         await prisma.instructions.deleteMany({});
-         await prisma.recipe.deleteMany({});
-        await prisma.ingredients.deleteMany({});
-         await prisma.recipe_Filter.deleteMany({});
-         await prisma.shopping_List.deleteMany({});
-         await prisma.planner.deleteMany({});
-        await prisma.image.deleteMany({});
-         //await prisma.user.deleteMany({});
+        console.log('🗑️ Cleaning Recipes, Ingredients, and related relations...');
 
-        console.log('✅ Todos los datos fueron eliminados exitosamente');
+        // Delete relations first
+        await prisma.recipe_Ingredient.deleteMany({});
+        await prisma.recipe_Type.deleteMany({});
+        await prisma.instructions.deleteMany({});
+        await prisma.favourite.deleteMany({}); // Opcional: favoritos de recetas si tenés
+        await prisma.ingredient_Image.deleteMany({});
+
+        // Now delete main entities
+        await prisma.recipe.deleteMany({});
+        await prisma.ingredients.deleteMany({});
+        await prisma.image.deleteMany({}); // Si querés también eliminar las imágenes asociadas a recetas
+
+        console.log('✅ Recipes, Ingredients, and relations cleaned successfully.');
     } catch (error) {
-        console.error('❌ Error al eliminar datos:', error);
+        console.error('❌ Error cleaning database:', error);
     } finally {
         await prisma.$disconnect();
     }
