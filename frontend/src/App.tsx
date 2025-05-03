@@ -13,6 +13,8 @@ import CreateRecipe from "./Components/CreateRecipe";
 import SetRecipeStepsAndIngredients from "./Components/SetRecipeStepsAndIngredients";
 import PrivateRoute from "./Components/PrivateRoute";
 import PublicRoute from "./Components/PublicRoute";
+import EditProfile from "./Components/EditProfile";
+
 
 const Planner = () => <div style={{ padding: '20px' }}><h1>Planes</h1></div>;
 
@@ -63,6 +65,7 @@ function App() {
                 <Route path="/AddIngredients" element={<PrivateRoute><LayoutWithNav><AddIngredients /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/CreateRecipe" element={<PrivateRoute><LayoutWithNav><CreateRecipe /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/SetRecipeStepsAndIngredients" element={<PrivateRoute><LayoutWithNav><SetRecipeStepsAndIngredients /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/edit-profile" element={<PrivateRoute><LayoutWithNav><EditProfile /></LayoutWithNav></PrivateRoute>} />
 
 
                 <Route path="*" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />

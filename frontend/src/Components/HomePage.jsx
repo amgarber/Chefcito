@@ -18,9 +18,9 @@ function HomePage({ FormHandle }) {
     const [selectedIngredients, setSelectedIngredients] = useState([]);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-        const decoded = jwtDecode(token);
+        const tokenData = localStorage.getItem('tokenData');
+        if (!tokenData) return;
+        const decoded = JSON.parse(tokenData);
         setToken(decoded);
     }, []);
 

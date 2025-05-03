@@ -85,5 +85,40 @@ const login = async (req, res) => {
         res.status(500).json({error: "Error del servidor"});
     }
 };
+const updateUser = async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
-module.exports = { register, login };
+    if (!token) {
+        return res.status(401).json({ message: 'Token no encontrado' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.userId; // depende de qué guardaste en tu token
+        const { username } = req.body;
+
+        // ⚡ Verificar si el username ya existe en otro usuario
+        const existingUser = await prisma.user.findUnique({
+            where: { username }
+        });
+
+        if (existingUser && existingUser.id !== userId) {
+            return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' });
+        }
+
+        // ⚡ Actualizar el usuario
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { username },
+        });
+
+        res.json(updatedUser);
+    } catch (error) {
+        console.error(error);
+        res.status(403).json({ message: 'Token inválido o error al actualizar' });
+    }
+};
+
+
+module.exports = { register, login, updateUser };

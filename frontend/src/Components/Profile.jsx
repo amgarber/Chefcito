@@ -26,11 +26,12 @@ function Profile({FormHandle}) {
     const [token, setToken] = useState('');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if(!token) return
-        const decoded = jwtDecode(token);
+        const tokenData = localStorage.getItem('tokenData');
+        if (!tokenData) return;
+        const decoded = JSON.parse(tokenData);
         setToken(decoded);
     }, []);
+
 
     return (
         <>
@@ -63,7 +64,7 @@ function Profile({FormHandle}) {
                     <i className="bx bx-chevron-right chevronIcon"></i>
                 </button>
 
-                <button type="submit" className="ProfileButton">
+                <button type="submit" className="ProfileButton" onClick={() => navigate("/edit-profile")}>
                     <img className="UserIcon" src="/assets/User.svg" alt="User Icon"/>
                     <h4>My Account</h4>
                     <i className="bx bx-chevron-right chevronIcon"></i>

@@ -7,10 +7,12 @@ const { login } = require('../controllers/authController');
 
 
 const router = express.Router();
+const { updateUser } = require('../controllers/authController');
 
 router.post('/register', register);
 //router.post('/login', login);
 
 router.post('/login', login);
+router.put('/edit-profile', updateUser);
 
 module.exports = router;

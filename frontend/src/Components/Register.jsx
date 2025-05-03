@@ -3,8 +3,10 @@ import '../css/Register.css';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
+import {useNavigate} from "react-router-dom";
 
 function Register({ FormHandle }) {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -126,7 +128,7 @@ function Register({ FormHandle }) {
                 <div className="footer-div">
                     <div className="register-footer">
                         Already have an account?{' '}
-                        <span className="link" onClick={() => FormHandle('Login')}>
+                        <span className="link" onClick={() => navigate('/login')}>
                             Sign in here
                         </span>
                     </div>
