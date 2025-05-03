@@ -15,7 +15,7 @@ async function main() {
             description: 'A fresh and colorful salad made with crisp greens, juicy tomatoes, olives, feta cheese, and a light dressing.',
             difficulty: 'Easy',
             preparation_time: 10,
-            userId: 1,
+            userId: 7,
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/Salad.webp',
             instructions: [
                 { stepNumber: '1', description: 'Wash and dry the lettuce.' },
@@ -40,7 +40,7 @@ async function main() {
             description: 'Juicy beef burger with melted cheese, fresh lettuce, tomato, and crispy fries on the side.',
             difficulty: 'Easy',
             preparation_time: 20,
-            userId: 1, // Ajustá si necesitás
+            userId: 7, // Ajustá si necesitás
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/burguer.webp', // 👉 tenés que subir la imagen a tu blob como cheeseburger.webp
             instructions: [
                 { stepNumber: '1', description: 'Form beef patties and season them with salt and pepper.' },
@@ -106,7 +106,7 @@ async function main() {
             description: 'Creamy risotto-style rice served with perfectly roasted fish, seasoned and pan-seared to perfection.',
             difficulty: 'Medium',
             preparation_time: 30,
-            userId: 1, // Asegurate que exista
+            userId: 7, // Asegurate que exista
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/free-photo-of-rice-with-roasted-fish.jpeg', // 👉 subí esta imagen a tu blob
             instructions: [
                 { stepNumber: '1', description: 'Season the fish fillet with salt and pepper.' },
@@ -166,7 +166,7 @@ async function main() {
             description: 'A warm and comforting creamy tomato soup made with fresh basil and topped with shaved Parmesan cheese.',
             difficulty: 'Easy',
             preparation_time: 25,
-            userId: 1, // Asegurate que exista
+            userId: 7, // Asegurate que exista
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/CreamySoup.jpg', // 👉 subí esta imagen a tu blob storage
             instructions: [
                 { stepNumber: '1', description: 'In a large pot, sauté chopped onions and garlic in olive oil until translucent.' },
@@ -226,7 +226,7 @@ async function main() {
             description: 'Refreshing and creamy lemon cheesecake with a buttery biscuit base, topped with whipped cream and lemon zest.',
             difficulty: 'Medium',
             preparation_time: 45,
-            userId: 1, // Asegurate que exista
+            userId: 7, // Asegurate que exista
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/foodiesfeed.com_refreshing-lemon-cheesecake-slice-with-mint-garnish.jpg', // 👉 subí esta imagen a tu blob
             instructions: [
                 { stepNumber: '1', description: 'Prepare the biscuit base by crushing biscuits and mixing with melted butter. Press into a cake tin.' },
@@ -286,7 +286,7 @@ async function main() {
             description: 'A delicious seafood noodle soup with shrimp, quail eggs, and fresh herbs.',
             difficulty: 'Medium',
             preparation_time: 25,
-            userId: 1,
+            userId: 7,
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/cooked-seafood.jpeg', // subí esta imagen a tu blob
             instructions: [
                 { stepNumber: '1', description: 'Boil the seafood in seasoned water.' },
@@ -307,7 +307,7 @@ async function main() {
             description: 'Fluffy pancakes stacked with fresh berries and orange slices, perfect for breakfast.',
             difficulty: 'Easy',
             preparation_time: 20,
-            userId: 1,
+            userId: 7,
             imageUrl: 'https://chefcito.blob.core.windows.net/photos/pancakes.webp', // subí esta imagen a tu blob
             instructions: [
                 { stepNumber: '1', description: 'Mix the pancake batter until smooth.' },
