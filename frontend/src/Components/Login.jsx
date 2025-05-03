@@ -122,7 +122,7 @@ const Login = ({ FormHandle }) => {
                 <div className="footer-div">
                     <div className="login-footer">
                         Don’t have an account?{' '}
-                        <span className="link" onClick={() => FormHandle("Register")}>
+                        <span className="link" onClick={() => navigate("/register")}>
                             Sign up here.
                         </span>
                     </div>

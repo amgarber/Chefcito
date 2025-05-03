@@ -31,6 +31,30 @@ function Profile({FormHandle}) {
         const decoded = jwtDecode(token);
         setToken(decoded);
     }, []);
+    const [editing, setEditing] = useState(false);
+    const [newUsername, setNewUsername] = useState('');
+
+    const handleKeyPress = async (e) => {
+        if (e.key === 'Enter') {
+            try {
+                const tokenLocal = localStorage.getItem('token');
+                const response = await fetch('/api/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${tokenLocal}`
+                    },
+                    body: JSON.stringify({ username: newUsername })
+                });
+
+                const data = await response.json();
+                setToken(prev => ({ ...prev, username: data.username }));
+                setEditing(false);
+            } catch (error) {
+                console.error('Error actualizando usuario:', error);
+            }
+        }
+    };
 
     return (
         <>
@@ -41,7 +65,27 @@ function Profile({FormHandle}) {
                 <div className="Profile">
                     <h1 className="profile-title">Profile</h1>
                     <img className="userPhoto" src="/assets/UserPic.svg" alt="User"/>
-                    <h3 className="UserName"> {token.username} </h3>
+                    {editing ? (
+                        <input
+                            type="text"
+                            value={newUsername}
+                            onChange={(e) => setNewUsername(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                            onBlur={() => setEditing(false)} // sale si hace click fuera
+                            autoFocus
+                            className="UserNameInput"
+                        />
+                    ) : (
+                        <h3
+                            className="UserName"
+                            onDoubleClick={() => {
+                                setNewUsername(token.username);
+                                setEditing(true);
+                            }}
+                        >
+                            {token.username}
+                        </h3>
+                    )}
                 </div>
             </div>
             <div className="Profile-Buttons">

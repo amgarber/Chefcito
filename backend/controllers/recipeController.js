@@ -153,7 +153,7 @@ const createRecipe = async (req, res) => {
 
                 user: {
                     connect: {
-                        id: req.user?.id || 1 // hay que agregar aca la autenticacion con el token para que guarde el verdadero id del usuario. ahora le puse 1 para que funcione
+                        id: req.user?.id || 7 // hay que agregar aca la autenticacion con el token para que guarde el verdadero id del usuario. ahora le puse 1 para que funcione
                     }
                 },
 

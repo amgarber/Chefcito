@@ -86,4 +86,20 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+const updateUser = async (req, res) => {
+    const { username } = req.body;
+    const userId = req.userId; // asumiendo que ya en tu middleware sacás el userId del token
+
+    try {
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { username },
+        });
+        res.json(updatedUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating username' });
+    }
+};
+
+module.exports = { register, login, updateUser };
