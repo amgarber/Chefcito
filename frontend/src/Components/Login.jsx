@@ -4,9 +4,12 @@ import { Link, useNavigate } from 'react-router-dom'; // Usar Link de react-rout
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
+import { jwtDecode } from 'jwt-decode';
+
 
 const Login = ({ FormHandle }) => {
     const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [type, setType] = useState('password');
@@ -37,6 +40,9 @@ const Login = ({ FormHandle }) => {
             // Guardar login persistente
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("token", data.token);
+            const decoded = jwtDecode(data.token);
+            localStorage.setItem("tokenData", JSON.stringify(decoded));
+
 
             // Cambiar estado y redirigir
             FormHandle("HomePage");

@@ -11,12 +11,8 @@ function Profile({FormHandle}) {
 
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("token");
+        localStorage.removeItem("tokenData");
 
-        // También podrías hacer directamente:
-        // localStorage.clear();
-        // si no guardás más cosas que quieras conservar
-
-        // Cambiar estado a "Login"
         FormHandle("Login");
 
         // Redirigir a /login
@@ -90,7 +86,7 @@ function Profile({FormHandle}) {
                 </div>
             </div>
             <div className="Profile-Buttons">
-                <button type="submit" className="ProfileButton">
+                <button type="submit" className="ProfileButton" onClick={() => navigate("/favorite-recipes")}>
                     <img className="LikeIcon" src="/assets/like.svg" alt="Like icon"/>
                     <h4>Favorite Recipes</h4>
                     <i className="bx bx-chevron-right chevronIcon"></i>

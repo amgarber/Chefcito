@@ -94,11 +94,12 @@ function RecipeDetail() {
 
     return (
         <div className="recipe-box">
-            <button type="submit" className="exit-button">
+            <button type="submit" className="exit-button-RD">
                 <img className="exit" src="/assets/exit.svg" alt="exit" onClick={() => navigate("/home")} />
             </button>
 
-            <FavoriteButton />
+            <FavoriteButton recipeId={recipe.id} />
+
 
             <img
                 className="background-image"

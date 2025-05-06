@@ -5,6 +5,8 @@ const authRoutes = require('./routes/authRoutes');
 const ingredientsRoutes = require('./routes/ingredientsRoutes');
 const recipeRoutes = require('./routes/recipes');
 const ingredientsCreateRoutes = require('./routes/ingredientsCreateRoutes');
+const favoritesRoutes = require('./routes/favorites');
+
 
 
 
@@ -18,6 +20,9 @@ app.use('/api/recipes', recipeRoutes); // sin multer acá
 app.use('/api/ingredients', ingredientsRoutes);
 app.use('/api/ingredients', ingredientsRoutes);
 app.use('/api/ingredients/create', ingredientsCreateRoutes);
+app.use('/api/favorites', favoritesRoutes);
+
+
 
 const filterRoutes = require('./routes/filters');
 app.use('/api/filters', filterRoutes);

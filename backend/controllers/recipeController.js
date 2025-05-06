@@ -248,6 +248,9 @@ const addIngredientsAndSteps = async (req, res) => {
         console.error('Error adding ingredients, steps or filters:', error);
         res.status(500).json({ message: 'Failed to update recipe' });
     }
+
+
+
 };
 
 module.exports = {

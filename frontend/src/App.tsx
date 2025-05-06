@@ -15,6 +15,7 @@ import PrivateRoute from "./Components/PrivateRoute";
 import PublicRoute from "./Components/PublicRoute";
 import EditProfile from "./Components/EditProfile";
 import Planner from "./Components/Planner";
+import FavoriteRecipes from "./Components/FavoriteRecipes";
 
 
 function App() {
@@ -65,6 +66,8 @@ function App() {
                 <Route path="/CreateRecipe" element={<PrivateRoute><LayoutWithNav><CreateRecipe /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/SetRecipeStepsAndIngredients" element={<PrivateRoute><LayoutWithNav><SetRecipeStepsAndIngredients /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/edit-profile" element={<PrivateRoute><LayoutWithNav><EditProfile /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/favorite-recipes" element={<PrivateRoute><FavoriteRecipes /></PrivateRoute>} />
+
 
 
                 <Route path="*" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />

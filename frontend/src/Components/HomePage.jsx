@@ -24,7 +24,7 @@ function HomePage({ FormHandle }) {
         setToken(decoded);
     }, []);
 
-    // ✅ Actualiza recetas al cambiar búsqueda o filtros
+
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
