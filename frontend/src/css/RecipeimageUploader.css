@@ -1,7 +1,6 @@
 /* RecipeImageUploader.css */
 .image-uploader {
-    width: 100%;
-    max-width: 300px;
+    width: 100vw;
     aspect-ratio: 1/1;
     background-color: rgba(63, 60, 60, 0.91);
     border-radius: 16px;

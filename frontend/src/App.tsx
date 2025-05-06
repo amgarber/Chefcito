@@ -14,9 +14,8 @@ import SetRecipeStepsAndIngredients from "./Components/SetRecipeStepsAndIngredie
 import PrivateRoute from "./Components/PrivateRoute";
 import PublicRoute from "./Components/PublicRoute";
 import EditProfile from "./Components/EditProfile";
+import Planner from "./Components/Planner";
 
-
-const Planner = () => <div style={{ padding: '20px' }}><h1>Planes</h1></div>;
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
