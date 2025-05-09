@@ -16,11 +16,18 @@ model User {
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
   picture    String?
+
   favourites Favourite[]
   planner    Planner?
-  recipes    Recipe[]
+  recipesAuthored Recipe[]  // ✅ Cambiado
+  recipesApproved Recipe[] @relation("ApprovedByAdmin")  // ✅ Cambiado
   lists      Shopping_List[]
+
+  approvalRequestsSent   Approval_Request[] @relation("Solicitor")
+  approvalRequestsHandled Approval_Request[] @relation("Approver")
 }
+
+
 
 model Recipe {
   id               Int                 @id @default(autoincrement())
@@ -30,12 +37,20 @@ model Recipe {
   preparation_time Int
   UserId           Int
   imageId          Int?                @unique
+
+  Approval_Status     ApprovalStatus      @default(PENDING)
+  id_approval_admin   Int?
+  Privacy_settings PrivacySetting @default(PUBLIC)
+
   favourites       Favourite[]
   instructions     Instructions[]
-  user             User                @relation(fields: [UserId], references: [id], onDelete: Cascade)
-  image            Image?              @relation(fields: [imageId], references: [id])
   ingredients      Recipe_Ingredient[]
   recipeTypes      Recipe_Type[]
+  requests         Approval_Request[]
+
+  user             User   @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  image            Image? @relation(fields: [imageId], references: [id])
+  admin            User?  @relation("ApprovedByAdmin", fields: [id_approval_admin], references: [id])
 }
 
 model Image {
@@ -50,7 +65,7 @@ model Favourite {
   recipe    Recipe @relation(fields: [id_recipe], references: [id])
   user      User   @relation(fields: [id_user], references: [id])
 
-  @@unique([id_user, id_recipe])
+  @@id([id_user, id_recipe])
 }
 
 model Ingredients {
@@ -127,8 +142,34 @@ model Planner {
   id_user Int  @unique
   user    User @relation(fields: [id_user], references: [id], onDelete: Cascade)
 }
+model Approval_Request {
+  id_solicitation   Int    @id @default(autoincrement())
+  id_recipe         Int
+  id_user_solicitor Int
+  id_admin          Int?
+  status            String @default("pending") // "pending" | "approved" | "rejected"
+
+  recipe    Recipe @relation(fields: [id_recipe], references: [id])
+  solicitor User   @relation("Solicitor", fields: [id_user_solicitor], references: [id])
+  admin     User?  @relation("Approver", fields: [id_admin], references: [id])
+
+  @@index([id_recipe])
+  @@index([id_user_solicitor])
+  @@index([id_admin])
+}
+
+
 
 enum Role {
   ADMIN
   USER
+}
+enum PrivacySetting {
+  PRIVATE
+  PUBLIC
+}
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

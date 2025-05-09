@@ -123,7 +123,7 @@ function RecipeDetail() {
                 <div className="drag-handle" />
                 <div className="Sheet-Content">
                     <h2 className="recipe-title2"><span>{recipe.name}</span></h2>
-
+                    <h3 className="recipe-author">By {recipe.author}</h3>
                     <div className="info-bar">
                         <div className="item">
                             <img src="/icons/Time.svg" alt="tiempo" className="Icon-time" />

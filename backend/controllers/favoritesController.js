@@ -129,11 +129,60 @@ const isFavorite = async (req, res) => {
             res.status(500).json({message: 'Error obteniendo favoritos'});
         }
     };
+const deleteFavorite = async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ message: 'Token requerido' });
+
+    const token = authHeader.split(' ')[1];
+    let userId;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.userId;
+    } catch (err) {
+        return res.status(403).json({ message: 'Token inválido' });
+    }
+
+    const recipeId = parseInt(req.params.id);
+    console.log('🔍 Intentando borrar favorito:', { userId, recipeId });
+
+    try {
+        const exists = await prisma.favourite.findUnique({
+            where: {
+                id_user_id_recipe: {
+                    id_user: userId,
+                    id_recipe: recipeId
+                }
+            }
+        });
+
+        if (!exists) {
+            console.log('🚫 No se encontró el favorito en la base de datos');
+            return res.status(404).json({ message: 'No se encontró el favorito' });
+        }
+
+        await prisma.favourite.delete({
+            where: {
+                id_user_id_recipe: {
+                    id_user: userId,
+                    id_recipe: recipeId
+                }
+            }
+        });
+
+        console.log('✅ Favorito eliminado');
+        res.status(200).json({ message: 'Favorito eliminado' });
+    } catch (error) {
+        console.error('❌ Error al eliminar favorito:', error);
+        res.status(500).json({ error: 'Error en el servidor al eliminar favorito' });
+    }
+};
 
     module.exports = {
         toggleFavorite,
         isFavorite,
-        getAllFavorites
+        getAllFavorites,
+        deleteFavorite
     };
 
 

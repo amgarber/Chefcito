@@ -31,38 +31,68 @@ const FavoriteRecipes = () => {
         navigate("/home");
     };
 
+    const handleRemoveFavorite = async (recipeId) => {
+        const token = localStorage.getItem("token");
+        try {
+            const res = await fetch(`http://localhost:3001/api/favorites/${recipeId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (res.ok) {
+                setFavorites(prev => prev.filter(fav => fav.id !== recipeId));
+            } else {
+                console.error("Error al eliminar favorito");
+            }
+        } catch (err) {
+            console.error("Error en la solicitud DELETE:", err);
+        }
+    };
+
+
     return (
         <div className="favorites-container">
-            <h2>My Favorites</h2>
+            <div className="favorites-header">
+                <i className='bx bx-left-arrow-alt' onClick={() => navigate('/profile')}></i>
+                <h2>My Favorites</h2>
+            </div>
 
-            {favorites.length === 0 ? (
-                <div className="empty-state">
-                    <img src="/assets/empty-box.svg" alt="Empty" className="BoxIcon" />
-                    <p className="subtitle">Your favourites list is empty!</p>
-                    <p className="subtitle2">Explore food dishes and add them to favorites to show them here.</p>
-                    <button className="explore-btn" onClick={handleExplore}>
-                        Explore Food
-                    </button>
-                </div>
-            ) : (
-                <ul className="favorites-list">
-                    {favorites.map((item) => (
-                        <li key={item.id} className="favorite-card">
-                            <img src={item.imageUrl} alt={item.name} className="favorite-image" />
-                            <div className="favorite-info">
-                                <h3>{item.name}</h3>
-                                <p>{item.description}</p>
-                                <div className="favorite-meta">
-                                    <span>⭐ {item.difficulty}</span>
-                                    <span>⏱ {item.preparationTime} min</span>
+            <div className="favorites-content">
+                {favorites.length === 0 ? (
+                    <div className="empty-state">
+                        <img src="/assets/empty-box.svg" alt="Empty" className="BoxIcon" />
+                        <p className="subtitle">Your favourites list is empty!</p>
+                        <p className="subtitle2">Explore food dishes and add them to favorites to show them here.</p>
+                        <button className="explore-btn" onClick={handleExplore}>
+                            Explore Food
+                        </button>
+                    </div>
+                ) : (
+                    <ul className="favorites-list">
+                        {favorites.map((item) => (
+                            <li key={item.id} className="favorite-card">
+                                <img src={item.imageUrl} alt={item.name} className="favorite-image" onClick={() => navigate(`/recipe/${item.id}`)}
+                                />
+                                <div className="favorite-info">
+                                    <h3 className="titulo">{item.name}</h3>
+                                    <p className="favorite-description">{item.description}</p>
+                                    <div className="favorite-meta">
+                                        <span>⭐ {item.difficulty}</span>
+                                        <span>⏱ {item.preparationTime} min</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <button className="remove-fav-btn">💔</button>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                                <button className="corner-remove-btn" onClick={() => handleRemoveFavorite(item.id)}>
+                                    <i className='bx bx-minus'></i>
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
+
     );
 };
 

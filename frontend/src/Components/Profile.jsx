@@ -92,7 +92,7 @@ function Profile({FormHandle}) {
                     <i className="bx bx-chevron-right chevronIcon"></i>
                 </button>
 
-                <button type="submit" className="ProfileButton">
+                <button type="submit" className="ProfileButton" onClick={()=> navigate("/My-Recipes")}>
                     <img className="WhiskIcon" src="/assets/whisk.svg" alt="Whisk icon"/>
                     <h4>My Recipes</h4>
                     <i className="bx bx-chevron-right chevronIcon"></i>

@@ -294,3 +294,8 @@
     font-size: 0.9rem;
     padding-left: 8px;
 }
+.recipe-author{
+    font-weight: lighter;
+    margin-top: -10px;
+
+}

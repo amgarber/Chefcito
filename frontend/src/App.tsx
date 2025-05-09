@@ -16,6 +16,7 @@ import PublicRoute from "./Components/PublicRoute";
 import EditProfile from "./Components/EditProfile";
 import Planner from "./Components/Planner";
 import FavoriteRecipes from "./Components/FavoriteRecipes";
+import MyRecipes from "./Components/MyRecipes";
 
 
 function App() {
@@ -67,6 +68,8 @@ function App() {
                 <Route path="/SetRecipeStepsAndIngredients" element={<PrivateRoute><LayoutWithNav><SetRecipeStepsAndIngredients /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/edit-profile" element={<PrivateRoute><LayoutWithNav><EditProfile /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/favorite-recipes" element={<PrivateRoute><FavoriteRecipes /></PrivateRoute>} />
+                <Route path="/My-Recipes" element={<PrivateRoute><MyRecipes /></PrivateRoute>} />
+
 
 
 

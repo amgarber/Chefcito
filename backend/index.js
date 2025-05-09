@@ -1,33 +1,27 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+
 const authRoutes = require('./routes/authRoutes');
 const ingredientsRoutes = require('./routes/ingredientsRoutes');
 const recipeRoutes = require('./routes/recipes');
 const ingredientsCreateRoutes = require('./routes/ingredientsCreateRoutes');
 const favoritesRoutes = require('./routes/favorites');
-
-
-
+const filterRoutes = require('./routes/filters');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
-app.use('/api', authRoutes);
-app.use('/api/recipes', recipeRoutes); // sin multer acá
-app.use('/api/ingredients', ingredientsRoutes);
-app.use('/api/ingredients', ingredientsRoutes);
-app.use('/api/ingredients/create', ingredientsCreateRoutes);
-app.use('/api/favorites', favoritesRoutes);
 
-
-
-const filterRoutes = require('./routes/filters');
-app.use('/api/filters', filterRoutes);
-
-
+// ✅ Rutas bien montadas
+app.use('/api', authRoutes); // login, register, etc
+app.use('/api/recipes', recipeRoutes); // recetas
+app.use('/api/ingredients', ingredientsRoutes); // listado ingredientes
+app.use('/api/ingredients/create', ingredientsCreateRoutes); // carga ingrediente nuevo
+app.use('/api/favorites', favoritesRoutes); // favoritos (con DELETE /:id)
+app.use('/api/filters', filterRoutes); // filtros de recetas
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);

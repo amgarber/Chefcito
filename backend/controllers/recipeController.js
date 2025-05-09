@@ -9,7 +9,8 @@ const getAllRecipes = async (req, res) => {
         const recipes = await prisma.recipe.findMany({
             where: {
                 AND: [
-                    // 🔍 Filtrar por nombre
+                    { Privacy_settings: 'PUBLIC' }, // ✅ solo públicas
+
                     query
                         ? {
                             name: {
@@ -19,7 +20,6 @@ const getAllRecipes = async (req, res) => {
                         }
                         : {},
 
-                    // 🏷️ Filtrar por tags/filtros
                     filters
                         ? {
                             recipeTypes: {
@@ -34,7 +34,6 @@ const getAllRecipes = async (req, res) => {
                         }
                         : {},
 
-                    // 🧅 Filtrar por ingredientes
                     ingredients
                         ? {
                             ingredients: {
@@ -56,7 +55,6 @@ const getAllRecipes = async (req, res) => {
             }
         });
 
-        // ✅ Formatear como antes para mostrar en el front
         const formatted = recipes.map(recipe => ({
             id: recipe.id,
             name: recipe.name,
@@ -79,12 +77,19 @@ const getAllRecipes = async (req, res) => {
 const getRecipeById = async (req, res) => {
     const { id } = req.params;
 
+    if (!id || isNaN(Number(id))) {
+        return res.status(400).json({ message: 'ID inválido' });
+    }
+
     try {
         const recipe = await prisma.recipe.findUnique({
-            where: { id: parseInt(id) },
+            where: { id: Number(id) },
             include: {
                 image: true,
                 instructions: true,
+                user: {
+                    select: { username: true }
+                },
                 ingredients: {
                     include: {
                         ingredient: {
@@ -107,6 +112,7 @@ const getRecipeById = async (req, res) => {
             description: recipe.description,
             preparation_time: recipe.preparation_time,
             difficulty: recipe.difficulty,
+            author: recipe.user.username,
             imageUrl: recipe.image?.url || null,
             steps: recipe.instructions?.map((step, i) => ({
                 id: step.id,
@@ -125,6 +131,7 @@ const getRecipeById = async (req, res) => {
         res.status(500).json({ message: 'Error interno del servidor' });
     }
 };
+
 
 const createRecipe = async (req, res) => {
     try {
@@ -252,10 +259,80 @@ const addIngredientsAndSteps = async (req, res) => {
 
 
 };
+const getPublicRecipesByUser = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    const jwt = require('jsonwebtoken');
+
+    if (!token) return res.status(401).json({ message: 'Token requerido' });
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.userId;
+    } catch (err) {
+        return res.status(403).json({ message: 'Token inválido' });
+    }
+
+    try {
+        const recipes = await prisma.recipe.findMany({
+            where: {
+                UserId: userId,
+                Privacy_settings: 'PUBLIC'
+            },
+            include: {
+                image: true
+            }
+        });
+
+        console.log("✅ Recetas públicas encontradas:", recipes);
+        res.json(recipes ?? []); // aseguramos array
+    } catch (err) {
+        console.error("❌ ERROR en getPublicRecipesByUser:", err);
+        res.status(500).json({ message: 'Error interno del servidor', error: err.message });
+    }
+
+};
+
+const getPrivateRecipesByUser = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    const jwt = require('jsonwebtoken');
+
+    if (!token) return res.status(401).json({ message: 'Token requerido' });
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.userId;
+    } catch (err) {
+        return res.status(403).json({ message: 'Token inválido' });
+    }
+
+    try {
+        const recipes = await prisma.recipe.findMany({
+            where: {
+                UserId: userId,
+                Privacy_settings: 'PRIVATE'
+            },
+            include: {
+                image: true
+            }
+        });
+
+        console.log("✅ Recetas privadas encontradas:", recipes);
+        res.json(recipes ?? []);
+    } catch (err) {
+        console.error("❌ ERROR en getPrivateRecipesByUser:", err);
+        res.status(500).json({ message: 'Error interno del servidor', error: err.message });
+    }
+};
+
+
 
 module.exports = {
     getAllRecipes,
     getRecipeById,
     createRecipe,
-    addIngredientsAndSteps
+    addIngredientsAndSteps,
+    getPublicRecipesByUser,
+    getPrivateRecipesByUser
 };

@@ -1,0 +1,45 @@
+.my-recipes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 40px;
+    font-family: sans-serif;
+    background-color: #f8f8f8;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.my-recipes-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.my-recipes-header h2 {
+    font-size: 26px;
+    margin: 0;
+}
+
+.back-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.back-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.my-recipes-header i {
+    font-size: 36px;
+    color: #01060b;
+}
+.controls{
+    margin-top: 10px;
+}
