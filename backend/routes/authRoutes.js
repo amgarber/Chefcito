@@ -1,18 +1,16 @@
-//rutas como /api/register y /api/login
-// routes/authRoutes.js
-//este vendria a ser nuestro archivo server.js
 const express = require('express');
-const { register} = require('../controllers/authController');
-const { login } = require('../controllers/authController');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
+const { register, login, updateUser, getUserProfile} = require('../controllers/authController');
 
 const router = express.Router();
-const { updateUser } = require('../controllers/authController');
 
-router.post('/register', register);
-//router.post('/login', login);
-
+router.post('/register', upload.single('picture'), register);
 router.post('/login', login);
 router.put('/edit-profile', updateUser);
+router.get('/user-profile', getUserProfile);
+
 
 module.exports = router;

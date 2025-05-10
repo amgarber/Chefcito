@@ -1,25 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import '../css/Profile.css';
-import React, {useEffect, useState} from "react";
-import {jwtDecode} from "jwt-decode";
+import React, { useEffect, useState } from "react";
 
-function Profile({FormHandle}) {
+function Profile({ FormHandle }) {
     const navigate = useNavigate();
-
-    const handleLogout = () => {
-        console.log("Saliendo...");
-
-        localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("token");
-        localStorage.removeItem("tokenData");
-
-        FormHandle("Login");
-
-        // Redirigir a /login
-        navigate("/login");
-    };
-
     const [token, setToken] = useState('');
+    const [editing, setEditing] = useState(false);
+    const [newUsername, setNewUsername] = useState('');
 
     useEffect(() => {
         const tokenData = localStorage.getItem('tokenData');
@@ -27,8 +14,15 @@ function Profile({FormHandle}) {
         const decoded = JSON.parse(tokenData);
         setToken(decoded);
     }, []);
-    const [editing, setEditing] = useState(false);
-    const [newUsername, setNewUsername] = useState('');
+
+    const handleLogout = () => {
+        console.log("Saliendo...");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        localStorage.removeItem("tokenData");
+        FormHandle("Login");
+        navigate("/login");
+    };
 
     const handleKeyPress = async (e) => {
         if (e.key === 'Enter') {
@@ -52,23 +46,29 @@ function Profile({FormHandle}) {
         }
     };
 
-
     return (
         <>
             <button type="button" className="logout-button" onClick={handleLogout}>
-                <img className="exit" src="/assets/logout.svg" alt="Logout"/>
+                <img className="exit" src="/assets/logout.svg" alt="Logout" />
             </button>
+
             <div className="user-info">
                 <div className="Profile">
                     <h1 className="profile-title">Profile</h1>
-                    <img className="userPhoto" src="/assets/UserPic.svg" alt="User"/>
+                    <div className="profile-image-wrapper">
+                        {token?.pictureUrl ? (
+                            <img src={token.pictureUrl} alt="Profile" className="profile-image" />
+                        ) : (
+                            <img src="/assets/default-profile.svg" alt="Default" className="profile-image" />
+                        )}
+                    </div>
                     {editing ? (
                         <input
                             type="text"
                             value={newUsername}
                             onChange={(e) => setNewUsername(e.target.value)}
                             onKeyDown={handleKeyPress}
-                            onBlur={() => setEditing(false)} // sale si hace click fuera
+                            onBlur={() => setEditing(false)}
                             autoFocus
                             className="UserNameInput"
                         />
@@ -85,35 +85,33 @@ function Profile({FormHandle}) {
                     )}
                 </div>
             </div>
+
             <div className="Profile-Buttons">
                 <button type="submit" className="ProfileButton" onClick={() => navigate("/favorite-recipes")}>
-                    <img className="LikeIcon" src="/assets/like.svg" alt="Like icon"/>
+                    <img className="LikeIcon" src="/assets/like.svg" alt="Like icon" />
                     <h4>Favorite Recipes</h4>
                     <i className="bx bx-chevron-right chevronIcon"></i>
                 </button>
 
-                <button type="submit" className="ProfileButton" onClick={()=> navigate("/My-Recipes")}>
-                    <img className="WhiskIcon" src="/assets/whisk.svg" alt="Whisk icon"/>
+                <button type="submit" className="ProfileButton" onClick={() => navigate("/My-Recipes")}>
+                    <img className="WhiskIcon" src="/assets/whisk.svg" alt="Whisk icon" />
                     <h4>My Recipes</h4>
                     <i className="bx bx-chevron-right chevronIcon"></i>
                 </button>
 
-                <button type="submit" className="ProfileButton">
+                <button type="submit" className="ProfileButton" onClick={() => navigate("/My-ShoppingLists")}>
                     <img className="BasketIcon" src="/assets/shopping-basket.svg" alt="Shopping Icon" />
                     <h4>My Shopping Lists</h4>
                     <i className="bx bx-chevron-right chevronIcon"></i>
                 </button>
 
                 <button type="submit" className="ProfileButton" onClick={() => navigate("/edit-profile")}>
-                    <img className="UserIcon" src="/assets/User.svg" alt="User Icon"/>
+                    <img className="UserIcon" src="/assets/User.svg" alt="User Icon" />
                     <h4>My Account</h4>
                     <i className="bx bx-chevron-right chevronIcon"></i>
                 </button>
             </div>
-
-
         </>
-
     );
 }
 

@@ -8,6 +8,7 @@ const recipeRoutes = require('./routes/recipes');
 const ingredientsCreateRoutes = require('./routes/ingredientsCreateRoutes');
 const favoritesRoutes = require('./routes/favorites');
 const filterRoutes = require('./routes/filters');
+const shoppingListRoutes = require('./routes/ShoppingListRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,6 +23,8 @@ app.use('/api/ingredients', ingredientsRoutes); // listado ingredientes
 app.use('/api/ingredients/create', ingredientsCreateRoutes); // carga ingrediente nuevo
 app.use('/api/favorites', favoritesRoutes); // favoritos (con DELETE /:id)
 app.use('/api/filters', filterRoutes); // filtros de recetas
+app.use('/api/shopping-list', shoppingListRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);

@@ -1,0 +1,73 @@
+.shopping-list-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.accordion {
+    width:80vw;
+    max-width: 400px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin: 16px auto;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    min-height: 60px;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.accordion-content {
+    padding: 12px 20px;
+    border-top: 1px solid #eee;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.ingredient-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.ingredient-row input {
+    margin-right: 8px;
+}
+
+.bought {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.chevron {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+.chevron.down {
+    transform: rotate(90deg); /* apunta hacia abajo */
+}
+.lists-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+}

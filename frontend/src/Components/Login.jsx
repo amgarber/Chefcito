@@ -42,6 +42,12 @@ const Login = ({ FormHandle }) => {
             localStorage.setItem("token", data.token);
             const decoded = jwtDecode(data.token);
             localStorage.setItem("tokenData", JSON.stringify(decoded));
+            localStorage.setItem('tokenData', JSON.stringify({
+                userId: data.user.id,
+                username: data.user.username,
+                pictureUrl: data.user.picture?.url || null
+            }));
+
 
 
             // Cambiar estado y redirigir

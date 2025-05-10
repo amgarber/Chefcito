@@ -14,7 +14,7 @@ function HomePage({ FormHandle }) {
     const [query, setQuery] = useState('');
     const [token, setToken] = useState('');
     const [recipes, setRecipes] = useState([]);
-    const [selectedFilters, setSelectedFilters] = useState([]); // ✅ Filtros seleccionados
+    const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedIngredients, setSelectedIngredients] = useState([]);
 
     useEffect(() => {

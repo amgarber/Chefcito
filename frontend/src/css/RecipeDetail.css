@@ -110,9 +110,9 @@
     font-weight: 600;
     line-height: 50px;
     display: inline-block;
-    font-family: var(--font-plus-jakarta-sans);
+    font-family: var(--font-plus-jakarta-sans), serif;
     color: #000;
-    ransition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
     cursor: pointer;
 }
 
@@ -138,7 +138,7 @@
     position: relative;
     font-size: 13px;
     line-height: 20px;
-    font-family: var(--font-plus-jakarta-sans);
+    font-family: var(--font-plus-jakarta-sans), serif;
     color: #757575;
     text-align: left;
     height: 127px;
@@ -296,6 +296,48 @@
 }
 .recipe-author{
     font-weight: lighter;
-    margin-top: -10px;
+    margin-top: 30px;
 
 }
+
+.ingredient-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    margin: 4px 10px;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.ingredient-row.selected {
+    background-color: #fff3c4; /* amarillo suave */
+}
+
+.ingredients-tab {
+    position: relative;
+    padding-bottom: 100px; /* deja espacio visual debajo de los ingredientes */
+}
+
+/* Botón flotante arriba del fondo blanco, visible mientras se hace scroll */
+.floating-button {
+    position: fixed;
+    bottom: 24px;
+    left: 5%;
+    width: 90%;
+    background-color: #ffd700;
+    color: black;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.floating-button:hover {
+    background-color: #ffcc00;
+}
+

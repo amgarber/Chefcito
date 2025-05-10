@@ -15,19 +15,25 @@ model User {
   role       Role            @default(USER)
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
-  picture    String?
+  pictureId  Int?           @unique
 
   favourites Favourite[]
   planner    Planner?
-  recipesAuthored Recipe[]  // ✅ Cambiado
-  recipesApproved Recipe[] @relation("ApprovedByAdmin")  // ✅ Cambiado
+  recipesAuthored Recipe[]
+  recipesApproved Recipe[] @relation("ApprovedByAdmin")
   lists      Shopping_List[]
 
   approvalRequestsSent   Approval_Request[] @relation("Solicitor")
   approvalRequestsHandled Approval_Request[] @relation("Approver")
+  picture    User_Image? @relation(fields: [pictureId], references: [id])
+
 }
 
-
+model User_Image {
+  id     Int   @id @default(autoincrement())
+  url    String
+  user   User?
+}
 
 model Recipe {
   id               Int                 @id @default(autoincrement())
@@ -40,7 +46,7 @@ model Recipe {
 
   Approval_Status     ApprovalStatus      @default(PENDING)
   id_approval_admin   Int?
-  Privacy_settings PrivacySetting @default(PUBLIC)
+  Privacy_settings    PrivacySetting      @default(PUBLIC)
 
   favourites       Favourite[]
   instructions     Instructions[]
@@ -78,10 +84,10 @@ model Ingredients {
 }
 
 model Ingredient_Image {
-  id           Int         @id @default(autoincrement()) // ID de la imagen
-  url          String // URL de la imagen
-  ingredient   Ingredients @relation(fields: [ingredientId], references: [id]) // Relación con el ingrediente
-  ingredientId Int // ID del ingrediente asociado
+  id           Int         @id @default(autoincrement())
+  url          String
+  ingredient   Ingredients @relation(fields: [ingredientId], references: [id])
+  ingredientId Int
 }
 
 model Recipe_Ingredient {
@@ -122,9 +128,13 @@ model Recipe_Filter {
 model Shopping_List {
   id          Int                        @id @default(autoincrement())
   id_user     Int
+  name        String
   user        User                       @relation(fields: [id_user], references: [id])
   ingredients Shopping_List_Ingredient[]
+
+  @@unique([id_user, name])
 }
+
 
 model Shopping_List_Ingredient {
   id_ShoppingList Int
@@ -142,12 +152,13 @@ model Planner {
   id_user Int  @unique
   user    User @relation(fields: [id_user], references: [id], onDelete: Cascade)
 }
+
 model Approval_Request {
   id_solicitation   Int    @id @default(autoincrement())
   id_recipe         Int
   id_user_solicitor Int
   id_admin          Int?
-  status            String @default("pending") // "pending" | "approved" | "rejected"
+  status            String @default("pending")
 
   recipe    Recipe @relation(fields: [id_recipe], references: [id])
   solicitor User   @relation("Solicitor", fields: [id_user_solicitor], references: [id])
@@ -158,16 +169,16 @@ model Approval_Request {
   @@index([id_admin])
 }
 
-
-
 enum Role {
   ADMIN
   USER
 }
+
 enum PrivacySetting {
   PRIVATE
   PUBLIC
 }
+
 enum ApprovalStatus {
   PENDING
   APPROVED

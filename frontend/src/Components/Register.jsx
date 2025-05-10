@@ -1,60 +1,71 @@
 import React, { useState } from "react";
-import '../css/Register.css';
-import { Icon } from 'react-icons-kit';
-import { eyeOff } from 'react-icons-kit/feather/eyeOff';
-import { eye } from 'react-icons-kit/feather/eye';
-import {useNavigate} from "react-router-dom";
+import "../css/Register.css";
+import { Icon } from "react-icons-kit";
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
+import { useNavigate } from "react-router-dom";
 
 function Register({ FormHandle }) {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [type, setType] = useState('password');
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [type, setType] = useState("password");
     const [icon, setIcon] = useState(eyeOff);
-    const [confirmPassword, setConfirmPassword] = useState('');
-
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        if (!username || !email || !password) {
+        if (!username || !email || !password || !confirmPassword) {
             alert("Por favor completá todos los campos");
             return;
         }
 
+        if (password !== confirmPassword) {
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+
         try {
-            const response = await fetch('http://localhost:3001/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
+            const formData = new FormData();
+            formData.append("username", username);
+            formData.append("email", email);
+            formData.append("password", password);
+            if (selectedFile) {
+                formData.append("picture", selectedFile);
+            }
+
+            const response = await fetch("http://localhost:3001/api/register", {
+                method: "POST",
+                body: formData,
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.message || 'Error al registrar');
+                alert(data.message || "Error al registrar");
                 return;
             }
 
             alert("¡Registro exitoso!");
-            setUsername('');
-            setEmail('');
-            setPassword('');
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
+            setSelectedFile(null);
+            FormHandle(); // si necesitás notificar al componente padre
+            navigate("/login");
         } catch (error) {
-            console.error('Error en el registro:', error);
+            console.error("Error en el registro:", error);
             alert("Ocurrió un error inesperado");
         }
     };
 
     const handleToggle = () => {
-        if (type === 'password') {
-            setIcon(eye);
-            setType('text');
-        } else {
-            setIcon(eyeOff);
-            setType('password');
-        }
+        setType(type === "password" ? "text" : "password");
+        setIcon(type === "password" ? eye : eyeOff);
     };
 
     return (
@@ -76,7 +87,7 @@ function Register({ FormHandle }) {
                             />
                         </div>
                         <div className="input-group">
-                            <img src="EnvelopeSimple.svg" alt="Username Icon" />
+                            <img src="EnvelopeSimple.svg" alt="Email Icon" />
                             <input
                                 type="email"
                                 placeholder="Email Address"
@@ -93,8 +104,8 @@ function Register({ FormHandle }) {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
-                                <Icon icon={icon} size={20} color="white" />
-                            </span>
+                <Icon icon={icon} size={20} color="white" />
+              </span>
                         </div>
                         <div className="input-group">
                             <img src="Lock.svg" alt="Lock Icon" />
@@ -105,8 +116,16 @@ function Register({ FormHandle }) {
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
-                                <Icon icon={icon} size={20} color="white" />
-                            </span>
+                <Icon icon={icon} size={20} color="white" />
+              </span>
+                        </div>
+                        <div className="input-group">
+                            <label className="upload-label">Upload profile picture:</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setSelectedFile(e.target.files[0])}
+                            />
                         </div>
                         <div className="signInWrapper">
                             <button type="submit" className="signIn">Sign In</button>
@@ -129,8 +148,8 @@ function Register({ FormHandle }) {
                     <div className="register-footer">
                         Already have an account?{' '}
                         <span className="link" onClick={() => navigate('/login')}>
-                            Sign in here
-                        </span>
+              Sign in here
+            </span>
                     </div>
                 </div>
             </div>

@@ -2,14 +2,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
-
 const prisma = new PrismaClient();
+const uploadToAzure = require('../services/azureUpload');
+
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
+    const file = req.file;  // imagen recibida
 
     try {
-        const existingUser = await prisma.User.findFirst({
+        // 🔒 Verificar existencia previa
+        const existingUser = await prisma.user.findFirst({
             where: {
                 OR: [
                     { email },
@@ -22,42 +25,48 @@ const register = async (req, res) => {
             return res.status(400).json({ message: 'El nombre de usuario o el email ya están registrados' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10); //hashear contra
+        // 🔐 Hashear contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = await prisma.User.create({
-            data: {
-                username,
-                email,
-                password: hashedPassword
-            }
+        // 🧱 Preparar datos base del usuario
+        const newUserData = {
+            username,
+            email,
+            password: hashedPassword
+        };
+
+        // 📷 Si hay imagen, subirla y asociarla
+        if (file) {
+            const imageUrl = await uploadToAzure(file);
+
+            const image = await prisma.user_Image.create({
+                data: { url: imageUrl }
+            });
+
+            newUserData.picture = { connect: { id: image.id } };
+        }
+
+        // 🙌 Crear usuario
+        const newUser = await prisma.user.create({
+            data: newUserData
         });
 
         res.status(201).json({ message: 'Usuario registrado exitosamente', userId: newUser.id });
     } catch (error) {
+        console.error('❌ Error al registrar:', error);
         res.status(500).json({ message: 'Error al registrar el usuario' });
     }
 };
-
-//const register = async (req, res) => {
-    // l--eer datos de req.body
-    // validar usuario
-    // guardar en la base de datos
-    // responder con éxito o error
-//}; //el controlador se encarga de la lógica de negocio: validar, guardar, responder, etc.ç
-
 const login = async (req, res) => {
     try {
         const {username,email, password} = req.body;
 
         // 1. Verificar si el usuario existe en la base de datos
-        const user = await prisma.user.findFirst({
-            where: {
-                OR: [
-                    { email },
-                    { username: email } // por si puso el username
-                ]
-            }
+        const user = await prisma.user.findUnique({
+            where: { email },
+            include: { picture: true }
         });
+
 
 
         if (!user) {
@@ -119,6 +128,31 @@ const updateUser = async (req, res) => {
         res.status(403).json({ message: 'Token inválido o error al actualizar' });
     }
 };
+const getUserProfile = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Token requerido' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await prisma.user.findUnique({
+            where: { id: decoded.userId },
+            include: { picture: true }
+        });
+
+        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+        res.json({
+            username: user.username,
+            email: user.email,
+            pictureUrl: user.picture?.url || null
+        });
+    } catch (err) {
+        console.error("❌ Error al obtener perfil:", err);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
+module.exports = { register, login, updateUser, getUserProfile };
 
 
-module.exports = { register, login, updateUser };
+

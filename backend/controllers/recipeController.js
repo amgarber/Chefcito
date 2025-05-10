@@ -120,6 +120,7 @@ const getRecipeById = async (req, res) => {
                 content: step.Description
             })) || [],
             ingredients: recipe.ingredients?.map(ri => ({
+                id:ri.ingredient.id,
                 name: ri.ingredient.name,
                 quantity: ri.quantity,
                 measurement_unit: ri.measurement_unit,

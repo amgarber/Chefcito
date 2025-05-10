@@ -17,6 +17,7 @@ import EditProfile from "./Components/EditProfile";
 import Planner from "./Components/Planner";
 import FavoriteRecipes from "./Components/FavoriteRecipes";
 import MyRecipes from "./Components/MyRecipes";
+import MyShoppingLists from "./Components/MyShoppingLists";
 
 
 function App() {
@@ -69,6 +70,8 @@ function App() {
                 <Route path="/edit-profile" element={<PrivateRoute><LayoutWithNav><EditProfile /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/favorite-recipes" element={<PrivateRoute><FavoriteRecipes /></PrivateRoute>} />
                 <Route path="/My-Recipes" element={<PrivateRoute><MyRecipes /></PrivateRoute>} />
+                <Route path="/My-ShoppingLists" element={<PrivateRoute><MyShoppingLists /></PrivateRoute>} />
+
 
 
 
