@@ -9,10 +9,9 @@ const ingredientsCreateRoutes = require('./routes/ingredientsCreateRoutes');
 const favoritesRoutes = require('./routes/favorites');
 const filterRoutes = require('./routes/filters');
 const shoppingListRoutes = require('./routes/ShoppingListRoutes');
-const dayRecipeRoutes = require('./routes/dayRecipeRoutes');
+const dayRecipeRoutes = require('./controllers/dayRecipeRoutes');
 const app = express();
 const PORT = process.env.PORT || 3001;
-app.use('/api/day-recipes', dayRecipeRoutes);
 app.use(cors());
 app.use(express.json());
 
