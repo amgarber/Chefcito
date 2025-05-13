@@ -71,11 +71,11 @@
     margin-top: 20px;
 }
 
-.signIn {
+.signInButton {
     width: 100%;
     border: none;
-    background-color: #000000;
-    color: white;
+    background-color: #000000 !important;
+    color: white !important;
     border-radius: 50px;
     font-weight: bold;
     font-size: 16px;

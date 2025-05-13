@@ -1,9 +1,8 @@
-'use client';
-import '../css/Planner.css';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 
 export const Planner = () => {
     const today = new Date();
@@ -20,7 +19,7 @@ export const Planner = () => {
         const targetElement = dayRefs.current[targetDayIndex];
 
         if (targetDayIndex !== -1 && targetElement) {
-            const container = document.querySelector('.calendar-container');
+            const container = document.querySelector('.tw-calendar-container');
             const elementRect = targetElement.getBoundingClientRect();
             const is2xl = window.matchMedia('(min-width: 1536px)').matches;
             const offsetFactor = is2xl ? 3 : 2.5;
@@ -82,7 +81,7 @@ export const Planner = () => {
         }
 
         return calendarWeeks.map((week, weekIndex) => (
-            <div className="flex w-full" key={`week-${weekIndex}`}>
+            <div className="tw-flex tw-w-full" key={`week-${weekIndex}`}>
                 {week.map(({ month, day }, dayIndex) => {
                     const index = weekIndex * 7 + dayIndex;
                     const isNewMonth = index === 0 || calendarDays[index - 1].month !== month;
@@ -96,13 +95,13 @@ export const Planner = () => {
                             onClick={() => handleDayClick(day, month, year)}
                             className="planner-day"
                         >
-              <span className={`absolute left-1 top-1 flex size-5 items-center justify-center rounded-full text-xs sm:size-6 sm:text-sm lg:left-2 lg:top-2 lg:size-8 lg:text-base ${isToday ? 'planner-today' : ''} ${month < 0 ? 'planner-old-month' : 'planner-current-month'}`}>
-                {day}
-              </span>
+                            <span className={`tw-absolute tw-left-1 tw-top-1 tw-flex tw-size-5 tw-items-center tw-justify-center tw-rounded-full tw-text-xs sm:tw-size-6 sm:tw-text-sm lg:tw-left-2 lg:tw-top-2 lg:tw-size-8 lg:tw-text-base ${isToday ? 'planner-today' : ''} ${month < 0 ? 'planner-old-month' : 'planner-current-month'}`}>
+                                {day}
+                            </span>
                             {isNewMonth && (
-                                <span className="absolute bottom-0.5 left-0 w-full truncate px-1.5 text-sm font-semibold text-slate-300 sm:bottom-0 sm:text-lg lg:bottom-2.5 lg:left-3.5 lg:-mb-1 lg:w-fit lg:px-0 lg:text-xl 2xl:mb-[-4px] 2xl:text-2xl">
-                  {monthNames[month]}
-                </span>
+                                <span className="tw-absolute tw-bottom-0.5 tw-left-0 tw-w-full tw-truncate tw-px-1.5 tw-text-sm tw-font-semibold tw-text-slate-300 sm:tw-bottom-0 sm:tw-text-lg lg:tw-bottom-2.5 lg:tw-left-3.5 lg:-tw-mb-1 lg:tw-w-fit lg:tw-px-0 lg:tw-text-xl 2xl:tw-mb-[-4px] 2xl:tw-text-2xl">
+                                    {monthNames[month]}
+                                </span>
                             )}
                         </div>
                     );
@@ -112,7 +111,8 @@ export const Planner = () => {
     }, [year]);
 
     useEffect(() => {
-        const calendarContainer = document.querySelector('.calendar-container');
+        import('../css/Planner.css');
+        const calendarContainer = document.querySelector('.tw-calendar-container');
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -137,100 +137,85 @@ export const Planner = () => {
     }, []);
 
     return (
-        <div className="calendar-container overflow-y-auto h-[calc(100vh-160px)] rounded-t-2xl bg-white pb-10 text-slate-800 shadow-xl">
-            <div className="sticky -top-px z-50 w-full rounded-t-2xl bg-white px-5 pt-7 sm:px-8 sm:pt-8">
-                <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-6">
-                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                        <Select name="month" value={`${selectedMonth}`} options={monthOptions}
-                                onChange={handleMonthChange}/>
-                        <button onClick={handleTodayClick} type="button"
-                                className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-gray-100 lg:px-5 lg:py-2.5">
+        <div className="tw-calendar-container tw-overflow-y-auto tw-h-[calc(100vh-160px)] tw-rounded-t-2xl tw-bg-white tw-pb-10 tw-text-slate-800 tw-shadow-xl">
+            <div className="tw-sticky -tw-top-px tw-z-50 tw-w-full tw-rounded-t-2xl tw-bg-white tw-px-5 tw-pt-7 sm:tw-px-8 sm:tw-pt-8">
+                <div className="tw-mb-4 tw-flex tw-w-full tw-flex-wrap tw-items-center tw-justify-between tw-gap-6">
+                    <div className="tw-flex tw-flex-wrap tw-gap-2 sm:tw-gap-3">
+                        <Select name="month" value={`${selectedMonth}`} options={monthOptions} onChange={handleMonthChange} />
+                        <button onClick={handleTodayClick} type="button" className="tw-rounded-lg tw-border tw-border-gray-300 tw-bg-white tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-text-gray-900 hover:tw-bg-gray-100 lg:tw-px-5 lg:tw-py-2.5">
                             Today
                         </button>
-                        <button
-                            type="button"
-                            className="whitespace-nowrap rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-1.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-cyan-300 sm:rounded-xl lg:px-5 lg:py-2.5"
-                        >
+                        <button type="button" className="tw-whitespace-nowrap tw-rounded-lg tw-bg-gradient-to-r tw-from-cyan-500 tw-to-blue-500 tw-px-3 tw-py-1.5 tw-text-center tw-text-sm tw-font-medium tw-text-white hover:tw-bg-gradient-to-bl focus:tw-outline-none focus:tw-ring-4 focus:tw-ring-cyan-300 sm:tw-rounded-xl lg:tw-px-5 lg:tw-py-2.5">
                             + Add Recipe
                         </button>
                     </div>
-                    <div className="flex w-fit items-center justify-between">
-                        <button onClick={handlePrevYear}
-                                className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 sm:p-2">←
-                        </button>
-                        <h1 className="min-w-16 text-center text-lg font-semibold sm:min-w-20 sm:text-xl">{year}</h1>
-                        <button onClick={handleNextYear}
-                                className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 sm:p-2">→
-                        </button>
+                    <div className="tw-flex tw-w-fit tw-items-center tw-justify-between">
+                        <button onClick={handlePrevYear} className="tw-rounded-full tw-border tw-border-slate-300 tw-p-1 tw-transition-colors hover:tw-bg-slate-100 sm:tw-p-2">←</button>
+                        <h1 className="tw-min-w-16 tw-text-center tw-text-lg tw-font-semibold sm:tw-min-w-20 sm:tw-text-xl">{year}</h1>
+                        <button onClick={handleNextYear} className="tw-rounded-full tw-border tw-border-slate-300 tw-p-1 tw-transition-colors hover:tw-bg-slate-100 sm:tw-p-2">→</button>
                     </div>
                 </div>
-                <div className="grid w-full grid-cols-7 justify-between text-slate-500">
+                <div className="tw-grid tw-w-full tw-grid-cols-7 tw-justify-between tw-text-slate-500">
                     {daysOfWeek.map((day, i) => (
-                        <div key={i}
-                             className="w-full border-b border-slate-200 py-2 text-center font-semibold">{day}</div>
+                        <div key={i} className="tw-w-full tw-border-b tw-border-slate-200 tw-py-2 tw-text-center tw-font-semibold">{day}</div>
                     ))}
                 </div>
             </div>
-            <div className="w-full px-5 pt-4 sm:px-8 sm:pt-6">{generateCalendar}</div>
+            <div className="tw-w-full tw-px-5 tw-pt-4 sm:tw-px-8 sm:tw-pt-6">{generateCalendar}</div>
 
             {selectedDay && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                    <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg text-left">
-                        <div className="flex justify-between items-start mb-4">
-                            <h2 className="text-2xl font-bold">
+                <div className="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-40">
+                    <div className="tw-bg-white tw-p-6 tw-rounded-xl tw-shadow-lg tw-w-full tw-max-w-lg tw-text-left">
+                        <div className="tw-flex tw-justify-between tw-items-start tw-mb-4">
+                            <h2 className="tw-text-2xl tw-font-bold">
                                 {monthNames[selectedDay.month]} {selectedDay.day}, {selectedDay.year}
                             </h2>
-                            <button
-                                onClick={() => setSelectedDay(null)}
-                                className="text-red-500 font-bold text-lg hover:text-red-700"
-                            >
+                            <button onClick={() => setSelectedDay(null)} className="tw-text-red-500 tw-font-bold tw-text-lg hover:tw-text-red-700">
                                 ×
                             </button>
                         </div>
 
-                        <div className="space-y-6">
+                        <div className="tw-space-y-6">
                             {['Breakfast 🥐', 'Lunch 🍝', 'Snack 🍪', 'Dinner 🍽'].map((category) => (
                                 <div key={category}>
-                                    <h3 className="text-lg font-semibold text-slate-700 mb-2">{category}</h3>
-                                    <div className="rounded border border-slate-200 p-3 text-slate-500 italic">
+                                    <h3 className="tw-text-lg tw-font-semibold tw-text-slate-700 tw-mb-2">{category}</h3>
+                                    <div className="tw-rounded tw-border tw-border-slate-200 tw-p-3 tw-text-slate-500 tw-italic">
                                         No recipes added yet.
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-6 flex justify-end">
-                            <button
-                                onClick={() => setSelectedDay(null)}
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                            >
+                        <div className="tw-mt-6 tw-flex tw-justify-end">
+                            <button onClick={() => setSelectedDay(null)} className="tw-px-4 tw-py-2 tw-bg-red-500 tw-text-white tw-rounded-lg hover:tw-bg-red-600">
                                 Cerrar
                             </button>
                         </div>
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
 
 export const Select = ({ name, value, label, options = [], onChange, className }) => (
-    <div className={`relative ${className}`}>
-        {label && <label htmlFor={name} className="mb-2 block font-medium text-slate-800">{label}</label>}
+    <div className={`tw-relative ${className}`}>
+        {label && <label htmlFor={name} className="tw-mb-2 tw-block tw-font-medium tw-text-slate-800">{label}</label>}
         <select
             id={name}
             name={name}
             value={value}
             onChange={onChange}
-            className="cursor-pointer rounded-lg border border-gray-300 bg-white py-1.5 pl-2 pr-6 text-sm font-medium text-gray-900 hover:bg-gray-100 sm:rounded-xl sm:py-2.5 sm:pl-3 sm:pr-8"
+            className="tw-cursor-pointer tw-rounded-lg tw-border tw-border-gray-300 tw-bg-white tw-py-1.5 tw-pl-2 tw-pr-6 tw-text-sm tw-font-medium tw-text-gray-900 hover:tw-bg-gray-100 sm:tw-rounded-xl sm:tw-py-2.5 sm:tw-pl-3 sm:tw-pr-8"
         >
             {options.map((option) => (
                 <option key={option.value} value={option.value}>{option.name}</option>
             ))}
         </select>
-        <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-1 sm:pr-2">
-      <svg className="size-5 text-slate-600" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" /></svg>
-    </span>
+        <span className="tw-pointer-events-none tw-absolute tw-inset-y-0 tw-right-0 tw-ml-3 tw-flex tw-items-center tw-pr-1 sm:tw-pr-2">
+            <svg className="tw-size-5 tw-text-slate-600" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
+            </svg>
+        </span>
     </div>
 );

@@ -154,11 +154,13 @@ model Planner {
 }
 
 model Approval_Request {
-  id_solicitation   Int    @id @default(autoincrement())
+  id_solicitation   Int             @id @default(autoincrement())
   id_recipe         Int
   id_user_solicitor Int
   id_admin          Int?
-  status            String @default("pending")
+  status            ApprovalStatus  @default(PENDING)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   recipe    Recipe @relation(fields: [id_recipe], references: [id])
   solicitor User   @relation("Solicitor", fields: [id_user_solicitor], references: [id])
@@ -168,6 +170,7 @@ model Approval_Request {
   @@index([id_user_solicitor])
   @@index([id_admin])
 }
+
 
 enum Role {
   ADMIN

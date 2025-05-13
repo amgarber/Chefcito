@@ -56,10 +56,8 @@ function Profile({ FormHandle }) {
                 <div className="Profile">
                     <h1 className="profile-title">Profile</h1>
                     <div className="profile-image-wrapper">
-                        {token?.pictureUrl ? (
+                        { (
                             <img src={token.pictureUrl} alt="Profile" className="profile-image" />
-                        ) : (
-                            <img src="/assets/default-profile.svg" alt="Default" className="profile-image" />
                         )}
                     </div>
                     {editing ? (

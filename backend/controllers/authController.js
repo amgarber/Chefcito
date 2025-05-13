@@ -8,16 +8,13 @@ const uploadToAzure = require('../services/azureUpload');
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
-    const file = req.file;  // imagen recibida
+    const file = req.file;
 
     try {
-        // 🔒 Verificar existencia previa
+        // 🔒 Verificar si el usuario ya existe
         const existingUser = await prisma.user.findFirst({
             where: {
-                OR: [
-                    { email },
-                    { username }
-                ]
+                OR: [{ email }, { username }]
             }
         });
 
@@ -25,28 +22,32 @@ const register = async (req, res) => {
             return res.status(400).json({ message: 'El nombre de usuario o el email ya están registrados' });
         }
 
-        // 🔐 Hashear contraseña
+        // 🔐 Hashear la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 🧱 Preparar datos base del usuario
+        // 🧱 Preparar los datos del nuevo usuario
         const newUserData = {
             username,
             email,
             password: hashedPassword
         };
 
-        // 📷 Si hay imagen, subirla y asociarla
+        // 📷 Subir imagen del usuario si se proporciona, o asignar imagen por defecto
+        let imageUrl;
+
         if (file) {
-            const imageUrl = await uploadToAzure(file);
-
-            const image = await prisma.user_Image.create({
-                data: { url: imageUrl }
-            });
-
-            newUserData.picture = { connect: { id: image.id } };
+            imageUrl = await uploadToAzure(file);
+        } else {
+            imageUrl = "https://chefcito.blob.core.windows.net/photos/DefaultProfilePic.jpeg";
         }
 
-        // 🙌 Crear usuario
+        const image = await prisma.user_Image.create({
+            data: { url: imageUrl }
+        });
+
+        newUserData.picture = { connect: { id: image.id } };
+
+        // 🙌 Crear el usuario
         const newUser = await prisma.user.create({
             data: newUserData
         });
@@ -57,6 +58,7 @@ const register = async (req, res) => {
         res.status(500).json({ message: 'Error al registrar el usuario' });
     }
 };
+
 const login = async (req, res) => {
     try {
         const {username,email, password} = req.body;
@@ -87,7 +89,15 @@ const login = async (req, res) => {
         );
 
         // 4. Enviar el token al frontend
-        res.json({token, user: {username: user.username, role: user.role}});
+        res.json({
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                role: user.role,
+                pictureUrl: user.picture?.url || null
+            }
+        });
 
     } catch (error) {
         console.error("Error en login:", error);
