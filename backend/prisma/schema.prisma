@@ -8,55 +8,56 @@ datasource db {
 }
 
 model User {
-  id         Int             @id @default(autoincrement())
-  username   String          @unique
-  email      String          @unique
-  password   String
-  role       Role            @default(USER)
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  pictureId  Int?           @unique
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pictureId Int?     @unique
 
-  favourites Favourite[]
-  planner    Planner?
+  favourites      Favourite[]
+  planner         Planner?
   recipesAuthored Recipe[]
-  recipesApproved Recipe[] @relation("ApprovedByAdmin")
-  lists      Shopping_List[]
+  recipesApproved Recipe[]        @relation("ApprovedByAdmin")
+  lists           Shopping_List[]
 
-  approvalRequestsSent   Approval_Request[] @relation("Solicitor")
+  approvalRequestsSent    Approval_Request[] @relation("Solicitor")
   approvalRequestsHandled Approval_Request[] @relation("Approver")
-  picture    User_Image? @relation(fields: [pictureId], references: [id])
-
+  picture                 User_Image?        @relation(fields: [pictureId], references: [id])
+  dayRecipes              DayRecipe[]
 }
 
 model User_Image {
-  id     Int   @id @default(autoincrement())
-  url    String
-  user   User?
+  id   Int    @id @default(autoincrement())
+  url  String
+  user User?
 }
 
 model Recipe {
-  id               Int                 @id @default(autoincrement())
+  id               Int    @id @default(autoincrement())
   name             String
   description      String
   difficulty       String
   preparation_time Int
   UserId           Int
-  imageId          Int?                @unique
+  imageId          Int?   @unique
 
-  Approval_Status     ApprovalStatus      @default(PENDING)
-  id_approval_admin   Int?
-  Privacy_settings    PrivacySetting      @default(PUBLIC)
+  Approval_Status   ApprovalStatus @default(PENDING)
+  id_approval_admin Int?
+  Privacy_settings  PrivacySetting @default(PUBLIC)
 
-  favourites       Favourite[]
-  instructions     Instructions[]
-  ingredients      Recipe_Ingredient[]
-  recipeTypes      Recipe_Type[]
-  requests         Approval_Request[]
+  favourites   Favourite[]
+  instructions Instructions[]
+  ingredients  Recipe_Ingredient[]
+  recipeTypes  Recipe_Type[]
+  requests     Approval_Request[]
 
-  user             User   @relation(fields: [UserId], references: [id], onDelete: Cascade)
-  image            Image? @relation(fields: [imageId], references: [id])
-  admin            User?  @relation("ApprovedByAdmin", fields: [id_approval_admin], references: [id])
+  user       User        @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  image      Image?      @relation(fields: [imageId], references: [id])
+  admin      User?       @relation("ApprovedByAdmin", fields: [id_approval_admin], references: [id])
+  dayRecipes DayRecipe[]
 }
 
 model Image {
@@ -135,7 +136,6 @@ model Shopping_List {
   @@unique([id_user, name])
 }
 
-
 model Shopping_List_Ingredient {
   id_ShoppingList Int
   id_Ingredients  Int
@@ -183,4 +183,14 @@ enum ApprovalStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+model DayRecipe {
+  id       String   @id @default(uuid())
+  date     DateTime
+  category String
+  user     User     @relation(fields: [userId], references: [id])
+  userId   Int
+  recipe   Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId Int
 }

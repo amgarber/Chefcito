@@ -1,138 +1,52 @@
-.planner-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+/* src/css/planner.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Elemento del grid de días */
+.planner-day {
+    @apply relative z-10 m-[-0.5px] aspect-square w-full grow cursor-pointer rounded-xl border font-medium transition-all;
 }
 
-.calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+.planner-today {
+    @apply bg-blue-500 font-semibold text-white;
 }
 
-.calendar-header button {
-    background: none;
-    border: 1px solid #ddd;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
+.planner-old-month {
+    @apply text-slate-400;
 }
 
-.calendar-header button:hover {
-    background: #e9ecef;
+.planner-current-month {
+    @apply text-slate-800;
 }
 
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    background: #f0f0f0;
-    border: 1px solid #ddd;
+/* Hover */
+.planner-day:hover {
+    @apply z-20 border-cyan-400;
 }
 
-.day-header {
-    background: #fff;
-    padding: 1rem;
-    text-align: center;
-    font-weight: bold;
-    border-bottom: 2px solid #eee;
+/* Responsive (manual porque @apply no soporta sm:, lg:...) */
+@media (min-width: 640px) {
+    .planner-day {
+        margin: -1px;
+        width: 5rem;
+        height: 5rem;
+        border-width: 2px;
+        border-radius: 1rem;
+    }
 }
 
-.calendar-day {
-    min-height: 120px;
-    background: white;
-    padding: 0.5rem;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s;
+@media (min-width: 1024px) {
+    .planner-day {
+        width: 9rem;
+        height: 9rem;
+        border-radius: 1.5rem;
+    }
 }
 
-.calendar-day:hover {
-    background: #f8f9fa;
-}
-
-.other-month {
-    background: #f8f9fa;
-    color: #868e96;
-}
-
-.selected-day {
-    background: #e3f2fd !important;
-    border: 2px solid #90caf9;
-}
-
-.day-number {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 1.1rem;
-}
-
-.meals-preview {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.meal-bubble {
-    background: #e3f2fd;
-    color: #1976d2;
-    padding: 2px 5px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    width: fit-content;
-}
-
-.day-view {
-    background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.time-slots {
-    display: grid;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.time-slot {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    padding: 1rem 0;
-}
-
-.time-label {
-    font-weight: bold;
-    color: #2d3748;
-}
-
-.slot-content {
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 1rem;
-    min-height: 60px;
-}
-
-.add-recipe {
-    background: none;
-    border: 1px dashed #cbd5e0;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    width: 100%;
-    cursor: pointer;
-    color: #718096;
-}
-
-.add-recipe:hover {
-    background: #fff;
-    border-color: #90caf9;
+@media (min-width: 1536px) {
+    .planner-day {
+        width: 10rem;
+        height: 10rem;
+    }
 }

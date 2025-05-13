@@ -10,7 +10,7 @@ async function createTestUser() {
         data: {
             email: 'chefcito@gmail.com',
             username: 'chefcito',
-            password: hashedPassword
+            password: 1
         }
     });
 

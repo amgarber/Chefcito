@@ -14,10 +14,11 @@ import SetRecipeStepsAndIngredients from "./Components/SetRecipeStepsAndIngredie
 import PrivateRoute from "./Components/PrivateRoute";
 import PublicRoute from "./Components/PublicRoute";
 import EditProfile from "./Components/EditProfile";
-import Planner from "./Components/Planner";
+import { Planner } from "./Components/Planner";
 import FavoriteRecipes from "./Components/FavoriteRecipes";
 import MyRecipes from "./Components/MyRecipes";
 import MyShoppingLists from "./Components/MyShoppingLists";
+import DemoWrapper from "./Components/DemoWrapper"; // ✅ Importa la demo del planner
 
 
 function App() {
@@ -59,7 +60,15 @@ function App() {
                 {/* Private routes */}
                 <Route path="/" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/home" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
-                <Route path="/planner" element={<PrivateRoute><LayoutWithNav><Planner /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/planner" element={
+                    <PrivateRoute>
+                        <LayoutWithNav>
+                            <Planner /> {/* ✅ Para que no falle la prop onClick */}
+                        </LayoutWithNav>
+                    </PrivateRoute>
+                } />
+
+                <Route path="/planner-demo" element={<DemoWrapper />} /> {/* ✅ Ruta de prueba */}
                 <Route path="/plus" element={<PrivateRoute><LayoutWithNav><Plus /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/plus2" element={<PrivateRoute><LayoutWithNav><Plus2 /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><LayoutWithNav><Profile FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
