@@ -1,4 +1,3 @@
-'use client';
 import '../css/Planner.css';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -12,6 +11,21 @@ export const Planner = () => {
     const [selectedMonth, setSelectedMonth] = useState(0);
     const [selectedDay, setSelectedDay] = useState(null);
     const monthOptions = monthNames.map((month, index) => ({ name: month, value: `${index}` }));
+    const [recipes, setRecipes] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedRecipeId, setSelectedRecipeId] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [showAddForm, setShowAddForm] = useState(false);
+
+
+    useEffect(() => { //formulario de add recipe
+        if (showAddForm) {
+            fetch('/api/recipes')
+                .then((res) => res.json())
+                .then((data) => setRecipes(data))
+                .catch((err) => console.error('Error loading recipes:', err));
+        }
+    }, [showAddForm]);
 
     const scrollToDay = (monthIndex, dayIndex) => {
         const targetDayIndex = dayRefs.current.findIndex(
@@ -149,6 +163,7 @@ export const Planner = () => {
                         </button>
                         <button
                             type="button"
+                            onClick={() => setShowAddForm(true)}
                             className="whitespace-nowrap rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-1.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-cyan-300 sm:rounded-xl lg:px-5 lg:py-2.5"
                         >
                             + Add Recipe
@@ -205,6 +220,90 @@ export const Planner = () => {
                                 className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                             >
                                 Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showAddForm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+                    <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg">
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className="text-xl font-bold text-gray-800">Agregar receta</h2>
+                            <button onClick={() => setShowAddForm(false)} className="text-gray-500 hover:text-red-500 text-2xl">×</button>
+                        </div>
+
+                        <div className="space-y-5">
+                            <input
+                                type="text"
+                                placeholder="Buscar receta..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-800 shadow-sm focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all"
+                            />
+
+                            <select
+                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-800 shadow-sm focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all"
+                                value={selectedRecipeId}
+                                onChange={(e) => setSelectedRecipeId(e.target.value)}
+                            >
+                                <option value="">-- Seleccioná una receta --</option>
+                                {recipes
+                                    .filter((r) => r.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                                    .map((recipe) => (
+                                        <option key={recipe.id} value={recipe.id}>
+                                            {recipe.name}
+                                        </option>
+                                    ))}
+                            </select>
+
+                            <select
+                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-800 shadow-sm focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all"
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                            >
+                                <option value="">-- Seleccioná una categoría --</option>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Snack">Snack</option>
+                                <option value="Dinner">Dinner</option>
+                            </select>
+
+                            <button
+                                className="w-full rounded-xl bg-gradient-to-r from-gray-900 to-gray-700 px-4 py-2 text-white font-semibold shadow-md hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                onClick={async () => {
+                                    const userId = JSON.parse(localStorage.getItem('tokenData'))?.id;
+                                    const today = new Date();
+                                    const payload = {
+                                        userId,
+                                        recipeId: parseInt(selectedRecipeId),
+                                        category: selectedCategory,
+                                        date: today.toISOString().split('T')[0], // Usamos la fecha actual
+                                    };
+
+                                    try {
+                                        const res = await fetch('/api/day-recipes', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(payload),
+                                        });
+
+                                        if (res.ok) {
+                                            alert('Receta agregada con éxito');
+                                            setShowAddForm(false);
+                                            setSelectedRecipeId('');
+                                            setSelectedCategory('');
+                                            setSearchQuery('');
+                                        } else {
+                                            alert('Error al guardar');
+                                        }
+                                    } catch (err) {
+                                        console.error('Error:', err);
+                                        alert('Error al guardar');
+                                    }
+                                }}
+                            >
+                                Agregar receta
                             </button>
                         </div>
                     </div>
