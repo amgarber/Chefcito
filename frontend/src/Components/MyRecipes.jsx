@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SegmentedControl from './SegmentedControl';
 import '../css/MyRecipes.css';
-import '../css/FavoriteRecipes.css'; // reutilizamos los estilos de las cards
+import '../css/FavoriteRecipes.css';
 
 function MyRecipes() {
     const navigate = useNavigate();
@@ -83,6 +83,29 @@ function MyRecipes() {
         }
     };
 
+    const handleMakePrivate = async (recipeId) => {
+        try {
+            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/make-private`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(`❌ Error: ${data.message}`);
+            } else {
+                alert("✅ La receta se hizo privada");
+                setPublicRecipes((prev) => prev.filter((r) => r.id !== recipeId)); // Actualiza la lista localmente
+            }
+        } catch (err) {
+            console.error("Error al hacer receta privada:", err);
+            alert("❌ Hubo un error al cambiar la visibilidad");
+        }
+    };
+
     const options = ['Public', 'Private', 'Requests'];
 
     return (
@@ -110,12 +133,18 @@ function MyRecipes() {
                                             onClick={() => navigate(`/recipe/${item.id}`)}
                                         />
                                         <div className="favorite-info">
-                                            <h3 className="titulo">{item.name}</h3>
+                                            <h3 className="titulo-MyRecipes">{item.name}</h3>
                                             <p className="favorite-description">{item.description}</p>
                                             <div className="favorite-meta">
                                                 <span>⭐ {item.difficulty}</span>
                                                 <span>⏱ {item.preparation_time} min</span>
                                             </div>
+                                            <button
+                                                className="make-private-btn"
+                                                onClick={() => handleMakePrivate(item.id)}
+                                            >
+                                                Make Recipe Private
+                                            </button>
                                         </div>
                                     </li>
                                 ))}

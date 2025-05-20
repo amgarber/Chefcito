@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const approvalController = require('../controllers/approvalController');
+const {makePrivate} = require("../controllers/approvalController");
 
 // Usuario solicita publicación de receta
 router.post('/recipes/:id/request-approval', approvalController.requestApproval);

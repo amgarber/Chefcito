@@ -43,3 +43,25 @@
 .controls{
     margin-top: 10px;
 }
+.make-private-btn,
+.request-public-btn {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.make-private-btn:hover,
+.request-public-btn:hover {
+    background-color: #e69500;
+}
+
+.titulo-MyRecipes{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

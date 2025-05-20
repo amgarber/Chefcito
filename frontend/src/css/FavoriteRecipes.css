@@ -141,14 +141,10 @@
 }
 
 .favorite-description {
-    margin: 20px 0;
     color: #666;
     font-size: 14px;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* cantidad de líneas que querés mostrar */
     -webkit-box-orient: vertical;
     overflow: hidden;
-}
-.titulo{
-    margin-left: 60px;
 }

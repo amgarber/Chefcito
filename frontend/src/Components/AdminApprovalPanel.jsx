@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import LoadingChef from "./LoadingChef";
+import { useNavigate } from 'react-router-dom';
+import '../css/AdminApprovalPanel.css';
 
 function AdminApprovalPanel({ adminId }) {
     console.log("Admin ID recibido:", adminId);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const fetchRequests = async () => {
         try {
@@ -43,28 +47,34 @@ function AdminApprovalPanel({ adminId }) {
         }
     };
 
-
-    if (loading) return <p>Cargando solicitudes...</p>;
+    if (loading) return <LoadingChef message="Loading delicious requests..." />;
 
     return (
-        <div>
-            <h2>Solicitudes de Publicación</h2>
+        <div className="approval-container">
+            <div className="Requests-header">
+                <i className='bx bx-left-arrow-alt' onClick={() => navigate('/home')}></i>
+                <h2 className="titulo2">Publication Requests</h2>
+            </div>
             {requests.length === 0 ? (
-                <p>No hay solicitudes pendientes.</p>
+                <div className="empty-state2">
+                <p className="no-requests">There are no pending requests.</p>
+                </div>
             ) : (
-                <ul>
+                <ul className="requests-cards">
                     {requests.map((req) => (
-                        <li key={req.id_solicitation} style={{ marginBottom: '20px', border: '1px solid #ccc', padding: '10px' }}>
-                            <p><strong>Receta:</strong> {req.recipe.name}</p>
-                            <p><strong>Usuario:</strong> {req.solicitor.username} ({req.solicitor.email})</p>
-                            <p><strong>Descripción:</strong> {req.recipe.description}</p>
+                        <li key={req.id_solicitation} className={`request-card ${req.status.toLowerCase()}`}>
+                            <p><strong>Recipe:</strong> {req.recipe.name}</p>
+                            <p><strong>User:</strong> {req.solicitor.username} ({req.solicitor.email})</p>
+                            <p><strong>Description:</strong> {req.recipe.description}</p>
 
-                            <button onClick={() => handleAction(req.id_solicitation, 'approve')} style={{ marginRight: '10px' }}>
-                                ✅ Aprobar
-                            </button>
-                            <button onClick={() => handleAction(req.id_solicitation, 'reject')}>
-                                ❌ Rechazar
-                            </button>
+                            <div className="actions">
+                                <button className="approve-btn" onClick={() => handleAction(req.id_solicitation, 'approve')}>
+                                    ✅ Approve
+                                </button>
+                                <button className="reject-btn" onClick={() => handleAction(req.id_solicitation, 'reject')}>
+                                    ❌ Reject
+                                </button>
+                            </div>
                         </li>
                     ))}
                 </ul>

@@ -5,17 +5,31 @@ function UserNotifications({ userId }) {
 
     useEffect(() => {
         const fetchNotifications = async () => {
+            const tokenData = JSON.parse(localStorage.getItem("tokenData"));
+            const userId = tokenData?.userId;
+
+            if (!userId) {
+                setUserIdError(true);
+                setLoading(false);
+                return;
+            }
+
             try {
-                const res = await fetch(`/api/users/${userId}/approval-status`);
+                const res = await fetch(`http://localhost:3001/api/users/${userId}/approval-status`);
                 const data = await res.json();
                 setNotifications(data);
+
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000);
             } catch (err) {
-                console.error("Error al cargar notificaciones del usuario:", err);
+                console.error("Error al cargar notificaciones:", err);
+                setLoading(false);
             }
         };
 
         fetchNotifications();
-    }, [userId]);
+    }, []);
 
     return (
         <div>

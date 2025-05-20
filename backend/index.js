@@ -27,6 +27,7 @@ app.use('/api/filters', filterRoutes); // filtros de recetas
 app.use('/api/shopping-list', shoppingListRoutes);
 app.use('/api/day-recipes', dayRecipeRoutes);
 app.use('/api', approvalRoutes);
+app.use('/api', recipeRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);

@@ -24,9 +24,13 @@ function UserNotificationsPage() {
                 const res = await fetch(`http://localhost:3001/api/users/${userId}/approval-status`);
                 const data = await res.json();
                 setNotifications(data);
+
+                // 👇 Delay artificial para dejar que la animación se vea
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000);
             } catch (err) {
                 console.error("Error al cargar notificaciones:", err);
-            } finally {
                 setLoading(false);
             }
         };
@@ -35,7 +39,7 @@ function UserNotificationsPage() {
     }, []);
 
 
-    if (loading) return <LoadingChef />;
+    if (loading) return <LoadingChef message="Loading delicious notifications..." />;
 
 
     if (userIdError) return <p className="no-notifications">Error: no se encontró el ID de usuario.</p>;
@@ -43,8 +47,8 @@ function UserNotificationsPage() {
     return (
         <div className="notifications-container">
             <div className="notifications-header">
-            <h2 className="Titulo">My Notifications</h2>
-            <i className='bx bx-left-arrow-alt' onClick={() => navigate('/home')}></i>
+                <i className='bx bx-left-arrow-alt' onClick={() => navigate('/home')}></i>
+                <h2 className="titulo">My Notifications</h2>
             </div>
             {notifications.length === 0 ? (
                 <p className="no-notifications">You don't have notifications.</p>

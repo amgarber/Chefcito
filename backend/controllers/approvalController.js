@@ -247,3 +247,22 @@ exports.getUserNotifications = async (req, res) => {
         res.status(500).json({ message: "Error al obtener notificaciones" });
     }
 };
+//para volver a hacer privada una receta que esta publica
+exports.makePrivate = async (req, res) => {
+    const recipeId = parseInt(req.params.id);
+
+    try {
+        const updated = await prisma.recipe.update({
+            where: { id: recipeId },
+            data: {
+                Privacy_settings: 'PRIVATE',
+                Approval_Status: 'APPROVED'
+            }
+        });
+
+        res.json({ message: "Receta marcada como privada", recipe: updated });
+    } catch (err) {
+        console.error("Error al cambiar a privada:", err);
+        res.status(500).json({ message: "Error interno al cambiar visibilidad" });
+    }
+};
