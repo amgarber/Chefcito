@@ -42,12 +42,16 @@ const Login = ({ FormHandle }) => {
             // Guardar login persistente
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("token", data.token);
+
             const decoded = jwtDecode(data.token);
             localStorage.setItem("tokenData", JSON.stringify({
                 userId: data.user.id,
                 username: data.user.username,
                 pictureUrl: data.user.pictureUrl
             }));
+            localStorage.setItem("role", data.user.role);
+
+
 
 
 

@@ -7,6 +7,7 @@ import IngredientsCarousel from './IngredientsCarousel';
 import PinterestLayout from "./PinterestLayout";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import NotificationBell from "./NotificationBell";
 
 function HomePage({ FormHandle }) {
     const navigate = useNavigate();
@@ -50,7 +51,8 @@ function HomePage({ FormHandle }) {
         <div className="MainContainer">
             <div className="welcome-user">
                 <text>Welcome {token.username}!</text>
-                <img src="/assets/notification.svg" alt="Notification" className="notification-img" />
+               {/* <img src="/assets/notification.svg" alt="Notification" className="notification-img" />*/}
+                <NotificationBell></NotificationBell>
             </div>
 
             <div className="search-bar">

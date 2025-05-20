@@ -18,7 +18,9 @@ import { Planner } from "./Components/Planner";
 import FavoriteRecipes from "./Components/FavoriteRecipes";
 import MyRecipes from "./Components/MyRecipes";
 import MyShoppingLists from "./Components/MyShoppingLists";
-import DemoWrapper from "./Components/DemoWrapper"; // ✅ Importa la demo del planner
+import DemoWrapper from "./Components/DemoWrapper";
+import PublicationRequestsPage from "./Components/PublicationRequestsPage";
+import UserNotificationsPage from "./Components/UserNotificationsPage"; // ✅ Importa la demo del planner
 
 
 function App() {
@@ -80,6 +82,9 @@ function App() {
                 <Route path="/favorite-recipes" element={<PrivateRoute><FavoriteRecipes /></PrivateRoute>} />
                 <Route path="/My-Recipes" element={<PrivateRoute><MyRecipes /></PrivateRoute>} />
                 <Route path="/My-ShoppingLists" element={<PrivateRoute><MyShoppingLists /></PrivateRoute>} />
+                <Route path="/publication-requests" element={<PublicationRequestsPage />} />
+                <Route path="/notifications" element={<UserNotificationsPage />} />
+
 
 
 

@@ -52,6 +52,37 @@ function MyRecipes() {
         fetchRecipes();
     }, [view]);
 
+    const handleRequestPublic = async (recipeId) => {
+
+        const tokenData = JSON.parse(localStorage.getItem("tokenData"));
+        const userId = tokenData?.userId;
+
+        console.log("User ID desde tokenData:", userId);
+
+
+
+        try {
+            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/request-approval`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: parseInt(userId) })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(`❌ Error: ${data.message}`);
+            } else {
+                alert("✅ Solicitud enviada al administrador");
+            }
+        } catch (err) {
+            console.error("Error al solicitar publicación:", err);
+            alert("❌ Hubo un error al enviar la solicitud");
+        }
+    };
+
     const options = ['Public', 'Private', 'Requests'];
 
     return (
@@ -114,6 +145,14 @@ function MyRecipes() {
                                                 <span>⭐ {item.difficulty}</span>
                                                 <span>⏱ {item.preparation_time} min</span>
                                             </div>
+
+                                            {/* Botón para solicitar publicación */}
+                                            <button
+                                                className="request-public-btn"
+                                                onClick={() => handleRequestPublic(item.id)}
+                                            >
+                                                Request Public
+                                            </button>
                                         </div>
                                     </li>
                                 ))}
