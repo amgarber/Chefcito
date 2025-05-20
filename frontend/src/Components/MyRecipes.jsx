@@ -3,54 +3,73 @@ import { useNavigate } from 'react-router-dom';
 import SegmentedControl from './SegmentedControl';
 import '../css/MyRecipes.css';
 import '../css/FavoriteRecipes.css';
+import LoadingChef from "./LoadingChef";
 
 function MyRecipes() {
     const navigate = useNavigate();
     const [view, setView] = useState('Public');
     const [publicRecipes, setPublicRecipes] = useState([]);
     const [privateRecipes, setPrivateRecipes] = useState([]);
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
-        const fetchRecipes = async () => {
-            const token = localStorage.getItem("token");
-            if (!token) return;
+        const token = localStorage.getItem("token");
+        const tokenData = JSON.parse(localStorage.getItem("tokenData"));
+        const userId = tokenData?.userId;
 
-            const endpointMap = {
-                'Public': 'my-public',
-                'Private': 'my-private'
-                // 'Requests': 'my-requests' // 👈 futura implementación
-            };
+        if (!token || !userId) return;
 
-            const endpoint = endpointMap[view];
-            if (!endpoint) return;
+        const fetchData = async () => {
+            if (view === 'Public' || view === 'Private') {
+                const endpointMap = {
+                    'Public': 'my-public',
+                    'Private': 'my-private',
+                };
 
-            try {
-                const res = await fetch(`http://localhost:3001/api/recipes/${endpoint}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+                const endpoint = endpointMap[view];
+                if (!endpoint) return;
+                setLoading(false);
 
-                const data = await res.json();
+                try {
+                    const res = await fetch(`http://localhost:3001/api/recipes/${endpoint}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
 
-                if (!res.ok) {
-                    console.error(`❌ Error al obtener recetas ${view.toLowerCase()}:`, data);
-                    return;
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        console.error(`❌ Error al obtener recetas ${view.toLowerCase()}:`, data);
+                        return;
+                    }
+
+                    if (view === 'Public') setPublicRecipes(data);
+                    if (view === 'Private') setPrivateRecipes(data);
+
+                } catch (err) {
+                    console.error(`❌ Error al cargar recetas ${view.toLowerCase()}:`, err);
                 }
 
-                console.log(`📦 Recetas ${view} recibidas:`, data);
-
-                if (!Array.isArray(data)) return;
-
-                if (view === 'Public') setPublicRecipes(data);
-                if (view === 'Private') setPrivateRecipes(data);
-            } catch (err) {
-                console.error(`❌ Error al cargar recetas ${view.toLowerCase()}:`, err);
+            } else if (view === 'Requests') {
+                setLoading(true);
+                try {
+                    const res = await fetch(`http://localhost:3001/api/users/${userId}/requests`);
+                    const data = await res.json();
+                    setRequests(data);
+                } catch (err) {
+                    console.error("❌ Error al cargar solicitudes:", err);
+                } finally {
+                    setLoading(false);
+                }
             }
         };
 
-        fetchRecipes();
+        fetchData();
     }, [view]);
+
 
     const handleRequestPublic = async (recipeId) => {
 
@@ -105,6 +124,7 @@ function MyRecipes() {
             alert("❌ Hubo un error al cambiar la visibilidad");
         }
     };
+
 
     const options = ['Public', 'Private', 'Requests'];
 
@@ -191,7 +211,35 @@ function MyRecipes() {
                 )}
 
                 {view === 'Requests' && (
-                    <p>Mostrar solicitudes de aprobación (pendiente)</p>
+                    <>
+                        {requests.length === 0 ? (
+                            <p className="no-requests">You haven't submitted any publication requests.</p>
+                        ) : (
+                            <ul className="favorites-list">
+                                {requests.map((item) => (
+                                    <li key={item.id_solicitation} className={`favorite-card ${item.status.toLowerCase()}`}>
+                                        <img
+                                            src={item.recipe.image?.url}
+                                            alt={item.recipe.name}
+                                            className="favorite-image"
+                                            onClick={() => navigate(`/recipe/${item.recipe.id}`)}
+                                        />
+                                        <div className="favorite-info">
+                                            <h3 className="titulo">{item.recipe.name}</h3>
+                                            <p className="favorite-description">{item.recipe.description}</p>
+                                            <div className="favorite-meta">
+                                                <span>⭐ {item.recipe.difficulty}</span>
+                                                <span>⏱ {item.recipe.preparation_time} min</span>
+                                            </div>
+                                            <p className="status">
+                                                Status: <strong>{item.status}</strong>
+                                            </p>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </>
                 )}
             </div>
         </div>

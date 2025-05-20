@@ -65,3 +65,19 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+.favorite-card.pending {
+    border-left: 6px solid #ffdd00;
+}
+
+.favorite-card.approved {
+    border-left: 6px solid #4caf50;
+}
+
+.favorite-card.rejected {
+    border-left: 6px solid #f44336;
+}
+
+.status {
+    margin-top: 8px;
+    font-weight: bold;
+}

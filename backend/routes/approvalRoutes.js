@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const approvalController = require('../controllers/approvalController');
-const {makePrivate} = require("../controllers/approvalController");
+const {makePrivate, getRequestsByUser} = require("../controllers/approvalController");
 
 // Usuario solicita publicación de receta
 router.post('/recipes/:id/request-approval', approvalController.requestApproval);
@@ -16,6 +16,13 @@ router.patch('/admin/requests/:id/approve', approvalController.approveRequest);
 router.patch('/admin/requests/:id/reject', approvalController.rejectRequest);
 
 router.get('/users/:id/approval-status', approvalController.getUserNotifications);
+
+/*
+router.get('/users/:userId/approval-status', getRequestsByUser);
+*/
+
+router.get('/users/:userId/requests', getRequestsByUser);
+
 
 
 module.exports = router;
