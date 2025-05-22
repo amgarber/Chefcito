@@ -43,3 +43,41 @@
 .controls{
     margin-top: 10px;
 }
+.make-private-btn,
+.request-public-btn {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.make-private-btn:hover,
+.request-public-btn:hover {
+    background-color: #e69500;
+}
+
+.titulo-MyRecipes{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.favorite-card.pending {
+    border-left: 6px solid #ffdd00;
+}
+
+.favorite-card.approved {
+    border-left: 6px solid #4caf50;
+}
+
+.favorite-card.rejected {
+    border-left: 6px solid #f44336;
+}
+
+.status {
+    margin-top: 8px;
+    font-weight: bold;
+}

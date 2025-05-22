@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
-import "../css/planner.css"; // si moviste globals aquí, o usa './globals.css'
+import "../css/Planner.css"; // si moviste globals aquí, o usa './globals.css'
 import { SnackProvider } from "../Components/SnackProvider";
 
-import '../css/planner.css';
+import '../css/Planner.css';
 import { SnackProvider } from '../Components/SnackProvider';
 const inter = Inter({ subsets: ["latin"] });
 

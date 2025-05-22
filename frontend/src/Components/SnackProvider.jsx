@@ -1,5 +1,3 @@
-'use client';
-
 import React, { createContext, useState, useContext, useCallback } from 'react';
 
 // Íconos opcionales, podés personalizar o eliminar si no los tenés

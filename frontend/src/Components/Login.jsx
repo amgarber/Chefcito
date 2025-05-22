@@ -27,6 +27,8 @@ const Login = ({ FormHandle }) => {
             });
 
             const data = await response.json();
+            console.log("🔍 Login data from backend:", data);
+
 
             if (!response.ok) {
                 alert(data.message || 'Login fallido');
@@ -40,13 +42,17 @@ const Login = ({ FormHandle }) => {
             // Guardar login persistente
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("token", data.token);
+
             const decoded = jwtDecode(data.token);
-            localStorage.setItem("tokenData", JSON.stringify(decoded));
-            localStorage.setItem('tokenData', JSON.stringify({
+            localStorage.setItem("tokenData", JSON.stringify({
                 userId: data.user.id,
                 username: data.user.username,
-                pictureUrl: data.user.picture?.url || null
+                pictureUrl: data.user.pictureUrl
             }));
+            localStorage.setItem("role", data.user.role);
+
+
+
 
 
 
@@ -116,7 +122,7 @@ const Login = ({ FormHandle }) => {
                             <label htmlFor="rememberMe">Remember me</label>
                         </div>
 
-                        <button type="submit" className="login-button">Sign In</button>
+                        <button type="submit" className="LoginButton">Sign In</button>
                     </form>
 
                     <div className="login-divider">

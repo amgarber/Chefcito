@@ -2,55 +2,129 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SegmentedControl from './SegmentedControl';
 import '../css/MyRecipes.css';
-import '../css/FavoriteRecipes.css'; // reutilizamos los estilos de las cards
+import '../css/FavoriteRecipes.css';
+import LoadingChef from "./LoadingChef";
 
 function MyRecipes() {
     const navigate = useNavigate();
     const [view, setView] = useState('Public');
     const [publicRecipes, setPublicRecipes] = useState([]);
     const [privateRecipes, setPrivateRecipes] = useState([]);
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
-        const fetchRecipes = async () => {
-            const token = localStorage.getItem("token");
-            if (!token) return;
+        const token = localStorage.getItem("token");
+        const tokenData = JSON.parse(localStorage.getItem("tokenData"));
+        const userId = tokenData?.userId;
 
-            const endpointMap = {
-                'Public': 'my-public',
-                'Private': 'my-private'
-                // 'Requests': 'my-requests' // 👈 futura implementación
-            };
+        if (!token || !userId) return;
 
-            const endpoint = endpointMap[view];
-            if (!endpoint) return;
+        const fetchData = async () => {
+            if (view === 'Public' || view === 'Private') {
+                const endpointMap = {
+                    'Public': 'my-public',
+                    'Private': 'my-private',
+                };
 
-            try {
-                const res = await fetch(`http://localhost:3001/api/recipes/${endpoint}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+                const endpoint = endpointMap[view];
+                if (!endpoint) return;
+                setLoading(false);
 
-                const data = await res.json();
+                try {
+                    const res = await fetch(`http://localhost:3001/api/recipes/${endpoint}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
 
-                if (!res.ok) {
-                    console.error(`❌ Error al obtener recetas ${view.toLowerCase()}:`, data);
-                    return;
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        console.error(`❌ Error al obtener recetas ${view.toLowerCase()}:`, data);
+                        return;
+                    }
+
+                    if (view === 'Public') setPublicRecipes(data);
+                    if (view === 'Private') setPrivateRecipes(data);
+
+                } catch (err) {
+                    console.error(`❌ Error al cargar recetas ${view.toLowerCase()}:`, err);
                 }
 
-                console.log(`📦 Recetas ${view} recibidas:`, data);
-
-                if (!Array.isArray(data)) return;
-
-                if (view === 'Public') setPublicRecipes(data);
-                if (view === 'Private') setPrivateRecipes(data);
-            } catch (err) {
-                console.error(`❌ Error al cargar recetas ${view.toLowerCase()}:`, err);
+            } else if (view === 'Requests') {
+                setLoading(true);
+                try {
+                    const res = await fetch(`http://localhost:3001/api/users/${userId}/requests`);
+                    const data = await res.json();
+                    setRequests(data);
+                } catch (err) {
+                    console.error("❌ Error al cargar solicitudes:", err);
+                } finally {
+                    setLoading(false);
+                }
             }
         };
 
-        fetchRecipes();
+        fetchData();
     }, [view]);
+
+
+    const handleRequestPublic = async (recipeId) => {
+
+        const tokenData = JSON.parse(localStorage.getItem("tokenData"));
+        const userId = tokenData?.userId;
+
+        console.log("User ID desde tokenData:", userId);
+
+
+
+        try {
+            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/request-approval`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: parseInt(userId) })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(`❌ Error: ${data.message}`);
+            } else {
+                alert("✅ Solicitud enviada al administrador");
+            }
+        } catch (err) {
+            console.error("Error al solicitar publicación:", err);
+            alert("❌ Hubo un error al enviar la solicitud");
+        }
+    };
+
+    const handleMakePrivate = async (recipeId) => {
+        try {
+            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/make-private`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(`❌ Error: ${data.message}`);
+            } else {
+                alert("✅ La receta se hizo privada");
+                setPublicRecipes((prev) => prev.filter((r) => r.id !== recipeId)); // Actualiza la lista localmente
+            }
+        } catch (err) {
+            console.error("Error al hacer receta privada:", err);
+            alert("❌ Hubo un error al cambiar la visibilidad");
+        }
+    };
+
 
     const options = ['Public', 'Private', 'Requests'];
 
@@ -79,12 +153,18 @@ function MyRecipes() {
                                             onClick={() => navigate(`/recipe/${item.id}`)}
                                         />
                                         <div className="favorite-info">
-                                            <h3 className="titulo">{item.name}</h3>
+                                            <h3 className="titulo-MyRecipes">{item.name}</h3>
                                             <p className="favorite-description">{item.description}</p>
                                             <div className="favorite-meta">
                                                 <span>⭐ {item.difficulty}</span>
                                                 <span>⏱ {item.preparation_time} min</span>
                                             </div>
+                                            <button
+                                                className="make-private-btn"
+                                                onClick={() => handleMakePrivate(item.id)}
+                                            >
+                                                Make Recipe Private
+                                            </button>
                                         </div>
                                     </li>
                                 ))}
@@ -114,6 +194,14 @@ function MyRecipes() {
                                                 <span>⭐ {item.difficulty}</span>
                                                 <span>⏱ {item.preparation_time} min</span>
                                             </div>
+
+                                            {/* Botón para solicitar publicación */}
+                                            <button
+                                                className="request-public-btn"
+                                                onClick={() => handleRequestPublic(item.id)}
+                                            >
+                                                Request Public
+                                            </button>
                                         </div>
                                     </li>
                                 ))}
@@ -123,7 +211,35 @@ function MyRecipes() {
                 )}
 
                 {view === 'Requests' && (
-                    <p>Mostrar solicitudes de aprobación (pendiente)</p>
+                    <>
+                        {requests.length === 0 ? (
+                            <p className="no-requests">You haven't submitted any publication requests.</p>
+                        ) : (
+                            <ul className="favorites-list">
+                                {requests.map((item) => (
+                                    <li key={item.id_solicitation} className={`favorite-card ${item.status.toLowerCase()}`}>
+                                        <img
+                                            src={item.recipe.image?.url}
+                                            alt={item.recipe.name}
+                                            className="favorite-image"
+                                            onClick={() => navigate(`/recipe/${item.recipe.id}`)}
+                                        />
+                                        <div className="favorite-info">
+                                            <h3 className="titulo">{item.recipe.name}</h3>
+                                            <p className="favorite-description">{item.recipe.description}</p>
+                                            <div className="favorite-meta">
+                                                <span>⭐ {item.recipe.difficulty}</span>
+                                                <span>⏱ {item.recipe.preparation_time} min</span>
+                                            </div>
+                                            <p className="status">
+                                                Status: <strong>{item.status}</strong>
+                                            </p>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </>
                 )}
             </div>
         </div>

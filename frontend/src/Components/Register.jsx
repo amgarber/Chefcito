@@ -119,16 +119,16 @@ function Register({ FormHandle }) {
                 <Icon icon={icon} size={20} color="white" />
               </span>
                         </div>
-                        <div className="input-group">
+                        {/*<div className="input-group">
                             <label className="upload-label">Upload profile picture:</label>
                             <input
                                 type="file"
                                 accept="image/*"
                                 onChange={(e) => setSelectedFile(e.target.files[0])}
                             />
-                        </div>
+                        </div>*/}
                         <div className="signInWrapper">
-                            <button type="submit" className="signIn">Sign In</button>
+                            <button type="submit" className="signInButton">Sign In</button>
                         </div>
                     </form>
 
