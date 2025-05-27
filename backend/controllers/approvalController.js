@@ -1,6 +1,6 @@
 const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
-
+const mailer = require('../NodeMailer/mailer');
 // POST /recipes/:id/request-approval
 exports.requestApproval = async (req, res) => {
     const recipeId = parseInt(req.params.id);
@@ -8,7 +8,10 @@ exports.requestApproval = async (req, res) => {
 
     try {
         const recipe = await prisma.recipe.findUnique({
-            where: { id: recipeId }
+            where: { id: recipeId },
+            include: {
+                user: true
+            }
         });
 
         if (!recipe || recipe.UserId !== userId) {
@@ -32,6 +35,18 @@ exports.requestApproval = async (req, res) => {
                 id_user_solicitor: userId
             }
         });
+        const adminEmail = "azulgarber@gmail.com";
+        const adminName = "Chefcito";
+        const subject = recipe.name || "Receta sin título";
+        const time = new Date().toLocaleString();
+
+        await mailer.RequestforAdminNotification(
+            adminName,
+            recipe.user.username,
+            adminEmail,
+            subject,
+            time
+        );
 
         res.status(201).json({ message: "Solicitud enviada al administrador", request: newRequest });
     } catch (err) {
@@ -80,6 +95,7 @@ exports.approveRequest = async (req, res) => {
             include: { recipe: true }
         });
 
+
         res.json({ message: "Receta aprobada", request: updated });
     } catch (err) {
         console.error(err);
@@ -115,9 +131,17 @@ exports.approveRequest = async (req, res) => {
                     }
                 }
             },
-            include: { recipe: true }
+            include: {
+                recipe: true,
+                solicitor: true
+            }
         });
-
+        await mailer.sendApprovalResult(
+            updated.solicitor.username,
+            updated.solicitor.email,
+            updated.recipe.title,
+            true
+        );
         res.json({ message: "Receta aprobada", request: updated });
     } catch (err) {
         console.error(err);
@@ -137,8 +161,19 @@ exports.rejectRequest = async (req, res) => {
                 status: 'REJECTED',
                 id_admin: adminId
             },
-            include: { recipe: true }
+            include: {
+                recipe: true,
+                solicitor: true
+            }
         });
+
+
+        await mailer.sendApprovalResult(
+            updated.solicitor.username,
+            updated.solicitor.email,
+            updated.recipe.title,
+            false
+        );
 
         res.json({ message: "Receta rechazada", request: updated });
     } catch (err) {
