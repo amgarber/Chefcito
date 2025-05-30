@@ -5,6 +5,10 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const uploadToAzure = require('../services/azureUpload');
 
+const validatePassword = (password) => {
+    const regex =  /^(?=.*[A-Z]).{8,}$/;
+    return regex.test(password);
+};
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -20,6 +24,10 @@ const register = async (req, res) => {
 
         if (existingUser) {
             return res.status(400).json({ message: 'El nombre de usuario o el email ya están registrados' });
+        }
+
+        if(!validatePassword(password)) {
+            return res.status(400).json({ message: 'Password should contain 8 characters an 1 upper case' });
         }
 
         // 🔐 Hashear la contraseña
@@ -160,6 +168,9 @@ const getUserProfile = async (req, res) => {
         console.error("❌ Error al obtener perfil:", err);
         res.status(500).json({ message: 'Error interno del servidor' });
     }
+
+
+
 };
 
 module.exports = { register, login, updateUser, getUserProfile };

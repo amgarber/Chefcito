@@ -14,17 +14,38 @@ function Register({ FormHandle }) {
     const [type, setType] = useState("password");
     const [icon, setIcon] = useState(eyeOff);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [passwordValidations, setPasswordValidations] = useState({
+        length: false,
+        uppercase: false,
+    });
+    const [passwordsMatch, setPasswordsMatch] = useState(true);
+    const [formMessage, setFormMessage] = useState({ text: "", type: "" });
+
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
         if (!username || !email || !password || !confirmPassword) {
-            alert("Por favor completá todos los campos");
+            setFormMessage({ text: "Please fill all the fields", type: "error" });
+            setTimeout(() => {
+                setFormMessage({ text: "", type: "" });
+            }, 4000);
             return;
         }
 
         if (password !== confirmPassword) {
-            alert("Las contraseñas no coinciden");
+            setFormMessage({ text: "Passwords do not match", type: "error" });
+            setTimeout(() => {
+                setFormMessage({ text: "", type: "" });
+            }, 4000);
+            return;
+        }
+
+        if (!passwordValidations.length || !passwordValidations.uppercase) {
+            setFormMessage({ text: "Passwords should contain 8 characters and one uppercase letter", type: "error" });
+            setTimeout(() => {
+                setFormMessage({ text: "", type: "" });
+            }, 4000);
             return;
         }
 
@@ -45,21 +66,28 @@ function Register({ FormHandle }) {
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.message || "Error al registrar");
+                setFormMessage({ text: data.message || "Error al registrar", type: "error" });
                 return;
             }
 
-            alert("¡Registro exitoso!");
+            setFormMessage({ text: "¡Sign up successful!", type: "success" });
+            setTimeout(() => {
+                setFormMessage({ text: "", type: "" });
+            }, 4000);
+
             setUsername("");
             setEmail("");
             setPassword("");
             setConfirmPassword("");
             setSelectedFile(null);
-            FormHandle(); // si necesitás notificar al componente padre
+            FormHandle();
             navigate("/login");
         } catch (error) {
             console.error("Error en el registro:", error);
-            alert("Ocurrió un error inesperado");
+            setFormMessage({ text: "There was an error signing up", type: "error" });
+            setTimeout(() => {
+                setFormMessage({ text: "", type: "" });
+            }, 4000);
         }
     };
 
@@ -72,7 +100,7 @@ function Register({ FormHandle }) {
         <div className="general-div">
             <div className="main-div">
                 <div className="register-container">
-                    <h1 className="register-title">Register <br /> now! </h1>
+                    <h1 className="register-title">Register <br /> now!</h1>
                     <p className="register-subtitle">
                         Sign up with your email and password to continue
                     </p>
@@ -86,6 +114,7 @@ function Register({ FormHandle }) {
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
+
                         <div className="input-group">
                             <img src="EnvelopeSimple.svg" alt="Email Icon" />
                             <input
@@ -95,38 +124,83 @@ function Register({ FormHandle }) {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                        <div className="input-group">
+
+                        {/* Contraseña */}
+                        <div className={`input-group ${
+                            password.length > 0 &&
+                            (!passwordValidations.length || !passwordValidations.uppercase)
+                                ? "shadow-invalid"
+                                : password.length > 0
+                                    ? "shadow-valid"
+                                    : ""
+                        }`}>
                             <img src="Lock.svg" alt="Lock Icon" />
                             <input
                                 type={type}
                                 placeholder="Password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setPassword(val);
+                                    setPasswordValidations({
+                                        length: val.length >= 8,
+                                        uppercase: /[A-Z]/.test(val),
+                                    });
+                                    setPasswordsMatch(confirmPassword === val);
+                                }}
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
                 <Icon icon={icon} size={20} color="white" />
               </span>
                         </div>
-                        <div className="input-group">
+
+                        {/* Requisitos */}
+                        {password.length > 0 && (
+                            <div className="password-requirements">
+                                <p className={passwordValidations.length ? "valid" : "invalid"}>
+                                    {passwordValidations.length ? '✔' : '✖'} At least 8 characters
+                                </p>
+                                <p className={passwordValidations.uppercase ? "valid" : "invalid"}>
+                                    {passwordValidations.uppercase ? '✔' : '✖'} At least 1 uppercase letter
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Confirmar contraseña */}
+                        <div className={`input-group ${
+                            confirmPassword.length > 0
+                                ? passwordsMatch
+                                    ? "shadow-valid"
+                                    : "shadow-invalid"
+                                : ""
+                        }`}>
                             <img src="Lock.svg" alt="Lock Icon" />
                             <input
                                 type={type}
                                 placeholder="Confirm Password"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setConfirmPassword(val);
+                                    setPasswordsMatch(password === val);
+                                }}
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
                 <Icon icon={icon} size={20} color="white" />
               </span>
                         </div>
-                        {/*<div className="input-group">
-                            <label className="upload-label">Upload profile picture:</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => setSelectedFile(e.target.files[0])}
-                            />
-                        </div>*/}
+
+                        {/* Mensaje de coincidencia */}
+                        {confirmPassword.length > 0 && (
+                            <div className={`password-match-message ${passwordsMatch ? 'match' : 'mismatch'}`}>
+                                {passwordsMatch ? '✔ Passwords match' : '✖ Passwords do not match'}
+                            </div>
+                        )}
+                        {formMessage.text && (
+                            <div className={`form-message ${formMessage.type}`}>
+                                {formMessage.text}
+                            </div>
+                        )}
                         <div className="signInWrapper">
                             <button type="submit" className="signInButton">Sign In</button>
                         </div>
@@ -139,7 +213,7 @@ function Register({ FormHandle }) {
                     </div>
 
                     <div className="register-google">
-                        <img src="/Clip path group.svg" alt="Google logo" />
+                        <img src="/GoogleLogo.svg" alt="Google logo" className="GoogleLogo" />
                         <img src="/VectorGoogle.svg" alt="Google text" />
                     </div>
                 </div>

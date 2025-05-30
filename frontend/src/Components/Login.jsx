@@ -51,11 +51,6 @@ const Login = ({ FormHandle }) => {
             }));
             localStorage.setItem("role", data.user.role);
 
-
-
-
-
-
             // Cambiar estado y redirigir
             FormHandle("HomePage");
             navigate("/home");
@@ -132,7 +127,7 @@ const Login = ({ FormHandle }) => {
                     </div>
 
                     <div className="login-google">
-                        <img src="/Clip path group.svg" alt="Google logo" />
+                        <img src="/GoogleLogo.svg" alt="Google logo" className="GoogleLogo" />
                         <img src="/VectorGoogle.svg" alt="Google text" />
                     </div>
                 </div>

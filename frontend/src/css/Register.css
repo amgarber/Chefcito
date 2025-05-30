@@ -54,8 +54,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 20px;
+    margin-top: 15px;
+    transition: box-shadow 0.3s ease;
 }
+
 
 .input-group input {
     border: none;
@@ -138,4 +140,80 @@
 .userIcon{
     color: whitesmoke;
     font-size: 24px;
+}
+
+.shadow-valid {
+    box-shadow: 0 0 6px 2px rgba(46, 204, 113, 0.5); /* Verde */
+}
+
+.shadow-invalid {
+    box-shadow: 0 0 6px 2px rgba(231, 76, 60, 0.5); /* Rojo */
+}
+
+.input-group input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+    padding: 5px;
+    color: #000;
+}
+
+.password-requirements {
+    margin-left: 10px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.password-requirements .valid {
+    color: #2ecc71;
+    margin-left: 20px;
+}
+
+.password-requirements .invalid {
+    color: #e74c3c;
+    margin-left: 20px;
+}
+
+.password-match-message {
+    margin-left: 10px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.password-match-message.match {
+    color: #2ecc71;
+    margin-left: 22px;
+}
+
+.password-match-message.mismatch {
+    color: #e74c3c;
+    margin-left: 20px;
+}
+.form-message {
+    margin: 10px 0;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.form-message.success {
+    background-color: #e9f8ec;
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+
+.form-message.error {
+    background-color: #fceaea;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.GoogleLogo{
+    gap: 5px;
+    width: 40px;
+    height: 40px;
 }
