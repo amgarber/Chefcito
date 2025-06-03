@@ -20,7 +20,8 @@ import MyRecipes from "./Components/MyRecipes";
 import MyShoppingLists from "./Components/MyShoppingLists";
 import DemoWrapper from "./Components/DemoWrapper";
 import PublicationRequestsPage from "./Components/PublicationRequestsPage";
-import UserNotificationsPage from "./Components/UserNotificationsPage"; // ✅ Importa la demo del planner
+import UserNotificationsPage from "./Components/UserNotificationsPage";
+import AdminRecipeDetails from "./Components/AdminRecipeDetails"; // ✅ Importa la demo del planner
 
 
 function App() {
@@ -84,6 +85,8 @@ function App() {
                 <Route path="/My-ShoppingLists" element={<PrivateRoute><MyShoppingLists /></PrivateRoute>} />
                 <Route path="/publication-requests" element={<PublicationRequestsPage />} />
                 <Route path="/notifications" element={<UserNotificationsPage />} />
+                <Route path="/admin/recipe/:id" element={<AdminRecipeDetails />} />
+
 
 
 
