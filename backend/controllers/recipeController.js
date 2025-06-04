@@ -13,13 +13,28 @@ const getAllRecipes = async (req, res) => {
 
                     query
                         ? {
-                            name: {
-                                contains: query,
-                                mode: 'insensitive'
-                            }
+                            OR: [
+                                {
+                                    name: {
+                                        contains: query,
+                                        mode: 'insensitive'
+                                    }
+                                },
+                                {
+                                    ingredients: {
+                                        some: {
+                                            ingredient: {
+                                                name: {
+                                                    contains: query,
+                                                    mode: 'insensitive'
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                         : {},
-
                     filters
                         ? {
                             recipeTypes: {

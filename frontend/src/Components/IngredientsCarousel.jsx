@@ -4,13 +4,21 @@ import '../css/IngredientsCarousel.css';
 
 function IngredientSelectorCarousel({ onChange }) {
     const [ingredients, setIngredients] = useState([]);
+    const [visibleIngredients, setVisibleIngredients] = useState([]);
     const [selected, setSelected] = useState({});
+
+    const pickRandomIngredients = (all, count = 10) => {
+        const shuffled = [...all].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    };
 
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
-                const res = await axios.get('/api/ingredients/all'); // deberías crear esta ruta
-                setIngredients(res.data);
+                const res = await axios.get('/api/ingredients/all');
+                const all = res.data;
+                setIngredients(all);
+                setVisibleIngredients(pickRandomIngredients(all));
             } catch (error) {
                 console.error("Error fetching ingredients:", error);
             }
@@ -33,13 +41,25 @@ function IngredientSelectorCarousel({ onChange }) {
 
     return (
         <div className="ingredient-carousel-container">
-            {ingredients.map((ingredient) => (
+            {visibleIngredients.map((ingredient) => (
                 <div
                     key={ingredient.id}
-                    className={`ingredient-icon-circle ${selected[ingredient.id] ? 'selected' : ''}`}
+                    className="ingredient-wrapper"
                     onClick={() => toggleSelect(ingredient.id)}
                 >
-                    <img src={ingredient.imageUrl} alt={ingredient.name} />
+                    <div className={`ingredient-icon-circle ${selected[ingredient.id] ? 'selected' : ''}`}>
+                        <img src={ingredient.imageUrl} alt={ingredient.name} />
+                        <div className="ingredient-label" title={ingredient.name}>
+                            {ingredient.name.includes(' ')
+                                ? (
+                                    <>
+                                        {ingredient.name.split(' ')[0]}<br />
+                                        {ingredient.name.split(' ').slice(1).join(' ')}
+                                    </>
+                                )
+                                : ingredient.name}
+                        </div>
+                    </div>
                 </div>
             ))}
         </div>
