@@ -51,7 +51,6 @@ function HomePage({ FormHandle }) {
         <div className="MainContainer">
             <div className="welcome-user">
                 <text>Welcome {token.username}!</text>
-               {/* <img src="/assets/notification.svg" alt="Notification" className="notification-img" />*/}
                 <NotificationBell></NotificationBell>
             </div>
 

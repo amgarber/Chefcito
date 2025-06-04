@@ -9,7 +9,7 @@ const getAllRecipes = async (req, res) => {
         const recipes = await prisma.recipe.findMany({
             where: {
                 AND: [
-                    { Privacy_settings: 'PUBLIC' }, // ✅ solo públicas
+                    { Privacy_settings: 'PUBLIC' },
 
                     query
                         ? {
@@ -55,7 +55,14 @@ const getAllRecipes = async (req, res) => {
             }
         });
 
-        const formatted = recipes.map(recipe => ({
+        const requiredFilters = filters ? filters.split(',') : [];
+
+        const filteredRecipes = recipes.filter(recipe => {
+            const recipeFilterNames = recipe.recipeTypes.map(rt => rt.filter.Name);
+            return requiredFilters.every(f => recipeFilterNames.includes(f));
+        });
+
+        const formatted = filteredRecipes.map(recipe => ({
             id: recipe.id,
             name: recipe.name,
             description: recipe.description,
@@ -66,6 +73,7 @@ const getAllRecipes = async (req, res) => {
         }));
 
         res.json(formatted);
+
     } catch (error) {
         console.error('Error al obtener recetas con filtros:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
