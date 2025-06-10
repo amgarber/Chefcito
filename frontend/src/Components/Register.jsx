@@ -66,7 +66,7 @@ function Register({ FormHandle }) {
             const data = await response.json();
 
             if (!response.ok) {
-                setFormMessage({ text: data.message || "Error al registrar", type: "error" });
+                setFormMessage({ text: data.message || "Error trying to register", type: "error" });
                 return;
             }
 

@@ -15,6 +15,8 @@ const Login = ({ FormHandle }) => {
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
     const [rememberMe, setRememberMe] = useState(false);
+    const [formMessage, setFormMessage] = useState({ text: "", type: "" });
+
 
     const handleLogin = async (e) => {
         e.preventDefault();

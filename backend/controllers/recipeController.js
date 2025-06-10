@@ -157,16 +157,30 @@ const getRecipeById = async (req, res) => {
 };
 
 
+const jwt = require('jsonwebtoken');
+
 const createRecipe = async (req, res) => {
     try {
         const {
             recipeTitle,
             recipeDescription,
             cookTimeMinutes,
-            // cookTimeHours
         } = req.body;
 
         const imageFile = req.file;
+        const token = req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Token requerido' });
+        }
+
+        let userId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            userId = decoded.userId;
+        } catch (err) {
+            return res.status(403).json({ message: 'Token inválido' });
+        }
 
         if (!imageFile) {
             return res.status(400).json({ message: "Image is required" });
@@ -180,11 +194,12 @@ const createRecipe = async (req, res) => {
                 name: recipeTitle,
                 description: recipeDescription,
                 preparation_time: preparationTime,
-                difficulty: "easy", // podés tomarlo también desde req.body si querés
+                difficulty: "easy",
+                Privacy_settings: "PRIVATE",
 
                 user: {
                     connect: {
-                        id: req.user?.id || 7 // hay que agregar aca la autenticacion con el token para que guarde el verdadero id del usuario. ahora le puse 1 para que funcione
+                        id: userId
                     }
                 },
 
@@ -196,14 +211,15 @@ const createRecipe = async (req, res) => {
             },
         });
 
-        console.log("✅ Receta creada:", newRecipe);
-        return res.status(201).json({ message: "Recipe created", data: newRecipe });
+        console.log("✅ Receta privada creada por el usuario:", userId);
+        return res.status(201).json({ message: "Private recipe created", data: newRecipe });
 
     } catch (err) {
         console.error("❌ Error al crear receta:", err);
         return res.status(500).json({ message: "Error al crear receta" });
     }
 };
+
 const addIngredientsAndSteps = async (req, res) => {
     const { recipeId, ingredients, steps, filters } = req.body;
 
