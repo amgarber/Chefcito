@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-
 export const Planner = () => {
     const today = new Date();
     const dayRefs = useRef([]);
@@ -11,7 +10,44 @@ export const Planner = () => {
     const [selectedMonth, setSelectedMonth] = useState(0);
     const [selectedDay, setSelectedDay] = useState(null);
     const monthOptions = monthNames.map((month, index) => ({ name: month, value: `${index}` }));
+    const [showAddRecipeModal, setShowAddRecipeModal] = useState(false);
+    const [recipeSearch, setRecipeSearch] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedRecipe, setSelectedRecipe] = useState(null);
+    const [plannerEntries, setPlannerEntries] = useState([]);
+    const [selectedDayNumber, setSelectedDayNumber] = useState(1);
+    const [selectedMonthNumber, setSelectedMonthNumber] = useState(0);
+    const [selectedYearNumber, setSelectedYearNumber] = useState(new Date().getFullYear());
 
+
+    useEffect(() => {
+        const fetchPlannerData = async () => {
+            if (!selectedDay) return;
+
+            const token = localStorage.getItem("token");
+            const dateString = new Date(selectedDay.year, selectedDay.month, selectedDay.day).toISOString().split("T")[0];
+
+            try {
+                const res = await fetch(`http://localhost:3001/api/planner/day?date=${dateString}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setPlannerEntries(data);
+                } else {
+                    console.error("Error fetching planner data");
+                }
+            } catch (err) {
+                console.error("Error:", err);
+            }
+        };
+
+        fetchPlannerData();
+    }, [selectedDay]);
     const scrollToDay = (monthIndex, dayIndex) => {
         const targetDayIndex = dayRefs.current.findIndex(
             (ref) => ref && ref.getAttribute('data-month') === `${monthIndex}` && ref.getAttribute('data-day') === `${dayIndex}`
@@ -50,65 +86,83 @@ export const Planner = () => {
     };
 
     const generateCalendar = useMemo(() => {
-        const daysInYear = () => {
+        const getDaysInMonthWithPadding = (year, month) => {
             const days = [];
-            const startDay = new Date(year, 0, 1).getDay();
-            if (startDay < 6) {
-                for (let i = 0; i < startDay; i++) {
-                    days.push({ month: -1, day: 32 - startDay + i });
-                }
+            const firstDay = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            // Días vacíos al principio
+            for (let i = 0; i < firstDay; i++) {
+                days.push(null); // valor nulo, no objeto con month -1
             }
-            for (let m = 0; m < 12; m++) {
-                const daysInMonth = new Date(year, m + 1, 0).getDate();
-                for (let d = 1; d <= daysInMonth; d++) {
-                    days.push({ month: m, day: d });
-                }
+
+            // Días reales
+            for (let d = 1; d <= totalDays; d++) {
+                days.push({ day: d, month });
             }
-            const remainder = days.length % 7;
-            if (remainder > 0) {
-                const extra = 7 - remainder;
-                for (let i = 1; i <= extra; i++) {
-                    days.push({ month: 0, day: i });
-                }
-            }
+
             return days;
         };
 
-        const calendarDays = daysInYear();
+        const calendarDays = getDaysInMonthWithPadding(year, selectedMonth);
         const calendarWeeks = [];
+        // Rellenar la última semana con nulls si no tiene 7 días
+        const remainder = calendarDays.length % 7;
+        if (remainder !== 0) {
+            const toAdd = 7 - remainder;
+            for (let i = 0; i < toAdd; i++) {
+                calendarDays.push(null);
+            }
+        }
+
         for (let i = 0; i < calendarDays.length; i += 7) {
             calendarWeeks.push(calendarDays.slice(i, i + 7));
         }
 
         return calendarWeeks.map((week, weekIndex) => (
             <div className="tw-flex tw-w-full" key={`week-${weekIndex}`}>
-                {week.map(({ month, day }, dayIndex) => {
+                {week.map((cell, dayIndex) => {
                     const index = weekIndex * 7 + dayIndex;
-                    const isNewMonth = index === 0 || calendarDays[index - 1].month !== month;
-                    const isToday = today.getMonth() === month && today.getDate() === day && today.getFullYear() === year;
+
+                    if (!cell) {
+                        return (
+                            <div
+                                key={`empty-${index}`}
+                                className="planner-day tw-bg-transparent"
+                            />
+                        );
+                    }
+
+                    const { day, month } = cell;
+                    const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+                    const isNewMonth = index === 0;
+
                     return (
                         <div
                             key={`${month}-${day}`}
                             ref={(el) => { dayRefs.current[index] = el; }}
                             data-month={month}
                             data-day={day}
-                            onClick={() => handleDayClick(day, month, year)}
+                            onClick={() => handleDayClick(day, selectedMonth, year)}
                             className="planner-day"
                         >
-                            <span className={`tw-absolute tw-left-1 tw-top-1 tw-flex tw-size-5 tw-items-center tw-justify-center tw-rounded-full tw-text-xs sm:tw-size-6 sm:tw-text-sm lg:tw-left-2 lg:tw-top-2 lg:tw-size-8 lg:tw-text-base ${isToday ? 'planner-today' : ''} ${month < 0 ? 'planner-old-month' : 'planner-current-month'}`}>
-                                {day}
-                            </span>
+                        <span className={`tw-absolute tw-left-1 tw-top-1 tw-flex tw-size-5 tw-items-center tw-justify-center tw-rounded-full tw-text-xs sm:tw-size-6 sm:tw-text-sm lg:tw-left-2 lg:tw-top-2 lg:tw-size-8 lg:tw-text-base ${
+                            isToday ? 'planner-today' : 'planner-current-month'
+                        }`}>
+                            {day}
+                        </span>
                             {isNewMonth && (
                                 <span className="tw-absolute tw-bottom-0.5 tw-left-0 tw-w-full tw-truncate tw-px-1.5 tw-text-sm tw-font-semibold tw-text-slate-300 sm:tw-bottom-0 sm:tw-text-lg lg:tw-bottom-2.5 lg:tw-left-3.5 lg:-tw-mb-1 lg:tw-w-fit lg:tw-px-0 lg:tw-text-xl 2xl:tw-mb-[-4px] 2xl:tw-text-2xl">
-                                    {monthNames[month]}
-                                </span>
+                                {monthNames[selectedMonth]}
+                            </span>
                             )}
                         </div>
                     );
                 })}
             </div>
         ));
-    }, [year]);
+    }, [year, selectedMonth]);
+
 
     useEffect(() => {
         import('../css/Planner.css');
@@ -141,16 +195,24 @@ export const Planner = () => {
             <div className="tw-sticky -tw-top-px tw-z-50 tw-w-full tw-rounded-t-2xl tw-bg-white tw-px-5 tw-pt-7 sm:tw-px-8 sm:tw-pt-8">
                 <div className="tw-mb-4 tw-flex tw-w-full tw-flex-wrap tw-items-center tw-justify-between tw-gap-6">
                     <div className="tw-flex tw-flex-wrap tw-gap-2 sm:tw-gap-3">
-                        <Select name="month" value={`${selectedMonth}`} options={monthOptions} onChange={handleMonthChange} />
-                        <button onClick={handleTodayClick} type="button" className="tw-rounded-lg tw-border tw-border-gray-300 tw-bg-white tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-text-gray-900 hover:tw-bg-gray-100 lg:tw-px-5 lg:tw-py-2.5">
+                        <Select name="month" value={`${selectedMonth}`} options={monthOptions}
+                                onChange={handleMonthChange}/>
+                        <button onClick={handleTodayClick} type="button"
+                                className="tw-rounded-lg tw-border tw-border-gray-300 tw-bg-white tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-text-gray-900 hover:tw-bg-gray-100 lg:tw-px-5 lg:tw-py-2.5">
                             Today
                         </button>
-                        <button type="button" className="tw-whitespace-nowrap tw-rounded-lg tw-bg-gradient-to-r tw-from-cyan-500 tw-to-blue-500 tw-px-3 tw-py-1.5 tw-text-center tw-text-sm tw-font-medium tw-text-white hover:tw-bg-gradient-to-bl focus:tw-outline-none focus:tw-ring-4 focus:tw-ring-cyan-300 sm:tw-rounded-xl lg:tw-px-5 lg:tw-py-2.5">
+                        <button
+                            type="button"
+                            onClick={() => setShowAddRecipeModal(true)}
+                            className="tw-whitespace-nowrap tw-rounded-lg tw-bg-gradient-to-r tw-from-cyan-500 tw-to-blue-500 tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-text-white hover:tw-bg-gradient-to-bl focus:tw-ring-4 focus:tw-ring-cyan-300 sm:tw-rounded-xl lg:tw-px-5 lg:tw-py-2.5"
+                        >
                             + Add Recipe
                         </button>
                     </div>
                     <div className="tw-flex tw-w-fit tw-items-center tw-justify-between">
-                        <button onClick={handlePrevYear} className="tw-rounded-full tw-border tw-border-slate-300 tw-p-1 tw-transition-colors hover:tw-bg-slate-100 sm:tw-p-2">←</button>
+                        <button onClick={handlePrevYear}
+                                className="tw-rounded-full tw-border tw-border-slate-300 tw-p-1 tw-transition-colors hover:tw-bg-slate-100 sm:tw-p-2">←
+                        </button>
                         <h1 className="tw-min-w-16 tw-text-center tw-text-lg tw-font-semibold sm:tw-min-w-20 sm:tw-text-xl">{year}</h1>
                         <button onClick={handleNextYear} className="tw-rounded-full tw-border tw-border-slate-300 tw-p-1 tw-transition-colors hover:tw-bg-slate-100 sm:tw-p-2">→</button>
                     </div>
@@ -170,30 +232,216 @@ export const Planner = () => {
                             <h2 className="tw-text-2xl tw-font-bold">
                                 {monthNames[selectedDay.month]} {selectedDay.day}, {selectedDay.year}
                             </h2>
-                            <button onClick={() => setSelectedDay(null)} className="tw-text-red-500 tw-font-bold tw-text-lg hover:tw-text-red-700">
+                            <button onClick={() => setSelectedDay(null)}
+                                    className="tw-text-red-500 tw-font-bold tw-text-lg hover:tw-text-red-700">
                                 ×
                             </button>
                         </div>
 
                         <div className="tw-space-y-6">
-                            {['Breakfast 🥐', 'Lunch 🍝', 'Snack 🍪', 'Dinner 🍽'].map((category) => (
+                            {['Breakfast', 'Lunch', 'Snack', 'Dinner'].map((category) => (
                                 <div key={category}>
-                                    <h3 className="tw-text-lg tw-font-semibold tw-text-slate-700 tw-mb-2">{category}</h3>
-                                    <div className="tw-rounded tw-border tw-border-slate-200 tw-p-3 tw-text-slate-500 tw-italic">
-                                        No recipes added yet.
-                                    </div>
+                                    <h3 className="tw-text-lg tw-font-semibold tw-text-slate-700 tw-mb-2">
+                                        {category} {category === "Breakfast" ? "🥐" : category === "Lunch" ? "🍝" : category === "Snack" ? "🍪" : "🍽"}
+                                    </h3>
+
+                                    {plannerEntries.filter(e => e.category === category).length === 0 ? (
+                                        <div
+                                            className="tw-rounded tw-border tw-border-slate-200 tw-p-3 tw-text-slate-500 tw-italic">
+                                            No recipes added yet.
+                                        </div>
+                                    ) : (
+                                        <ul className="tw-space-y-2">
+                                            {plannerEntries
+                                                .filter(e => e.category === category)
+                                                .map((entry) => (
+                                                    <li key={entry.id} className="tw-flex tw-items-center tw-gap-3">
+                                                        {entry.recipe.image?.url && (
+                                                            <img
+                                                                src={entry.recipe.image.url}
+                                                                alt={entry.recipe.name}
+                                                                className="planner-recipe-thumb"
+                                                            />
+                                                        )}
+                                                        <span className="tw-font-medium">{entry.recipe.name}</span>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    )}
                                 </div>
                             ))}
                         </div>
 
+
                         <div className="tw-mt-6 tw-flex tw-justify-end">
-                            <button onClick={() => setSelectedDay(null)} className="tw-px-4 tw-py-2 tw-bg-red-500 tw-text-white tw-rounded-lg hover:tw-bg-red-600">
+                            <button onClick={() => setSelectedDay(null)}
+                                    className="tw-px-4 tw-py-2 tw-bg-red-500 tw-text-white tw-rounded-lg hover:tw-bg-red-600">
                                 Cerrar
                             </button>
                         </div>
                     </div>
                 </div>
             )}
+            {showAddRecipeModal && (
+                <div className="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50">
+                    <div className="tw-bg-white tw-p-6 tw-rounded-xl tw-shadow-xl tw-w-full tw-max-w-md tw-text-left">
+                        <h2 className="tw-text-xl tw-font-bold tw-mb-4">Add Recipe</h2>
+
+                        {/* 📅 Selector de fecha */}
+                        <div className="tw-mb-4">
+                            <label className="tw-block tw-mb-2 tw-font-medium">Select date:</label>
+                            <div className="tw-flex tw-gap-2">
+                                <select
+                                    value={selectedDayNumber}
+                                    onChange={(e) => setSelectedDayNumber(parseInt(e.target.value))}
+                                    className="tw-p-2 tw-border tw-rounded tw-w-1/3"
+                                >
+                                    {[...Array(31)].map((_, i) => (
+                                        <option key={i} value={i + 1}>{i + 1}</option>
+                                    ))}
+                                </select>
+
+                                <select
+                                    value={selectedMonthNumber}
+                                    onChange={(e) => setSelectedMonthNumber(parseInt(e.target.value))}
+                                    className="tw-p-2 tw-border tw-rounded tw-w-1/3"
+                                >
+                                    {monthNames.map((month, index) => (
+                                        <option key={index} value={index}>{month}</option>
+                                    ))}
+                                </select>
+
+                                <select
+                                    value={selectedYearNumber}
+                                    onChange={(e) => setSelectedYearNumber(parseInt(e.target.value))}
+                                    className="tw-p-2 tw-border tw-rounded tw-w-1/3"
+                                >
+                                    {[...Array(5)].map((_, i) => {
+                                        const year = new Date().getFullYear() + i;
+                                        return <option key={i} value={year}>{year}</option>;
+                                    })}
+                                </select>
+                            </div>
+                        </div>
+
+                        <label className="tw-block tw-mb-2 tw-font-medium">Select category:</label>
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            className="tw-w-full tw-mb-4 tw-p-2 tw-border tw-rounded"
+                        >
+                            <option value="">Choose...</option>
+                            <option value="Breakfast">Breakfast 🥐</option>
+                            <option value="Lunch">Lunch 🍝</option>
+                            <option value="Snack">Snack 🍪</option>
+                            <option value="Dinner">Dinner 🍽</option>
+                        </select>
+
+                        <label className="tw-block tw-mb-2 tw-font-medium">Search recipe by name:</label>
+                        <input
+                            type="text"
+                            className="tw-w-full tw-p-2 tw-border tw-rounded tw-mb-2"
+                            placeholder="Type to search..."
+                            value={recipeSearch}
+                            onChange={async (e) => {
+                                const query = e.target.value;
+                                setRecipeSearch(query);
+                                const token = localStorage.getItem("token");
+                                if (query.length > 1) {
+                                    const res = await fetch(`http://localhost:3001/api/recipes?search=${query}`, {
+                                        headers: { Authorization: `Bearer ${token}` }
+                                    });
+                                    const data = await res.json();
+                                    setSearchResults(data);
+                                } else {
+                                    setSearchResults([]);
+                                }
+                            }}
+                        />
+
+                        <ul className="tw-max-h-40 tw-overflow-y-auto tw-mb-4">
+                            {searchResults.map((recipe) => (
+                                <li
+                                    key={recipe.id}
+                                    onClick={() => setSelectedRecipe(recipe)}
+                                    className={`tw-p-2 tw-cursor-pointer hover:tw-bg-gray-100 tw-rounded ${selectedRecipe?.id === recipe.id ? 'tw-bg-blue-100' : ''}`}
+                                >
+                                    {recipe.name}
+                                </li>
+                            ))}
+                        </ul>
+
+                        <div className="tw-flex tw-justify-end tw-gap-3">
+                            <button onClick={() => setShowAddRecipeModal(false)} className="tw-px-4 tw-py-2 tw-bg-gray-300 tw-rounded hover:tw-bg-gray-400">Cancel</button>
+                            <button
+                                onClick={async () => {
+                                    if (!selectedCategory || !selectedRecipe) {
+                                        alert("Please choose a category and recipe");
+                                        return;
+                                    }
+
+                                    const dateObj = new Date(selectedYearNumber, selectedMonthNumber, selectedDayNumber);
+                                    const formattedDate = dateObj.toISOString().split("T")[0];
+                                    const token = localStorage.getItem("token");
+
+                                    try {
+                                        const res = await fetch("http://localhost:3001/api/planner", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                Authorization: `Bearer ${token}`
+                                            },
+                                            body: JSON.stringify({
+                                                recipeId: selectedRecipe.id,
+                                                category: selectedCategory,
+                                                date: formattedDate
+                                            })
+                                        });
+
+                                        if (res.ok) {
+                                            const newEntry = await res.json();
+                                            console.log("✅ Planner entry created:", newEntry);
+                                            // Fuerza refresco desde base de datos
+                                            setSelectedDay(null);
+                                            setTimeout(() => {
+                                                setSelectedDay({
+                                                    day: selectedDayNumber,
+                                                    month: selectedMonthNumber,
+                                                    year: selectedYearNumber
+                                                });
+                                            }, 50);
+
+                                            // Cierra y resetea
+                                            setShowAddRecipeModal(false);
+                                            setSelectedCategory('');
+                                            setRecipeSearch('');
+                                            setSearchResults([]);
+                                            setSelectedRecipe(null);
+                                        } else {
+                                            const err = await res.json();
+                                            console.error("❌ Error:", err);
+                                        }
+                                    } catch (err) {
+                                        console.error("❌ Error adding recipe:", err);
+                                    }
+
+                                    // Cleanup
+                                    setShowAddRecipeModal(false);
+                                    setSelectedCategory('');
+                                    setRecipeSearch('');
+                                    setSearchResults([]);
+                                    setSelectedRecipe(null);
+                                }}
+                                className="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded hover:tw-bg-blue-600"
+                            >
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
         </div>
     );
 };
