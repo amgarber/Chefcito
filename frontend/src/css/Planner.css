@@ -50,3 +50,7 @@
         height: 10rem;
     }
 }
+
+.planner-recipe-thumb {
+    @apply tw-w-16 tw-h-16 tw-object-cover tw-rounded-lg;
+}

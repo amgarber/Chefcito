@@ -11,6 +11,8 @@ const filterRoutes = require('./routes/filters');
 const shoppingListRoutes = require('./routes/ShoppingListRoutes');
 const dayRecipeRoutes = require('./controllers/dayRecipeRoutes');
 const approvalRoutes = require('./routes/approvalRoutes');
+const plannerRoutes = require('./controllers/plannerController');
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -28,6 +30,7 @@ app.use('/api/shopping-list', shoppingListRoutes);
 app.use('/api/day-recipes', dayRecipeRoutes);
 app.use('/api', approvalRoutes);
 app.use('/api', recipeRoutes);
+app.use('/api/planner', plannerRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);

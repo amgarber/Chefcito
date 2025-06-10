@@ -27,6 +27,7 @@ model User {
   approvalRequestsHandled Approval_Request[] @relation("Approver")
   picture                 User_Image?        @relation(fields: [pictureId], references: [id])
   dayRecipes              DayRecipe[]
+  PlannerRecipe           PlannerRecipe[]
 }
 
 model User_Image {
@@ -54,10 +55,11 @@ model Recipe {
   recipeTypes  Recipe_Type[]
   requests     Approval_Request[]
 
-  user       User        @relation(fields: [UserId], references: [id], onDelete: Cascade)
-  image      Image?      @relation(fields: [imageId], references: [id])
-  admin      User?       @relation("ApprovedByAdmin", fields: [id_approval_admin], references: [id])
-  dayRecipes DayRecipe[]
+  user          User            @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  image         Image?          @relation(fields: [imageId], references: [id])
+  admin         User?           @relation("ApprovedByAdmin", fields: [id_approval_admin], references: [id])
+  dayRecipes    DayRecipe[]
+  PlannerRecipe PlannerRecipe[]
 }
 
 model Image {
@@ -77,7 +79,7 @@ model Favourite {
 
 model Ingredients {
   id      Int                        @id @default(autoincrement())
-  name    String                      @unique
+  name    String                     @unique
   type    String
   images  Ingredient_Image[]
   recipes Recipe_Ingredient[]
@@ -154,13 +156,13 @@ model Planner {
 }
 
 model Approval_Request {
-  id_solicitation   Int             @id @default(autoincrement())
+  id_solicitation   Int            @id @default(autoincrement())
   id_recipe         Int
   id_user_solicitor Int
   id_admin          Int?
-  status            ApprovalStatus  @default(PENDING)
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  status            ApprovalStatus @default(PENDING)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   recipe    Recipe @relation(fields: [id_recipe], references: [id])
   solicitor User   @relation("Solicitor", fields: [id_user_solicitor], references: [id])
@@ -170,7 +172,6 @@ model Approval_Request {
   @@index([id_user_solicitor])
   @@index([id_admin])
 }
-
 
 enum Role {
   ADMIN
@@ -196,4 +197,18 @@ model DayRecipe {
   userId   Int
   recipe   Recipe   @relation(fields: [recipeId], references: [id])
   recipeId Int
+}
+
+model PlannerRecipe {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId Int
+
+  date     DateTime
+  category String
+
+  @@index([userId, date])
 }
