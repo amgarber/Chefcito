@@ -136,12 +136,17 @@ exports.approveRequest = async (req, res) => {
                 solicitor: true
             }
         });
+
+
+        const title = updated.recipe.name || "Receta sin título";
+
         await mailer.sendApprovalResult(
             updated.solicitor.username,
             updated.solicitor.email,
-            updated.recipe.title,
+            title,
             true
         );
+
         res.json({ message: "Receta aprobada", request: updated });
     } catch (err) {
         console.error(err);
@@ -167,11 +172,13 @@ exports.rejectRequest = async (req, res) => {
             }
         });
 
+        const title = updated.recipe.name || "Receta sin título";
+
 
         await mailer.sendApprovalResult(
             updated.solicitor.username,
             updated.solicitor.email,
-            updated.recipe.title,
+            title,
             false
         );
 
@@ -224,6 +231,7 @@ exports.makePrivate = async (req, res) => {
         res.status(500).json({ message: "Error interno al cambiar visibilidad" });
     }
 };
+// ...otros exports arriba
 
 exports.getRequestsByUser = async (req, res) => {
     const userId = parseInt(req.params.userId);
@@ -253,5 +261,48 @@ exports.getRequestsByUser = async (req, res) => {
     } catch (err) {
         console.error("Error al obtener solicitudes:", err);
         res.status(500).json({ message: "Error interno al obtener las solicitudes" });
+    }
+};
+
+
+exports.getRecipeAsAdmin = async (req, res) => {
+    const recipeId = parseInt(req.params.id);
+    const adminId = parseInt(req.query.adminId);
+
+    if (isNaN(recipeId) || isNaN(adminId)) {
+        return res.status(400).json({ message: "Parámetros inválidos" });
+    }
+
+    try {
+        const admin = await prisma.user.findUnique({
+            where: { id: adminId }
+        });
+
+        if (!admin || admin.role !== 'ADMIN') {
+            return res.status(403).json({ message: "Acceso denegado: no es un administrador válido" });
+        }
+
+        const recipe = await prisma.recipe.findUnique({
+            where: { id: recipeId },
+            include: {
+                user: { select: { username: true, email: true } },
+                image: true,
+                ingredients: {
+                    include: {
+                        ingredient: true
+                    }
+                },
+                instructions: true
+            }
+        });
+
+        if (!recipe) {
+            return res.status(404).json({ message: "Receta no encontrada" });
+        }
+
+        res.json(recipe);
+    } catch (err) {
+        console.error("Error al obtener receta como admin:", err);
+        res.status(500).json({ message: "Error interno al obtener receta" });
     }
 };

@@ -51,7 +51,6 @@ function HomePage({ FormHandle }) {
         <div className="MainContainer">
             <div className="welcome-user">
                 <text>Welcome {token.username}!</text>
-               {/* <img src="/assets/notification.svg" alt="Notification" className="notification-img" />*/}
                 <NotificationBell></NotificationBell>
             </div>
 
@@ -71,13 +70,26 @@ function HomePage({ FormHandle }) {
 
             <div className="foodType-carousel">
                 <div className="foodType">
-                    {/* ✅ Filtros conectados */}
                     <MultipleSelectionTag onChange={setSelectedFilters} />
+
+                    {recipes.length === 0 && (
+                        <div className="no-recipes-message">
+                            {selectedFilters.length > 0 && selectedIngredients.length === 0 && (
+                                <>There are no recipes matching the selected filters.</>
+                            )}
+                            {selectedIngredients.length > 0 && selectedFilters.length === 0 && (
+                                <>There are no recipes with the selected ingredients.</>
+                            )}
+                            {selectedFilters.length > 0 && selectedIngredients.length > 0 && (
+                                <>There are no recipes matching the selected filters and ingredients.</>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
 
             <div className="scrollable-recipes">
-                <PinterestLayout recipes={recipes} />
+                {recipes.length > 0 && <PinterestLayout recipes={recipes} />}
             </div>
         </div>
     );

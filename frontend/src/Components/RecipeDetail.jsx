@@ -5,6 +5,7 @@ import '../css/RecipeDetail.css';
 import { motion } from 'framer-motion';
 import FavoriteButton from "./FavoriteButton";
 import ShoppingListModal from "./ShoppingListModal";
+import LoadingChef from "./LoadingChef";
 
 function formatTime(minutes) {
     const hours = Math.floor(minutes / 60);
@@ -66,7 +67,7 @@ function RecipeDetail() {
         setSheetPosition(Math.max(120, Math.min(newPosition, window.innerHeight * 0.8)));
     };
 
-    if (loading) return <div className="recipe-detail-container"><p className="loading-text">Cargando receta...</p></div>;
+    if (loading) return <div className="recipe-detail-container"><LoadingChef message="Loading a delicious recipe..." />;</div>;
     if (!recipe) return <div className="recipe-detail-container"><h2>Receta no disponible</h2><p>No se encontró la receta con ID: {id}</p><button onClick={() => navigate('/')}>Volver al inicio</button></div>;
 
     return (

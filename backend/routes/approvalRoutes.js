@@ -23,6 +23,8 @@ router.get('/users/:userId/approval-status', getRequestsByUser);
 
 router.get('/users/:userId/requests', getRequestsByUser);
 
+router.get('/admin/recipe/:id', approvalController.getRecipeAsAdmin);
+
 
 
 module.exports = router;

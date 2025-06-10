@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import '../css/NotificationBell.css';
 
 function NotificationBell() {
     const navigate = useNavigate();
@@ -13,8 +14,8 @@ function NotificationBell() {
     };
 
     return (
-        <button onClick={handleClick}>
-            🔔 Notificaciones
+        <button className="notification-bell" onClick={handleClick}>
+            <span role="img" aria-label="bell">🔔</span>
         </button>
     );
 }
