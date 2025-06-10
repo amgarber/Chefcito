@@ -9,7 +9,7 @@ import RecipeDetail from './Components/RecipeDetail';
 import Plus from './Components/Plus';
 import Plus2 from "./Components/Plus2";
 import AddIngredients from "./Components/AddIngredients";
-import CreateRecipe from "./Components/CreateRecipe";
+import CreateRecipe from "./Components/CreateRecipeOld";
 import SetRecipeStepsAndIngredients from "./Components/SetRecipeStepsAndIngredients";
 import PrivateRoute from "./Components/PrivateRoute";
 import PublicRoute from "./Components/PublicRoute";
