@@ -71,7 +71,7 @@ function App() {
                     </PrivateRoute>
                 } />
 
-                <Route path="/planner-demo" element={<DemoWrapper />} /> {/* ✅ Ruta de prueba */}
+                <Route path="/planner-demo" element={<DemoWrapper />} />
                 <Route path="/plus" element={<PrivateRoute><LayoutWithNav><Plus /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/plus2" element={<PrivateRoute><LayoutWithNav><Plus2 /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><LayoutWithNav><Profile FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />

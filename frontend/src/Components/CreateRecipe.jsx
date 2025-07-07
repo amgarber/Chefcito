@@ -1,3 +1,4 @@
+/*
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../css/RecipeDetail.css';
@@ -135,7 +136,7 @@ function CreateRecipe() {
             >
                 <div className="drag-handle" />
                 <div className="Sheet-Content">
-                    {/*//modifico el titulo */}
+                    {/!*!//modifico el titulo *!/}
                     {isEditingTitle ? (
                         <input
                             type="text"
@@ -160,9 +161,9 @@ function CreateRecipe() {
                                  style={{width: '20px', height: '20px', opacity: 0.5}}/>
                         </h2>
                     )}
-                    {/*//modifico el titulo */}
+                    {/!*!//modifico el titulo *!/}
                     <div className="info-bar">
-                        {/* Tiempo */}
+                        {/!* Tiempo *!/}
                         <div className="item">
                             <img src="/icons/Time.svg" alt="tiempo" className="Icon-time"/>
                             {editingField === 'time' ? (
@@ -189,7 +190,7 @@ function CreateRecipe() {
                             )}
                         </div>
 
-                        {/* Calorías */}
+                        {/!* Calorías *!/}
                         <div className="item">
                             <img src="/icons/fire.svg" alt="calorías" className="Icon-fire"/>
                             {editingField === 'calories' ? (
@@ -216,7 +217,7 @@ function CreateRecipe() {
                             )}
                         </div>
 
-                        {/* Estrellas */}
+                        {/!* Estrellas *!/}
                         <div className="item">
                             <img src="/icons/star.svg" alt="rating" className="Icon-star"/>
                             {editingField === 'rating' ? (
@@ -245,7 +246,7 @@ function CreateRecipe() {
                     </div>
 
 
-                    {/* Tabs + flecha */}
+                    {/!* Tabs + flecha *!/}
                     <div className="NatigateOption">
                         {activeTab && (
                             <button
@@ -277,7 +278,7 @@ function CreateRecipe() {
                         </button>
                     </div>
 
-                    {/* About */}
+                    {/!* About *!/}
                     {activeTab === null && (
                         <div className="about-section">
                             <p className="about-title">About the food:</p>
@@ -317,14 +318,14 @@ function CreateRecipe() {
 
                 </div>
 
-                {/* Ingredients */
+                {/!* Ingredients *!/
                 }
                 {activeTab === "tab1" && (
                     <div className="accordion-wrapper">
                         <h2>Ingredients</h2>
                         <p className="about-title">Add your ingredient</p>
 
-                        {/* Input de búsqueda */}
+                        {/!* Input de búsqueda *!/}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
                             <input
                                 type="text"
@@ -343,12 +344,12 @@ function CreateRecipe() {
                             >+</button>
                         </div>
 
-                        {/* Mensaje de error si no existe */}
+                        {/!* Mensaje de error si no existe *!/}
                         {invalidIngredient && (
                             <p style={{ color: 'red', marginBottom: '12px' }}>❌ Not an ingredient</p>
                         )}
 
-                        {/* Lista de ingredientes agregados */}
+                        {/!* Lista de ingredientes agregados *!/}
                         {ingredients.map((ingredient, index) => (
                             <div key={index} className="ingredient-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                                 <img
@@ -394,7 +395,7 @@ function CreateRecipe() {
                 )}
 
 
-                {/* Steps */}
+                {/!* Steps *!/}
                 {activeTab === 'tab2' && (
                     <div className="accordion-wrapper">
                         <h2>Directions</h2>
@@ -419,3 +420,4 @@ function CreateRecipe() {
 }
 
 export default CreateRecipe;
+*/

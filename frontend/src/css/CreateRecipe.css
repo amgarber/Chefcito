@@ -1,14 +1,19 @@
 html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
-    width: 100%;
+    overflow: hidden; /* evita que el body escrolee si ya está contenido */
 }
 
 .general-div {
-    width: 100vw;
+    height: 100vh; /* ocupa toda la altura de la ventana */
+    overflow-y: auto; /* habilita scroll vertical */
+    width: 100%;
     padding: 20px;
     box-sizing: border-box;
+    margin-bottom: 50px;
 }
+
 
 .exit-button {
     background: none;
@@ -28,10 +33,10 @@ html, body {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 48px;
+    margin-top: 55px;
     align-items: center;
-    padding: 13px 0 12px 65px;
-    gap: 10px;
+    padding: 13px 0 12px 0px;
+    gap: 30px;
 }
 
 .image-Uploader {
@@ -46,8 +51,8 @@ html, body {
 
 
 /* Botones */
-.save-button {
-    margin-top: 20px;
+.save-button1 {
+
     background-color: #9497cc;
     color: white;
     border: none;
@@ -82,6 +87,7 @@ html, body {
     max-width: 600px; /* mismo ancho que el uploader visual */
     padding: 0 20px;
     box-sizing: border-box;
+
 }
 
 /* Vertical: título + input */
@@ -170,4 +176,11 @@ html, body {
     font-size: 14px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.title-CreateRecipe {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+
 }

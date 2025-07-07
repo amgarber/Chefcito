@@ -1,10 +1,7 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../css/CreateRecipe.css";
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
 import RecipeImageUploader from "./RecipeImageUploader";
-import MultipleSelectionTag from "./MultipleSelectionTag";
+import { useNavigate } from "react-router-dom";
 
 function CreateRecipeOld() {
     const navigate = useNavigate();
@@ -12,91 +9,54 @@ function CreateRecipeOld() {
     const [recipeTitle, setRecipeTitle] = useState("");
     const [recipeDescription, setRecipeDescription] = useState("");
     const [cookTimeMinutes, setCookTimeMinutes] = useState("");
-    const [ingredients, setIngredients] = useState([]);
-    const [steps, setSteps] = useState(['']);
-    const [newIngredient, setNewIngredient] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
-    const [selectedFilters, setSelectedFilters] = useState([]);
 
-    // 🔍 Buscar ingredientes con debounce
-    useEffect(() => {
-        const fetchSuggestions = async () => {
-            if (newIngredient.trim() === '') {
-                setSuggestions([]);
-                return;
-            }
-            try {
-                const res = await axios.get(`/api/ingredients?query=${newIngredient}`);
-                setSuggestions(res.data);
-            } catch (err) {
-                console.error('Error fetching ingredient suggestions:', err);
-            }
-        };
-        const delayDebounce = setTimeout(fetchSuggestions, 300);
-        return () => clearTimeout(delayDebounce);
-    }, [newIngredient]);
+    const [createdRecipeId, setCreatedRecipeId] = useState(null); // nuevo estado
 
-    const handleAddIngredient = (ingredient) => {
-        const alreadyAdded = ingredients.find((ing) => ing.id === ingredient.id);
-        if (!alreadyAdded) {
-            setIngredients([...ingredients, {
-                id: ingredient.id,
-                name: ingredient.name,
-                imageUrl: ingredient.images?.[0]?.url || '',
-                quantity: 1
-            }]);
-            setNewIngredient('');
-            setSuggestions([]);
-        }
-    };
-
-    const addStep = () => setSteps([...steps, '']);
-    const removeStep = (index) => setSteps(steps.filter((_, i) => i !== index));
-    const handleStepChange = (index, value) => {
-        const newSteps = [...steps];
-        newSteps[index] = value;
-        setSteps(newSteps);
+    const getFormattedCookTime = () => {
+        const mins = parseInt(cookTimeMinutes) || 0;
+        if (mins === 0) return "—";
+        return `${mins} min${mins === 1 ? "" : "s"}`;
     };
 
     const handleSubmit = async () => {
         if (!imageFile || !recipeTitle || !recipeDescription) {
             alert("Please complete all fields including the image.");
-            return;
+            return null;
         }
 
-        try {
-            const formData = new FormData();
-            formData.append("recipeTitle", recipeTitle);
-            formData.append("recipeDescription", recipeDescription);
-            formData.append("cookTimeMinutes", cookTimeMinutes);
-            formData.append("image", imageFile);
+        const formData = new FormData();
+        formData.append("recipeTitle", recipeTitle);
+        formData.append("recipeDescription", recipeDescription);
+        formData.append("cookTimeMinutes", cookTimeMinutes);
+        formData.append("image", imageFile);
 
+        const token = localStorage.getItem("token");
+
+        try {
             const response = await fetch("http://localhost:3001/api/recipes", {
                 method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
                 body: formData,
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                const recipeId = data.data.id;
-
-                // Ahora hacemos el PATCH con ingredientes, pasos y tags
-                await axios.patch('/api/recipes', {
-                    recipeId,
-                    ingredients,
-                    steps,
-                    filters: selectedFilters
-                });
-
-                alert("✅ Receta guardada correctamente");
-                navigate("/home");
+                alert("Recipe saved successfully!");
+                console.log("✅ Receta enviada:", data);
+                console.log("Receta ID:", data.data.id);
+                setCreatedRecipeId(data.data.id);
+                return data.data.id;  // 👈 devolvemos el ID
             } else {
-                alert(`Error: ${data.error}`);
+                alert(`Error: ${data.message || data.error}`);
+                return null;
             }
         } catch (error) {
-            console.error("❌ Error al guardar receta:", error);
+            console.error("❌ Error al enviar receta:", error);
             alert("Ocurrió un error al guardar la receta.");
+            return null;
         }
     };
 
@@ -108,6 +68,7 @@ function CreateRecipeOld() {
                 </button>
                 <h2 className="title">Create Recipe</h2>
                 <button className="save-button" onClick={handleSubmit}>Save</button>
+                <button className="publish-button" onClick={handleSubmit}>Publish</button>
             </div>
 
             <div className="image-Uploader">
@@ -138,95 +99,34 @@ function CreateRecipeOld() {
                     <div className="CookTime">
                         <h3>Cooking Time</h3>
                         <div className="CookTime-inputs">
-                            <input
-                                type="number"
-                                min="0"
-                                max="999"
-                                value={cookTimeMinutes}
-                                onChange={(e) => setCookTimeMinutes(e.target.value)}
-                            />
-                            <span>minute{cookTimeMinutes === "1" ? "" : "s"}</span>
-                        </div>
-                    </div>
-
-                    {/* INGREDIENTES */}
-                    <div className="ingredients-section">
-                        <h3>Ingredients</h3>
-                        <input
-                            type="text"
-                            placeholder="Add ingredient"
-                            value={newIngredient}
-                            onChange={(e) => setNewIngredient(e.target.value)}
-                        />
-                        <button onClick={() => handleAddIngredient({ name: newIngredient })}>Add Ingredient</button>
-
-                        {suggestions.length > 0 && (
-                            <ul className="suggestions-list">
-                                {suggestions.map((sugg) => (
-                                    <li key={sugg.id} onClick={() => handleAddIngredient(sugg)}>
-                                        {sugg.name}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-
-                        <ul className="selected-ingredients">
-                            {ingredients.map((ingredient, index) => (
-                                <li key={index} className="ingredient-item">
-                                    {ingredient.imageUrl && (
-                                        <img src={ingredient.imageUrl} alt={ingredient.name} className="ingredient-icon" />
-                                    )}
-                                    <span>{ingredient.name}</span>
-                                    <div className="quantity-control">
-                                        <button onClick={() => {
-                                            const updated = [...ingredients];
-                                            if (updated[index].quantity > 1) {
-                                                updated[index].quantity -= 1;
-                                                setIngredients(updated);
-                                            }
-                                        }}>−</button>
-                                        <span>{ingredient.quantity}</span>
-                                        <button onClick={() => {
-                                            const updated = [...ingredients];
-                                            updated[index].quantity += 1;
-                                            setIngredients(updated);
-                                        }}>+</button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* PASOS */}
-                    <div className="steps-section">
-                        <h3>Steps</h3>
-                        <div className="step-counter-control">
-                            <button onClick={() => removeStep(steps.length - 1)} disabled={steps.length <= 1}>−</button>
-                            <span>{steps.length} Step{steps.length > 1 ? 's' : ''}</span>
-                            <button onClick={addStep}>+</button>
-                        </div>
-                        {steps.map((step, index) => (
-                            <div key={index} className="step-input">
-                                <textarea
-                                    placeholder={`Step ${index + 1}`}
-                                    value={step}
-                                    onChange={(e) => handleStepChange(index, e.target.value)}
+                            <div className="time-group">
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="59"
+                                    value={cookTimeMinutes}
+                                    onChange={(e) => setCookTimeMinutes(e.target.value)}
                                 />
-                                <button onClick={() => removeStep(index)}>Remove</button>
+                                <span>minute{cookTimeMinutes === "1" ? "" : "s"}</span>
                             </div>
-                        ))}
+                        </div>
                     </div>
 
-                    {/* TAGS */}
-                    <div className="tags-section">
-                        <h3>Tags</h3>
-                        <MultipleSelectionTag onChange={setSelectedFilters} />
-                    </div>
-
-                    {/* ACCIONES */}
-                    <div className="action-buttons">
-                        <button onClick={handleSubmit}>Save Recipe</button>
-                        <button onClick={() => navigate('/home')}>Cancel</button>
+                    <div className="button">
+                        <button
+                            type="button"
+                            className="next-button"
+                            onClick={async () => {
+                                const id = createdRecipeId || await handleSubmit();  // si no está guardado, lo guarda
+                                if (!id) {
+                                    alert("Please complete all fields and try again.");
+                                    return;
+                                }
+                                navigate('/SetRecipeStepsAndIngredients', { state: { recipeId: id } });
+                            }}
+                        >
+                            Go to ingredients and steps
+                        </button>
                     </div>
                 </div>
             </div>
