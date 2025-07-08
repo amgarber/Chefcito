@@ -1,6 +1,9 @@
 const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
 const mailer = require('../NodeMailer/mailer');
+const crypto = require('crypto');
+
+
 // POST /recipes/:id/request-approval
 exports.requestApproval = async (req, res) => {
     const recipeId = parseInt(req.params.id);
@@ -29,12 +32,21 @@ exports.requestApproval = async (req, res) => {
             return res.status(400).json({ message: "Ya existe una solicitud pendiente para esta receta." });
         }
 
+        // Crear token aleatorio único
+        const emailToken = crypto.randomBytes(32).toString('hex');
+
         const newRequest = await prisma.approval_Request.create({
             data: {
                 id_recipe: recipeId,
-                id_user_solicitor: userId
+                id_user_solicitor: userId,
+                emailToken  // guardamos el token en la base
             }
         });
+        const baseURL = process.env.APP_URL;
+        const approveURL = `${baseURL}/email/request/${newRequest.emailToken}/approve`;
+        const rejectURL  = `${baseURL}/email/request/${newRequest.emailToken}/reject`;
+
+
         const adminEmail = "azulgarber@gmail.com";
         const adminName = "Chefcito";
         const subject = recipe.name || "Receta sin título";
@@ -45,8 +57,11 @@ exports.requestApproval = async (req, res) => {
             recipe.user.username,
             adminEmail,
             subject,
-            time
+            time,
+            approveURL,
+            rejectURL
         );
+
 
         res.status(201).json({ message: "Solicitud enviada al administrador", request: newRequest });
     } catch (err) {

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import '../css/HomePage.css';
 import React, { useEffect, useState } from "react";
 import MultipleSelectionTag from "./MultipleSelectionTag";
@@ -8,9 +8,12 @@ import PinterestLayout from "./PinterestLayout";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import NotificationBell from "./NotificationBell";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function HomePage({ FormHandle }) {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [query, setQuery] = useState('');
     const [token, setToken] = useState('');
@@ -18,6 +21,25 @@ function HomePage({ FormHandle }) {
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedIngredients, setSelectedIngredients] = useState([]);
 
+    // Mostrar pop-up si se aprobó o rechazó una receta (al volver del mail)
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const status = searchParams.get('status');
+
+        if (status === 'approved') {
+            toast.success("Recipe approved successfully");
+        } else if (status === 'rejected') {
+            toast.error("❌ Recipe rejected");
+        }
+
+
+        if (status) {
+            const newUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    }, [location.search]);
+
+    // Cargar token de usuario desde localStorage
     useEffect(() => {
         const tokenData = localStorage.getItem('tokenData');
         if (!tokenData) return;
@@ -25,7 +47,7 @@ function HomePage({ FormHandle }) {
         setToken(decoded);
     }, []);
 
-
+    // Traer recetas cada vez que cambian filtros o query
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
@@ -34,7 +56,6 @@ function HomePage({ FormHandle }) {
                     ...(selectedFilters.length > 0 && { filters: selectedFilters.join(',') }),
                     ...(selectedIngredients.length > 0 && { ingredients: selectedIngredients.join(',') })
                 };
-
 
                 console.log("Buscando recetas con:", params);
                 const res = await axios.get('http://localhost:3001/api/recipes', { params });
@@ -51,7 +72,7 @@ function HomePage({ FormHandle }) {
         <div className="MainContainer">
             <div className="welcome-user">
                 <text>Welcome {token.username}!</text>
-                <NotificationBell></NotificationBell>
+                <NotificationBell />
             </div>
 
             <div className="search-bar">
@@ -91,6 +112,8 @@ function HomePage({ FormHandle }) {
             <div className="scrollable-recipes">
                 {recipes.length > 0 && <PinterestLayout recipes={recipes} />}
             </div>
+
+            <ToastContainer position="top-center" autoClose={3000} />
         </div>
     );
 }

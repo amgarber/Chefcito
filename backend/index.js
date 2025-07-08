@@ -12,6 +12,7 @@ const shoppingListRoutes = require('./routes/ShoppingListRoutes');
 const dayRecipeRoutes = require('./controllers/dayRecipeRoutes');
 const approvalRoutes = require('./routes/approvalRoutes');
 const plannerRoutes = require('./controllers/plannerController');
+const emailApprovalRoutes = require('./routes/emailApprovalRoutes');
 
 
 const app = express();
@@ -19,7 +20,6 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// ✅ Rutas bien montadas
 app.use('/api', authRoutes); // login, register, etc
 app.use('/api/recipes', recipeRoutes); // recetas
 app.use('/api/ingredients', ingredientsRoutes); // listado ingredientes
@@ -32,6 +32,7 @@ app.use('/api', approvalRoutes);
 app.use('/api', recipeRoutes);
 app.use('/api/planner', plannerRoutes);
 app.use('/api', require('./routes/approvalRoutes'));
+app.use('/', emailApprovalRoutes);
 
 
 app.listen(PORT, () => {

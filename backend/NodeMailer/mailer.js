@@ -1,5 +1,3 @@
-
-
 const dotenv = require('dotenv').config().parsed;
 const nodemailer = require('nodemailer');
 
@@ -27,23 +25,43 @@ class Mailer {
                     text: `Hi ${name}, thanks for signing in to Chefcito! If you didn't do this action, click here to delete your account.`,
                 },
                 (error) => {
-                    if (error) {
-                        resolve(false)
-                    }
-                    resolve(true)
+                    resolve(!error)
                 }
             )
         })
     }
-
 
     async RequestforAdminNotification(
         adminName,
         name,
         email,
         subject,
-        time
+        time,
+        approveURL,
+        rejectURL
     ) {
+        const buttonsHTML = `
+            <div style="margin-top: 16px;">
+                <a href="${approveURL}" style="
+                    padding: 10px 16px;
+                    background: #28a745;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 4px;
+                    margin-right: 12px;">
+                    ✅ Approve
+                </a>
+                <a href="${rejectURL}" style="
+                    padding: 10px 16px;
+                    background: #dc3545;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 4px;">
+                    ❌ Reject
+                </a>
+            </div>
+        `;
+
         return new Promise((resolve) => {
             this.transporter.sendMail(
                 {
@@ -52,25 +70,23 @@ class Mailer {
                     subject: `${name} has requested approval for a recipe`,
                     html: `
                         <p>Hi ${adminName},</p>
-                        <p>${name} has requested to make public their recipe. </p>
+                        <p><strong>${name}</strong> has requested to make public their recipe.</p>
                         <ul>
                             <li><strong>Recipe Name:</strong> ${subject}</li>
                             <li><strong>Requested Time:</strong> ${time}</li>
                         </ul>
-                        <p>Please revise it as soon as possible, as ${name} is wating for a response.</p>
-                        <p>Best regards,</p>
-                        <p>Chefcito's Team</p>
+                        <p>Please review it and take action:</p>
+                        ${buttonsHTML}
+                        <p style="margin-top: 24px;">Best regards,<br/>Chefcito's Team</p>
                     `,
                 },
                 (error) => {
-                    if (error) {
-                        resolve(false)
-                    }
-                    resolve(true)
+                    resolve(!error)
                 }
             )
         })
     }
+
     async sendApprovalResult(name, email, recipeName, isApproved) {
         const statusText = isApproved ? "approved" : "rejected";
         const subject = `Your recipe has been ${statusText}`;
@@ -95,7 +111,6 @@ class Mailer {
             );
         });
     }
-
 }
 
 const mailer = new Mailer()
