@@ -10,6 +10,7 @@ import axios from "axios";
 import NotificationBell from "./NotificationBell";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import ChatbotWidget from "./Chatbot/ChatbotWidget";
 
 function HomePage({ FormHandle }) {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ function HomePage({ FormHandle }) {
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedIngredients, setSelectedIngredients] = useState([]);
 
-    // Mostrar pop-up si se aprobó o rechazó una receta (al volver del mail)
+    // Mostrar pop‑up si se aprobó o rechazó una receta (al volver del mail)
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const status = searchParams.get('status');
@@ -31,7 +32,6 @@ function HomePage({ FormHandle }) {
         } else if (status === 'rejected') {
             toast.error("❌ Recipe rejected");
         }
-
 
         if (status) {
             const newUrl = window.location.origin + window.location.pathname;
@@ -112,6 +112,9 @@ function HomePage({ FormHandle }) {
             <div className="scrollable-recipes">
                 {recipes.length > 0 && <PinterestLayout recipes={recipes} />}
             </div>
+
+            {/* Widget flotante del chatbot */}
+            <ChatbotWidget />
 
             <ToastContainer position="top-center" autoClose={3000} />
         </div>

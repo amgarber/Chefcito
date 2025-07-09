@@ -376,6 +376,28 @@ const getPrivateRecipesByUser = async (req, res) => {
         res.status(500).json({ message: 'Error interno del servidor', error: err.message });
     }
 };
+const getRecipeImage = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const recipe = await prisma.recipe.findUnique({
+            where: { id: Number(id) },
+            include: { image: true }
+        });
+
+        if (!recipe || !recipe.image || !recipe.image.url) {
+            return res.status(404).send('Image not found');
+        }
+
+        // Redirigimos directamente a la URL donde está alojada la imagen (ej. Azure)
+        res.redirect(recipe.image.url);
+
+    } catch (error) {
+        console.error("❌ Error al obtener imagen de receta:", error);
+        res.status(500).json({ message: 'Error al obtener imagen' });
+    }
+};
+
 
 
 
@@ -385,5 +407,6 @@ module.exports = {
     createRecipe,
     addIngredientsAndSteps,
     getPublicRecipesByUser,
-    getPrivateRecipesByUser
+    getPrivateRecipesByUser,
+    getRecipeImage
 };

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getAllRecipes, getRecipeById, addIngredientsAndSteps, getPublicRecipesByUser, getPrivateRecipesByUser} = require('../controllers/recipeController');
+const { getAllRecipes, getRecipeById, addIngredientsAndSteps, getPublicRecipesByUser, getPrivateRecipesByUser,
+    getRecipeImage
+} = require('../controllers/recipeController');
 const multer = require("multer");
 const { createRecipe } = require("../controllers/recipeController");
 const {makePrivate} = require("../controllers/approvalController");
@@ -15,6 +17,8 @@ router.get('/my-public', getPublicRecipesByUser);
 router.get('/my-private', getPrivateRecipesByUser);
 router.get('/:id', getRecipeById);
 router.patch('/recipes/:id/make-private', makePrivate);
+router.get('/:id/image', getRecipeImage);
+
 
 
 

@@ -1,0 +1,36 @@
+.bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    margin: 6px 0;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.bubble.user {
+    align-self: flex-end;
+    background-color: #d0eaff;
+    color: #004a75;
+    border-top-right-radius: 0;
+    margin-left: auto;
+}
+
+.bubble.bot {
+    align-self: flex-start;
+    background-color: #e2ffe9;
+    color: #215e35;
+    border-top-left-radius: 0;
+    margin-right: auto;
+}
+
+.bubble.system {
+    align-self: center;
+    background-color: #ffe5e5;
+    color: #8b0000;
+    border-radius: 10px;
+    font-style: italic;
+    padding: 8px 12px;
+    text-align: center;
+}
