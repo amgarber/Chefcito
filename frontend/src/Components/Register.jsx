@@ -4,6 +4,7 @@ import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from '@react-oauth/google';
 
 function Register({ FormHandle }) {
     const navigate = useNavigate();
@@ -100,7 +101,7 @@ function Register({ FormHandle }) {
         <div className="general-div">
             <div className="main-div">
                 <div className="register-container">
-                    <h1 className="register-title">Register <br /> now!</h1>
+                    <h1 className="register-title">Register <br/> now!</h1>
                     <p className="register-subtitle">
                         Sign up with your email and password to continue
                     </p>
@@ -116,7 +117,7 @@ function Register({ FormHandle }) {
                         </div>
 
                         <div className="input-group">
-                            <img src="EnvelopeSimple.svg" alt="Email Icon" />
+                            <img src="EnvelopeSimple.svg" alt="Email Icon"/>
                             <input
                                 type="email"
                                 placeholder="Email Address"
@@ -134,7 +135,7 @@ function Register({ FormHandle }) {
                                     ? "shadow-valid"
                                     : ""
                         }`}>
-                            <img src="Lock.svg" alt="Lock Icon" />
+                            <img src="Lock.svg" alt="Lock Icon"/>
                             <input
                                 type={type}
                                 placeholder="Password"
@@ -150,7 +151,7 @@ function Register({ FormHandle }) {
                                 }}
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
-                <Icon icon={icon} size={20} color="white" />
+                <Icon icon={icon} size={20} color="white"/>
               </span>
                         </div>
 
@@ -174,7 +175,7 @@ function Register({ FormHandle }) {
                                     : "shadow-invalid"
                                 : ""
                         }`}>
-                            <img src="Lock.svg" alt="Lock Icon" />
+                            <img src="Lock.svg" alt="Lock Icon"/>
                             <input
                                 type={type}
                                 placeholder="Confirm Password"
@@ -186,7 +187,7 @@ function Register({ FormHandle }) {
                                 }}
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
-                <Icon icon={icon} size={20} color="white" />
+                <Icon icon={icon} size={20} color="white"/>
               </span>
                         </div>
 
@@ -207,15 +208,44 @@ function Register({ FormHandle }) {
                     </form>
 
                     <div className="login-divider">
-                        <div className="line" />
+                        <div className="line"/>
                         <span className="or">Or continue with</span>
-                        <div className="line" />
+                        <div className="line"/>
                     </div>
 
                     <div className="register-google">
-                        <img src="/GoogleLogo.svg" alt="Google logo" className="GoogleLogo" />
-                        <img src="/VectorGoogle.svg" alt="Google text" />
+                        <GoogleLogin
+                            onSuccess={async credentialResponse => {
+                                const res = await fetch("http://localhost:3001/api/google-login", {
+                                    method: "POST",
+                                    headers: {"Content-Type": "application/json"},
+                                    body: JSON.stringify({credential: credentialResponse.credential}),
+                                });
+
+                                const data = await res.json();
+                                if (!res.ok) return alert(data.message || "Error");
+
+                                // Guardar sesión
+                                localStorage.setItem("isLoggedIn", "true");
+                                localStorage.setItem("token", data.token);
+                                localStorage.setItem("tokenData", JSON.stringify({
+                                    userId: data.user.id,
+                                    username: data.user.username,
+                                    pictureUrl: data.user.picture?.url || "" // ✅ accede correctamente
+                                }));
+
+                                localStorage.setItem("role", data.user.role);
+
+                                // Redirigir a home
+                                FormHandle("HomePage");
+                                navigate("/home");
+                            }}
+                            onError={() => {
+                                alert("Google Sign Up falló");
+                            }}
+                        />
                     </div>
+
                 </div>
 
                 <div className="footer-div">

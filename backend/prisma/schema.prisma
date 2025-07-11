@@ -8,26 +8,24 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  pictureId Int?     @unique
-
-  favourites      Favourite[]
-  planner         Planner?
-  recipesAuthored Recipe[]
-  recipesApproved Recipe[]        @relation("ApprovedByAdmin")
-  lists           Shopping_List[]
-
-  approvalRequestsSent    Approval_Request[] @relation("Solicitor")
+  id                      Int                @id @default(autoincrement())
+  username                String             @unique
+  email                   String             @unique
+  password                String?
+  role                    Role               @default(USER)
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+  pictureId               Int?               @unique
   approvalRequestsHandled Approval_Request[] @relation("Approver")
-  picture                 User_Image?        @relation(fields: [pictureId], references: [id])
+  approvalRequestsSent    Approval_Request[] @relation("Solicitor")
   dayRecipes              DayRecipe[]
+  favourites              Favourite[]
+  planner                 Planner?
   PlannerRecipe           PlannerRecipe[]
+  recipesAuthored         Recipe[]
+  recipesApproved         Recipe[]           @relation("ApprovedByAdmin")
+  lists                   Shopping_List[]
+  picture                 User_Image?        @relation(fields: [pictureId], references: [id])
 }
 
 model User_Image {
@@ -37,29 +35,26 @@ model User_Image {
 }
 
 model Recipe {
-  id               Int    @id @default(autoincrement())
-  name             String
-  description      String
-  difficulty       String
-  preparation_time Int
-  UserId           Int
-  imageId          Int?   @unique
-
-  Approval_Status   ApprovalStatus @default(PENDING)
+  id                Int                 @id @default(autoincrement())
+  name              String
+  description       String
+  difficulty        String
+  preparation_time  Int
+  UserId            Int
+  imageId           Int?                @unique
+  Privacy_settings  PrivacySetting      @default(PUBLIC)
   id_approval_admin Int?
-  Privacy_settings  PrivacySetting @default(PUBLIC)
-
-  favourites   Favourite[]
-  instructions Instructions[]
-  ingredients  Recipe_Ingredient[]
-  recipeTypes  Recipe_Type[]
-  requests     Approval_Request[]
-
-  user          User            @relation(fields: [UserId], references: [id], onDelete: Cascade)
-  image         Image?          @relation(fields: [imageId], references: [id])
-  admin         User?           @relation("ApprovedByAdmin", fields: [id_approval_admin], references: [id])
-  dayRecipes    DayRecipe[]
-  PlannerRecipe PlannerRecipe[]
+  Approval_Status   ApprovalStatus      @default(PENDING)
+  requests          Approval_Request[]
+  dayRecipes        DayRecipe[]
+  favourites        Favourite[]
+  instructions      Instructions[]
+  PlannerRecipe     PlannerRecipe[]
+  user              User                @relation(fields: [UserId], references: [id], onDelete: Cascade)
+  admin             User?               @relation("ApprovedByAdmin", fields: [id_approval_admin], references: [id])
+  image             Image?              @relation(fields: [imageId], references: [id])
+  ingredients       Recipe_Ingredient[]
+  recipeTypes       Recipe_Type[]
 }
 
 model Image {
@@ -89,8 +84,8 @@ model Ingredients {
 model Ingredient_Image {
   id           Int         @id @default(autoincrement())
   url          String
-  ingredient   Ingredients @relation(fields: [ingredientId], references: [id])
   ingredientId Int
+  ingredient   Ingredients @relation(fields: [ingredientId], references: [id])
 }
 
 model Recipe_Ingredient {
@@ -160,19 +155,40 @@ model Approval_Request {
   id_recipe         Int
   id_user_solicitor Int
   id_admin          Int?
-  status            ApprovalStatus @default(PENDING)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
-  emailToken        String?    @unique
-  tokenExpires      DateTime?  @default(dbgenerated("now() + interval '2 days'"))
-
-  recipe    Recipe @relation(fields: [id_recipe], references: [id])
-  solicitor User   @relation("Solicitor", fields: [id_user_solicitor], references: [id])
-  admin     User?  @relation("Approver", fields: [id_admin], references: [id])
+  status            ApprovalStatus @default(PENDING)
+  emailToken        String?        @unique
+  tokenExpires      DateTime?      @default(dbgenerated("(now() + '2 days'::interval)"))
+  admin             User?          @relation("Approver", fields: [id_admin], references: [id])
+  recipe            Recipe         @relation(fields: [id_recipe], references: [id])
+  solicitor         User           @relation("Solicitor", fields: [id_user_solicitor], references: [id])
 
   @@index([id_recipe])
   @@index([id_user_solicitor])
   @@index([id_admin])
+}
+
+model DayRecipe {
+  id       String   @id @default(uuid())
+  date     DateTime
+  category String
+  userId   Int
+  recipeId Int
+  recipe   Recipe   @relation(fields: [recipeId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+}
+
+model PlannerRecipe {
+  id       String   @id @default(uuid())
+  userId   Int
+  recipeId Int
+  date     DateTime
+  category String
+  recipe   Recipe   @relation(fields: [recipeId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, date])
 }
 
 enum Role {
@@ -189,28 +205,4 @@ enum ApprovalStatus {
   PENDING
   APPROVED
   REJECTED
-}
-
-model DayRecipe {
-  id       String   @id @default(uuid())
-  date     DateTime
-  category String
-  user     User     @relation(fields: [userId], references: [id])
-  userId   Int
-  recipe   Recipe   @relation(fields: [recipeId], references: [id])
-  recipeId Int
-}
-
-model PlannerRecipe {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
-
-  recipe   Recipe @relation(fields: [recipeId], references: [id])
-  recipeId Int
-
-  date     DateTime
-  category String
-
-  @@index([userId, date])
 }

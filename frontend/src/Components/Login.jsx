@@ -5,7 +5,7 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { jwtDecode } from 'jwt-decode';
-
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = ({ FormHandle }) => {
     const navigate = useNavigate();
@@ -77,14 +77,14 @@ const Login = ({ FormHandle }) => {
         <div className="general-div">
             <div className="main-div">
                 <div className="login-container">
-                    <h1 className="login-title">Welcome <br /> back!</h1>
+                    <h1 className="login-title">Welcome <br/> back!</h1>
                     <p className="login-subtitle">
                         Access your account securely by using your email and password
                     </p>
 
                     <form onSubmit={handleLogin} className="login-form">
                         <div className="input-group">
-                            <img src="/EnvelopeSimple.svg" alt="Email icon" />
+                            <img src="/EnvelopeSimple.svg" alt="Email icon"/>
                             <input
                                 type="email"
                                 placeholder="Enter email or username"
@@ -95,7 +95,7 @@ const Login = ({ FormHandle }) => {
                         </div>
 
                         <div className="input-group">
-                            <img src="/Lock.svg" alt="Lock icon" />
+                            <img src="/Lock.svg" alt="Lock icon"/>
                             <input
                                 type={type} // "password" o "text"
                                 name="password"
@@ -106,7 +106,7 @@ const Login = ({ FormHandle }) => {
                                 required
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
-                                <Icon icon={icon} size={20} color="white" />
+                                <Icon icon={icon} size={20} color="white"/>
                             </span>
                         </div>
                         <div className="remember-me">
@@ -123,15 +123,44 @@ const Login = ({ FormHandle }) => {
                     </form>
 
                     <div className="login-divider">
-                        <div className="line" />
+                        <div className="line"/>
                         <span className="or">Or continue with</span>
-                        <div className="line" />
+                        <div className="line"/>
                     </div>
 
                     <div className="login-google">
-                        <img src="/GoogleLogo.svg" alt="Google logo" className="GoogleLogo" />
-                        <img src="/VectorGoogle.svg" alt="Google text" />
+                        <GoogleLogin
+                            onSuccess={async credentialResponse => {
+                                const res = await fetch("http://localhost:3001/api/google-login", {
+                                    method: "POST",
+                                    headers: {"Content-Type": "application/json"},
+                                    body: JSON.stringify({credential: credentialResponse.credential}),
+                                });
+
+                                const data = await res.json();
+                                if (!res.ok) return alert(data.message || "Error");
+
+                                // Guardar login persistente
+                                localStorage.setItem("isLoggedIn", "true");
+                                localStorage.setItem("token", data.token);
+                                localStorage.setItem("tokenData", JSON.stringify({
+                                    userId: data.user.id,
+                                    username: data.user.username,
+                                    pictureUrl: data.user.picture?.url || "" // ✅ accede correctamente
+                                }));
+
+                                localStorage.setItem("role", data.user.role);
+
+                                // Redirigir a Home
+                                FormHandle("HomePage");
+                                navigate("/home");
+                            }}
+                            onError={() => {
+                                alert("Login con Google falló");
+                            }}
+                        />
                     </div>
+
                 </div>
 
                 <div className="footer-div">
