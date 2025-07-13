@@ -9,7 +9,6 @@ exports.googleLogin = async (req, res) => {
     const { credential } = req.body;
 
     try {
-        // 🔍 Agregamos logs para inspeccionar el token recibido y el clientId
         console.log("🔑 Token recibido del frontend:", credential?.slice(0, 40) + "...");
         console.log("🔐 GOOGLE_CLIENT_ID en backend:", process.env.GOOGLE_CLIENT_ID);
 
@@ -23,12 +22,18 @@ exports.googleLogin = async (req, res) => {
 
         let user = await prisma.user.findUnique({ where: { email } });
 
-        if (!user) {
+        if (user){
+            if (user.authProvider !== 'GOOGLE') {
+                return res.status(403).json({ message: 'Cuenta ya registrada con otro proveedor'
+                });
+            }
+        } else {
             user = await prisma.user.create({
                 data: {
                     email,
                     username: name,
                     password: null,
+                    authProvider: 'GOOGLE',
                     picture: {
                         create: {
                             url: picture, // Esto guarda el URL en User_Image
@@ -50,7 +55,6 @@ exports.googleLogin = async (req, res) => {
         res.json({ token, user });
 
     } catch (err) {
-        // 🧨 Agregamos más detalles del error
         console.error('❌ Error en Google Login:', err.message || err);
         res.status(401).json({ message: 'Login con Google falló' });
     }

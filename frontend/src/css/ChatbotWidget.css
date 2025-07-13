@@ -17,6 +17,9 @@
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease;
+    position: relative;
+    margin-bottom: 70px;
+    margin-right: 10px;
 }
 
 .chatbot-button:hover {

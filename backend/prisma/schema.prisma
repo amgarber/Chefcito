@@ -26,6 +26,8 @@ model User {
   recipesApproved         Recipe[]           @relation("ApprovedByAdmin")
   lists                   Shopping_List[]
   picture                 User_Image?        @relation(fields: [pictureId], references: [id])
+  authProvider            String?            @default("local")
+
 }
 
 model User_Image {
@@ -163,7 +165,7 @@ model Approval_Request {
   admin             User?          @relation("Approver", fields: [id_admin], references: [id])
   recipe            Recipe         @relation(fields: [id_recipe], references: [id])
   solicitor         User           @relation("Solicitor", fields: [id_user_solicitor], references: [id])
-
+  isRead            Boolean        @default(false)
   @@index([id_recipe])
   @@index([id_user_solicitor])
   @@index([id_admin])

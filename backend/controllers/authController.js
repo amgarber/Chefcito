@@ -37,7 +37,8 @@ const register = async (req, res) => {
         const newUserData = {
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            authProvider: 'local'
         };
 
         // 📷 Subir imagen del usuario si se proporciona, o asignar imagen por defecto
@@ -77,10 +78,13 @@ const login = async (req, res) => {
             include: { picture: true }
         });
 
-
-
         if (!user) {
             return res.status(401).json({error: "Usuario o contraseña incorrectos"});
+        }
+
+        if (user.authProvider !== 'local') {
+            return res.status(403).json({error: "Cuenta registrada con otro proveedor de autenticación"
+            });
         }
 
         // 2. Comparar la contraseña ingresada con la almacenada (hash)
@@ -112,6 +116,8 @@ const login = async (req, res) => {
         res.status(500).json({error: "Error del servidor"});
     }
 };
+
+
 const updateUser = async (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];

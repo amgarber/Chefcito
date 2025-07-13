@@ -231,7 +231,7 @@ function Register({ FormHandle }) {
                                 localStorage.setItem("tokenData", JSON.stringify({
                                     userId: data.user.id,
                                     username: data.user.username,
-                                    pictureUrl: data.user.picture?.url || "" // ✅ accede correctamente
+                                    pictureUrl: data.user.picture?.url || ""
                                 }));
 
                                 localStorage.setItem("role", data.user.role);

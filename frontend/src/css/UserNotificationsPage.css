@@ -57,7 +57,6 @@
     align-items: center;
     gap: 60px;
     padding-bottom: 20px;
-    margin-right: 65px;
 }
 
 
@@ -65,4 +64,35 @@
     font-size: 36px;       /* Tamaño del ícono */
     color: #01060b;
     cursor: pointer;
+}
+.mark-all-btn {
+    background-color: #f8b400;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: auto;
+    margin-top: 4px;
+}
+.mark-all-btn:hover {
+    background-color: #e0a800;
+}
+
+.notification-card.unread {
+    background-color: #fffde7; /* amarillo claro */
+}
+
+.notification-card.read {
+    background-color: #f0f0f0; /* gris claro */
+}
+
+.notification-card {
+    padding: 16px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }

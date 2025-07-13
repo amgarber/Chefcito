@@ -207,17 +207,27 @@ exports.rejectRequest = async (req, res) => {
 
 exports.getUserNotifications = async (req, res) => {
     const userId = parseInt(req.params.id);
+    const onlyUnread = req.query.unread === 'true';
 
     try {
         const requests = await prisma.approval_Request.findMany({
             where: {
                 id_user_solicitor: userId,
                 status: {
-                    not: 'PENDING'  // Solo mostrar las ya resueltas
-                }
+                    not: 'PENDING'
+                },
+                ...(onlyUnread && { isRead: false }) // 👈 si query tiene ?unread=true
             },
             include: {
-                recipe: true
+                recipe: {
+                    select: {
+                        name: true,
+                        image: true
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
 
@@ -321,3 +331,59 @@ exports.getRecipeAsAdmin = async (req, res) => {
         res.status(500).json({ message: "Error interno al obtener receta" });
     }
 };
+// PATCH /notifications/:id/read
+exports.markNotificationAsRead = async (req, res) => {
+    const notificationId = parseInt(req.params.id);
+
+    try {
+        await prisma.approval_Request.update({
+            where: { id_solicitation: notificationId },
+            data: { isRead: true }
+        });
+
+        res.json({ message: "Notificación marcada como leída" });
+    } catch (err) {
+        console.error("Error al marcar como leída:", err);
+        res.status(500).json({ message: "Error interno" });
+    }
+};
+exports.markAllNotificationsAsRead = async (req, res) => {
+    const userId = parseInt(req.params.userId);
+
+    try {
+        await prisma.approval_Request.updateMany({
+            where: {
+                id_user_solicitor: userId,
+                status: { not: 'PENDING' },
+                isRead: false
+            },
+            data: { isRead: true }
+        });
+
+        res.json({ message: "Todas las notificaciones marcadas como leídas" });
+    } catch (err) {
+        console.error("Error al marcar todas como leídas:", err);
+        res.status(500).json({ message: "Error interno" });
+    }
+};
+exports.markAllNotificationsAsUnread = async (req, res) => {
+    const userId = parseInt(req.params.userId);
+
+    try {
+        await prisma.approval_Request.updateMany({
+            where: {
+                id_user_solicitor: userId,
+                status: { not: 'PENDING' },
+                isRead: true
+            },
+            data: { isRead: false }
+        });
+
+        res.json({ message: "Todas las notificaciones marcadas como no leídas" });
+    } catch (err) {
+        console.error("Error al marcar como no leídas:", err);
+        res.status(500).json({ message: "Error interno" });
+    }
+};
+
+
