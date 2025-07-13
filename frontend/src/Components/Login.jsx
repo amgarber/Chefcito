@@ -1,31 +1,32 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../css/Login.css';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { jwtDecode } from 'jwt-decode';
 import { GoogleLogin } from '@react-oauth/google';
-import {toast} from "react-toastify";
+import { toast } from 'react-toastify';
 
 const Login = ({ FormHandle }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const redirectAfterLogin = location.state?.redirectAfterLogin;
+    const hasShownToast = useRef(false);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
     const [rememberMe, setRememberMe] = useState(false);
-    const [formMessage, setFormMessage] = useState({ text: "", type: "" });
+    const [loading, setLoading] = useState(false);
+    const [formMessage, setFormMessage] = useState({ text: '', type: '' });
 
     const redirectProperly = () => {
         FormHandle("HomePage");
         if (redirectAfterLogin) {
             const fromEmail = location.state?.fromEmailLink;
             if (fromEmail) {
-                // Reforzamos el redirect "limpio"
                 navigate(redirectAfterLogin, { replace: true });
             } else {
                 navigate(redirectAfterLogin);
@@ -37,6 +38,8 @@ const Login = ({ FormHandle }) => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setFormMessage({ text: '', type: '' });
 
         try {
             const response = await fetch('http://localhost:3001/api/login', {
@@ -49,46 +52,50 @@ const Login = ({ FormHandle }) => {
             console.log("🔍 Login data from backend:", data);
 
             if (!response.ok) {
-                alert(data.message || 'Login fallido');
+                setFormMessage({ text: data.message || 'Login fallido', type: 'error' });
+                setLoading(false);
                 return;
             }
 
-            alert('Login exitoso');
-            setEmail('');
-            setPassword('');
+            setFormMessage({ text: 'Login successful!', type: 'success' });
+            setTimeout(() => {
+                setFormMessage({ text: '', type: '' });
+            }, 3000);
 
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("token", data.token);
-            const decoded = jwtDecode(data.token);
-            localStorage.setItem("tokenData", JSON.stringify({
-                userId: data.user.id,
-                username: data.user.username,
-                pictureUrl: data.user.pictureUrl
-            }));
-            localStorage.setItem("role", data.user.role);
+            setTimeout(() => {
+                setFormMessage({ text: '', type: '' });
 
-            redirectProperly();
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("token", data.token);
+                const decoded = jwtDecode(data.token);
+                localStorage.setItem("tokenData", JSON.stringify({
+                    userId: data.user.id,
+                    username: data.user.username,
+                    pictureUrl: data.user.pictureUrl
+                }));
+                localStorage.setItem("role", data.user.role);
+
+                redirectProperly();
+            }, 2000); // ⏱ Espera 2 segundos
 
 
         } catch (error) {
             console.error('Error al hacer login:', error);
-            alert('Ocurrió un error inesperado');
+            setFormMessage({ text: 'Ocurrió un error inesperado', type: 'error' });
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleToggle = () => {
-        if (type === 'password') {
-            setIcon(eye);
-            setType('text');
-        } else {
-            setIcon(eyeOff);
-            setType('password');
-        }
+        setIcon(type === 'password' ? eye : eyeOff);
+        setType(type === 'password' ? 'text' : 'password');
     };
+
     useEffect(() => {
-        if (location.state?.toastMessage) {
+        if (!hasShownToast.current && location.state?.toastMessage) {
             toast.warn(location.state.toastMessage);
-            // Limpiar el mensaje del estado después de mostrarlo para evitar repeticiones
+            hasShownToast.current = true;
             window.history.replaceState({}, document.title);
         }
     }, [location.state]);
@@ -140,7 +147,16 @@ const Login = ({ FormHandle }) => {
                             <label htmlFor="rememberMe">Remember me</label>
                         </div>
 
-                        <button type="submit" className="LoginButton">Sign In</button>
+                        {/* ✅ Mostrar mensaje como en Register */}
+                        {formMessage.text && (
+                            <div className={`form-message ${formMessage.type}`}>
+                                {formMessage.text}
+                            </div>
+                        )}
+
+                        <button type="submit" className="LoginButton" disabled={loading}>
+                            {loading ? "Signing in..." : "Sign In"}
+                        </button>
                     </form>
 
                     <div className="login-divider">
@@ -159,7 +175,7 @@ const Login = ({ FormHandle }) => {
                                 });
 
                                 const data = await res.json();
-                                if (!res.ok) return alert(data.message || "Error");
+                                if (!res.ok) return setFormMessage({ text: data.message || "Error", type: "error" });
 
                                 localStorage.setItem("isLoggedIn", "true");
                                 localStorage.setItem("token", data.token);
@@ -173,7 +189,7 @@ const Login = ({ FormHandle }) => {
                                 redirectProperly();
                             }}
                             onError={() => {
-                                alert("Login con Google falló");
+                                setFormMessage({ text: "Login con Google falló", type: "error" });
                             }}
                         />
                     </div>

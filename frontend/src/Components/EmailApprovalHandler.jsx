@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -32,24 +32,25 @@ function EmailApprovalHandler() {
                 return;
             }
 
-            toast.warn("⚠️ Iniciá sesión como ADMIN para continuar");
+            // Limpiar token por seguridad
+            localStorage.removeItem("token");
+            localStorage.removeItem("role");
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("tokenData");
 
-           localStorage.removeItem("token");
-           localStorage.removeItem("role");
-           localStorage.removeItem("isLoggedIn");
-           localStorage.removeItem("tokenData");
-
-            // Redirigimos al login con flag de que venimos del handler
+            // Redirigimos al login con flag para mostrar toast allá
             navigate("/login", {
                 state: {
                     redirectAfterLogin: `/email/request/${token}/${action}`,
                     redirectedOnce: true,
-                    toastMessage: "⚠️ Iniciá sesión como ADMIN para continuar"
+                    toastMessage: "⚠️ Iniciá sesión como ADMIN para continuar",
+                    fromEmailLink: true // ✅ clave para evitar toasts duplicados
                 }
             });
             return;
         }
 
+        // Si está loggeado como admin, procesar aprobación
         processApproval(jwt);
 
     }, [token, action]);

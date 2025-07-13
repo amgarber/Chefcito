@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SegmentedControl from './SegmentedControl';
 import '../css/MyRecipes.css';
 import '../css/FavoriteRecipes.css';
-import LoadingChef from "./LoadingChef";
+import LoadingAnimation from "./LoadingAnimation";
 
 function MyRecipes() {
     const navigate = useNavigate();
@@ -12,7 +12,9 @@ function MyRecipes() {
     const [privateRecipes, setPrivateRecipes] = useState([]);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [loadingRequestId, setLoadingRequestId] = useState(null);
+    const [requestingPublic, setRequestingPublic] = useState(false);
+    const [feedbackMessage, setFeedbackMessage] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -22,6 +24,8 @@ function MyRecipes() {
         if (!token || !userId) return;
 
         const fetchData = async () => {
+            setLoading(true);
+
             if (view === 'Public' || view === 'Private') {
                 const endpointMap = {
                     'Public': 'my-public',
@@ -30,7 +34,6 @@ function MyRecipes() {
 
                 const endpoint = endpointMap[view];
                 if (!endpoint) return;
-                setLoading(false);
 
                 try {
                     const res = await fetch(`http://localhost:3001/api/recipes/${endpoint}`, {
@@ -51,10 +54,11 @@ function MyRecipes() {
 
                 } catch (err) {
                     console.error(`❌ Error al cargar recetas ${view.toLowerCase()}:`, err);
+                } finally {
+                    setLoading(false);
                 }
 
             } else if (view === 'Requests') {
-                setLoading(true);
                 try {
                     const res = await fetch(`http://localhost:3001/api/users/${userId}/requests`);
                     const data = await res.json();
@@ -70,35 +74,38 @@ function MyRecipes() {
         fetchData();
     }, [view]);
 
+    const showFeedback = (message, type = "success") => {
+        setFeedbackMessage({ message, type });
+        setTimeout(() => setFeedbackMessage(null), 3000);
+    };
 
     const handleRequestPublic = async (recipeId) => {
-
         const tokenData = JSON.parse(localStorage.getItem("tokenData"));
         const userId = tokenData?.userId;
 
-        console.log("User ID desde tokenData:", userId);
-
-
+        setLoadingRequestId(recipeId);
+        setRequestingPublic(true);
 
         try {
             const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/request-approval`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: parseInt(userId) })
             });
 
             const data = await res.json();
 
             if (!res.ok) {
-                alert(`❌ Error: ${data.message}`);
+                showFeedback(data.message || "Error al enviar solicitud", "error");
             } else {
-                alert("✅ Solicitud enviada al administrador");
+                showFeedback("Solicitud enviada al administrador");
             }
         } catch (err) {
             console.error("Error al solicitar publicación:", err);
-            alert("❌ Hubo un error al enviar la solicitud");
+            showFeedback("Hubo un error al enviar la solicitud", "error");
+        } finally {
+            setLoadingRequestId(null);
+            setRequestingPublic(false);
         }
     };
 
@@ -106,25 +113,22 @@ function MyRecipes() {
         try {
             const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/make-private`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
 
             const data = await res.json();
 
             if (!res.ok) {
-                alert(`❌ Error: ${data.message}`);
+                showFeedback(data.message || "Error al cambiar visibilidad", "error");
             } else {
-                alert("✅ La receta se hizo privada");
-                setPublicRecipes((prev) => prev.filter((r) => r.id !== recipeId)); // Actualiza la lista localmente
+                showFeedback("La receta se hizo privada");
+                setPublicRecipes((prev) => prev.filter((r) => r.id !== recipeId));
             }
         } catch (err) {
             console.error("Error al hacer receta privada:", err);
-            alert("❌ Hubo un error al cambiar la visibilidad");
+            showFeedback("Hubo un error al cambiar la visibilidad", "error");
         }
     };
-
 
     const options = ['Public', 'Private', 'Requests'];
 
@@ -137,109 +141,123 @@ function MyRecipes() {
 
             <SegmentedControl options={options} selected={view} onChange={setView} className="Controls" />
 
+            {loading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation>Loading {view.toLowerCase()} recipes...</LoadingAnimation>
+                </div>
+            )}
+
+            {requestingPublic && (
+                <div className="loading-overlay">
+                    <LoadingAnimation>Requesting publication...</LoadingAnimation>
+                </div>
+            )}
+
+            {feedbackMessage && (
+                <div className={`feedback-message ${feedbackMessage.type}`}>
+                    {feedbackMessage.message}
+                </div>
+            )}
+
             <div className="recipes-content">
-                {view === 'Public' && (
-                    <>
-                        {Array.isArray(publicRecipes) && publicRecipes.length === 0 ? (
-                            <p>No tenés recetas públicas</p>
-                        ) : (
-                            <ul className="favorites-list">
-                                {publicRecipes.map((item) => (
-                                    <li key={item.id} className="favorite-card">
-                                        <img
-                                            src={item.image?.url}
-                                            alt={item.name}
-                                            className="favorite-image"
-                                            onClick={() => navigate(`/recipe/${item.id}`)}
-                                        />
-                                        <div className="favorite-info">
-                                            <h3 className="titulo-MyRecipes">{item.name}</h3>
-                                            <p className="favorite-description">{item.description}</p>
-                                            <div className="favorite-meta">
-                                                <span>⭐ {item.difficulty}</span>
-                                                <span>⏱ {item.preparation_time} min</span>
-                                            </div>
-                                            <button
-                                                className="make-private-btn"
-                                                onClick={() => handleMakePrivate(item.id)}
-                                            >
-                                                Make Recipe Private
-                                            </button>
+                {/* PUBLIC */}
+                {view === 'Public' && !loading && (
+                    publicRecipes.length === 0 ? (
+                        <p>No tenés recetas públicas</p>
+                    ) : (
+                        <ul className="favorites-list">
+                            {publicRecipes.map((item) => (
+                                <li key={item.id} className="favorite-card">
+                                    <img
+                                        src={item.image?.url}
+                                        alt={item.name}
+                                        className="favorite-image"
+                                        onClick={() => navigate(`/recipe/${item.id}`)}
+                                    />
+                                    <div className="favorite-info">
+                                        <h3 className="titulo-MyRecipes">{item.name}</h3>
+                                        <p className="favorite-description">{item.description}</p>
+                                        <div className="favorite-meta">
+                                            <span>⭐ {item.difficulty}</span>
+                                            <span>⏱ {item.preparation_time} min</span>
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </>
+                                        <button
+                                            className="make-private-btn"
+                                            onClick={() => handleMakePrivate(item.id)}
+                                        >
+                                            Make Recipe Private
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )
                 )}
 
-                {view === 'Private' && (
-                    <>
-                        {Array.isArray(privateRecipes) && privateRecipes.length === 0 ? (
-                            <p>No tenés recetas privadas</p>
-                        ) : (
-                            <ul className="favorites-list">
-                                {privateRecipes.map((item) => (
-                                    <li key={item.id} className="favorite-card">
-                                        <img
-                                            src={item.image?.url}
-                                            alt={item.name}
-                                            className="favorite-image"
-                                            onClick={() => navigate(`/recipe/${item.id}`)}
-                                        />
-                                        <div className="favorite-info">
-                                            <h3 className="titulo">{item.name}</h3>
-                                            <p className="favorite-description">{item.description}</p>
-                                            <div className="favorite-meta">
-                                                <span>⭐ {item.difficulty}</span>
-                                                <span>⏱ {item.preparation_time} min</span>
-                                            </div>
-
-                                            {/* Botón para solicitar publicación */}
-                                            <button
-                                                className="request-public-btn"
-                                                onClick={() => handleRequestPublic(item.id)}
-                                            >
-                                                Request Public
-                                            </button>
+                {/* PRIVATE */}
+                {view === 'Private' && !loading && (
+                    privateRecipes.length === 0 ? (
+                        <p>No tenés recetas privadas</p>
+                    ) : (
+                        <ul className="favorites-list">
+                            {privateRecipes.map((item) => (
+                                <li key={item.id} className="favorite-card">
+                                    <img
+                                        src={item.image?.url}
+                                        alt={item.name}
+                                        className="favorite-image"
+                                        onClick={() => navigate(`/recipe/${item.id}`)}
+                                    />
+                                    <div className="favorite-info">
+                                        <h3 className="titulo">{item.name}</h3>
+                                        <p className="favorite-description">{item.description}</p>
+                                        <div className="favorite-meta">
+                                            <span>⭐ {item.difficulty}</span>
+                                            <span>⏱ {item.preparation_time} min</span>
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </>
+                                        <button
+                                            className="request-public-btn"
+                                            onClick={() => handleRequestPublic(item.id)}
+                                            disabled={loadingRequestId === item.id}
+                                        >
+                                            Request Public
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )
                 )}
 
-                {view === 'Requests' && (
-                    <>
-                        {requests.length === 0 ? (
-                            <p className="no-requests">You haven't submitted any publication requests.</p>
-                        ) : (
-                            <ul className="favorites-list">
-                                {requests.map((item) => (
-                                    <li key={item.id_solicitation} className={`favorite-card ${item.status.toLowerCase()}`}>
-                                        <img
-                                            src={item.recipe.image?.url}
-                                            alt={item.recipe.name}
-                                            className="favorite-image"
-                                            onClick={() => navigate(`/recipe/${item.recipe.id}`)}
-                                        />
-                                        <div className="favorite-info">
-                                            <h3 className="titulo">{item.recipe.name}</h3>
-                                            <p className="favorite-description">{item.recipe.description}</p>
-                                            <div className="favorite-meta">
-                                                <span>⭐ {item.recipe.difficulty}</span>
-                                                <span>⏱ {item.recipe.preparation_time} min</span>
-                                            </div>
-                                            <p className="status">
-                                                Status: <strong>{item.status}</strong>
-                                            </p>
+                {/* REQUESTS */}
+                {view === 'Requests' && !loading && (
+                    requests.length === 0 ? (
+                        <p className="no-requests">You haven't submitted any publication requests.</p>
+                    ) : (
+                        <ul className="favorites-list">
+                            {requests.map((item) => (
+                                <li key={item.id_solicitation} className={`favorite-card ${item.status.toLowerCase()}`}>
+                                    <img
+                                        src={item.recipe.image?.url}
+                                        alt={item.recipe.name}
+                                        className="favorite-image"
+                                        onClick={() => navigate(`/recipe/${item.recipe.id}`)}
+                                    />
+                                    <div className="favorite-info">
+                                        <h3 className="titulo">{item.recipe.name}</h3>
+                                        <p className="favorite-description">{item.recipe.description}</p>
+                                        <div className="favorite-meta">
+                                            <span>⭐ {item.recipe.difficulty}</span>
+                                            <span>⏱ {item.recipe.preparation_time} min</span>
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </>
+                                        <p className="status">
+                                            Status: <strong>{item.status}</strong>
+                                        </p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )
                 )}
             </div>
         </div>
