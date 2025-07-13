@@ -3,6 +3,9 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../css/RecipeDetail.css';
 import LoadingChef from './LoadingChef';
+import { toast } from 'react-toastify';
+import { useRef } from "react";
+
 
 function formatTime(minutes) {
     const hours = Math.floor(minutes / 60);
@@ -29,13 +32,18 @@ function AdminRecipeDetails() {
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
-    const adminId = queryParams.get('adminId');
+    const adminId = JSON.parse(localStorage.getItem('tokenData')).userId
+
+    const fromEmail = location.state?.fromEmail;
+    const action = location.state?.action;
 
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState(null);
     const [expandedId, setExpandedId] = useState(null);
     const [sheetPosition, setSheetPosition] = useState(240);
+    const shownToast = useRef(false);
+
 
     useEffect(() => {
         const fetchRecipe = async () => {
@@ -52,6 +60,18 @@ function AdminRecipeDetails() {
         };
         fetchRecipe();
     }, [id, adminId]);
+
+    // Mostrar toast si se llegó desde el email
+    useEffect(() => {
+        if (!shownToast.current && fromEmail && action) {
+            if (action === "approve") {
+                toast.success("✅ Receta aprobada desde el email");
+            } else if (action === "reject") {
+                toast.error("❌ Receta rechazada desde el email");
+            }
+            shownToast.current = true;
+        }
+    }, [fromEmail, action]);
 
     const handleDrag = (event, info) => {
         const newPosition = sheetPosition - info.delta.y;

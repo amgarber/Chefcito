@@ -21,7 +21,12 @@ import MyShoppingLists from "./Components/MyShoppingLists";
 import DemoWrapper from "./Components/DemoWrapper";
 import PublicationRequestsPage from "./Components/PublicationRequestsPage";
 import UserNotificationsPage from "./Components/UserNotificationsPage";
-import AdminRecipeDetails from "./Components/AdminRecipeDetails"; // ✅ Importa la demo del planner
+import AdminRecipeDetails from "./Components/AdminRecipeDetails";
+import {NotificationProvider} from "./Components/NotificationContext";
+import EmailApprovalHandler from "./Components/EmailApprovalHandler";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function App() {
@@ -46,9 +51,11 @@ function App() {
 
 
     return (
+        <NotificationProvider>
+
         <Router>
             <Routes>
-                {/* Public routes */}
+
                 <Route path="/login" element={
                     <PublicRoute>
                         <Login FormHandle={handleAuthChange} />
@@ -59,14 +66,12 @@ function App() {
                         <Register FormHandle={handleAuthChange} />
                     </PublicRoute>
                 } />
-
-                {/* Private routes */}
                 <Route path="/" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/home" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
                 <Route path="/planner" element={
                     <PrivateRoute>
                         <LayoutWithNav>
-                            <Planner /> {/* ✅ Para que no falle la prop onClick */}
+                            <Planner />
                         </LayoutWithNav>
                     </PrivateRoute>
                 } />
@@ -86,16 +91,25 @@ function App() {
                 <Route path="/publication-requests" element={<PublicationRequestsPage />} />
                 <Route path="/notifications" element={<UserNotificationsPage />} />
                 <Route path="/admin/recipe/:id" element={<AdminRecipeDetails />} />
-
-
-
-
-
-
-
                 <Route path="*" element={<PrivateRoute><LayoutWithNav><HomePage FormHandle={handleAuthChange} /></LayoutWithNav></PrivateRoute>} />
+                <Route path="/email/request/:token/:action" element={<EmailApprovalHandler />} />
+
             </Routes>
         </Router>
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
+
+        </NotificationProvider>
     );
 }
 

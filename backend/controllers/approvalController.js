@@ -3,7 +3,6 @@ const prisma = new PrismaClient();
 const mailer = require('../NodeMailer/mailer');
 const crypto = require('crypto');
 
-
 // POST /recipes/:id/request-approval
 exports.requestApproval = async (req, res) => {
     const recipeId = parseInt(req.params.id);
@@ -256,7 +255,7 @@ exports.makePrivate = async (req, res) => {
         res.status(500).json({ message: "Error interno al cambiar visibilidad" });
     }
 };
-// ...otros exports arriba
+
 
 exports.getRequestsByUser = async (req, res) => {
     const userId = parseInt(req.params.userId);
@@ -385,5 +384,6 @@ exports.markAllNotificationsAsUnread = async (req, res) => {
         res.status(500).json({ message: "Error interno" });
     }
 };
+
 
 

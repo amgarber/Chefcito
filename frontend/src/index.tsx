@@ -9,13 +9,11 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 const root = ReactDOM.createRoot(document.getElementById("root")!); // ✅ ! evita el error de null
 
 root.render(
-    <React.StrictMode>
         <GoogleOAuthProvider clientId="536312009768-232g187ti3jpun1npbvf84h3j2b6bqtd.apps.googleusercontent.com">
-        <SnackProvider> {/* ✅ Proveedor para usar notificaciones globales */}
+        <SnackProvider>
             <App />
         </SnackProvider>
         </GoogleOAuthProvider>
-    </React.StrictMode>
 );
 
 reportWebVitals();

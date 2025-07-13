@@ -19,12 +19,4 @@ router.get('/:id', getRecipeById);
 router.patch('/recipes/:id/make-private', makePrivate);
 router.get('/:id/image', getRecipeImage);
 
-
-
-
-
-
-
-
-
 module.exports = router;

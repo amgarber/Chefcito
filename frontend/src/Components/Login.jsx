@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import '../css/Login.css';
-import { Link, useNavigate } from 'react-router-dom'; // Usar Link de react-router-dom
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { jwtDecode } from 'jwt-decode';
 import { GoogleLogin } from '@react-oauth/google';
+import {toast} from "react-toastify";
 
 const Login = ({ FormHandle }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const redirectAfterLogin = location.state?.redirectAfterLogin;
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,6 +20,20 @@ const Login = ({ FormHandle }) => {
     const [rememberMe, setRememberMe] = useState(false);
     const [formMessage, setFormMessage] = useState({ text: "", type: "" });
 
+    const redirectProperly = () => {
+        FormHandle("HomePage");
+        if (redirectAfterLogin) {
+            const fromEmail = location.state?.fromEmailLink;
+            if (fromEmail) {
+                // Reforzamos el redirect "limpio"
+                navigate(redirectAfterLogin, { replace: true });
+            } else {
+                navigate(redirectAfterLogin);
+            }
+        } else {
+            navigate("/home");
+        }
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -31,7 +48,6 @@ const Login = ({ FormHandle }) => {
             const data = await response.json();
             console.log("🔍 Login data from backend:", data);
 
-
             if (!response.ok) {
                 alert(data.message || 'Login fallido');
                 return;
@@ -41,10 +57,8 @@ const Login = ({ FormHandle }) => {
             setEmail('');
             setPassword('');
 
-            // Guardar login persistente
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("token", data.token);
-
             const decoded = jwtDecode(data.token);
             localStorage.setItem("tokenData", JSON.stringify({
                 userId: data.user.id,
@@ -53,9 +67,8 @@ const Login = ({ FormHandle }) => {
             }));
             localStorage.setItem("role", data.user.role);
 
-            // Cambiar estado y redirigir
-            FormHandle("HomePage");
-            navigate("/home");
+            redirectProperly();
+
 
         } catch (error) {
             console.error('Error al hacer login:', error);
@@ -72,19 +85,26 @@ const Login = ({ FormHandle }) => {
             setType('password');
         }
     };
+    useEffect(() => {
+        if (location.state?.toastMessage) {
+            toast.warn(location.state.toastMessage);
+            // Limpiar el mensaje del estado después de mostrarlo para evitar repeticiones
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state]);
 
     return (
         <div className="general-div">
             <div className="main-div">
                 <div className="login-container">
-                    <h1 className="login-title">Welcome <br/> back!</h1>
+                    <h1 className="login-title">Welcome <br /> back!</h1>
                     <p className="login-subtitle">
                         Access your account securely by using your email and password
                     </p>
 
                     <form onSubmit={handleLogin} className="login-form">
                         <div className="input-group">
-                            <img src="/EnvelopeSimple.svg" alt="Email icon"/>
+                            <img src="/EnvelopeSimple.svg" alt="Email icon" />
                             <input
                                 type="email"
                                 placeholder="Enter email or username"
@@ -95,9 +115,9 @@ const Login = ({ FormHandle }) => {
                         </div>
 
                         <div className="input-group">
-                            <img src="/Lock.svg" alt="Lock icon"/>
+                            <img src="/Lock.svg" alt="Lock icon" />
                             <input
-                                type={type} // "password" o "text"
+                                type={type}
                                 name="password"
                                 placeholder="Password"
                                 value={password}
@@ -106,9 +126,10 @@ const Login = ({ FormHandle }) => {
                                 required
                             />
                             <span className="toggle-password-icon" onClick={handleToggle}>
-                                <Icon icon={icon} size={20} color="white"/>
+                                <Icon icon={icon} size={20} color="white" />
                             </span>
                         </div>
+
                         <div className="remember-me">
                             <input
                                 type="checkbox"
@@ -123,9 +144,9 @@ const Login = ({ FormHandle }) => {
                     </form>
 
                     <div className="login-divider">
-                        <div className="line"/>
+                        <div className="line" />
                         <span className="or">Or continue with</span>
-                        <div className="line"/>
+                        <div className="line" />
                     </div>
 
                     <div className="login-google">
@@ -133,34 +154,29 @@ const Login = ({ FormHandle }) => {
                             onSuccess={async credentialResponse => {
                                 const res = await fetch("http://localhost:3001/api/google-login", {
                                     method: "POST",
-                                    headers: {"Content-Type": "application/json"},
-                                    body: JSON.stringify({credential: credentialResponse.credential}),
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ credential: credentialResponse.credential }),
                                 });
 
                                 const data = await res.json();
                                 if (!res.ok) return alert(data.message || "Error");
 
-                                // Guardar login persistente
                                 localStorage.setItem("isLoggedIn", "true");
                                 localStorage.setItem("token", data.token);
                                 localStorage.setItem("tokenData", JSON.stringify({
                                     userId: data.user.id,
                                     username: data.user.username,
-                                    pictureUrl: data.user.picture?.url || "" // ✅ accede correctamente
+                                    pictureUrl: data.user.picture?.url || ""
                                 }));
-
                                 localStorage.setItem("role", data.user.role);
 
-                                // Redirigir a Home
-                                FormHandle("HomePage");
-                                navigate("/home");
+                                redirectProperly();
                             }}
                             onError={() => {
                                 alert("Login con Google falló");
                             }}
                         />
                     </div>
-
                 </div>
 
                 <div className="footer-div">

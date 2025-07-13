@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import '../css/UserNotificationsPage.css';
 import { useNavigate } from 'react-router-dom';
 import LoadingChef from './LoadingChef';
+import { useNotification } from './NotificationContext';
 
 function UserNotificationsPage() {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userIdError, setUserIdError] = useState(false);
-    const [allRead, setAllRead] = useState(false); // nuevo estado para toggle
+    const [allRead, setAllRead] = useState(false);
+
+    const { setUnreadCount } = useNotification(); // 👉 del contexto
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,9 +29,12 @@ function UserNotificationsPage() {
                 const data = await res.json();
                 setNotifications(data);
 
-                // Setear el estado allRead correctamente
                 const allNotificationsRead = data.every(n => n.isRead);
                 setAllRead(allNotificationsRead);
+
+                // 👇 Actualiza el contador global
+                const unread = data.filter(n => !n.isRead).length;
+                setUnreadCount(unread);
 
                 setTimeout(() => {
                     setLoading(false);
@@ -40,7 +46,7 @@ function UserNotificationsPage() {
         };
 
         fetchNotifications();
-    }, []);
+    }, [setUnreadCount]);
 
     const handleMarkAsRead = async (notifId) => {
         try {
@@ -48,15 +54,16 @@ function UserNotificationsPage() {
                 method: 'PATCH',
             });
 
-            setNotifications((prev) =>
-                prev.map((n) =>
+            setNotifications((prev) => {
+                const updated = prev.map((n) =>
                     n.id_solicitation === notifId ? { ...n, isRead: true } : n
-                )
-            );
+                );
 
-            setAllRead(notifications.every(n =>
-                n.id_solicitation === notifId ? true : n.isRead
-            ));
+                const unread = updated.filter(n => !n.isRead).length;
+                setUnreadCount(unread);
+                setAllRead(unread === 0);
+                return updated;
+            });
         } catch (err) {
             console.error("Error al marcar como leída:", err);
         }
@@ -72,19 +79,23 @@ function UserNotificationsPage() {
                     method: 'PATCH',
                 });
 
-                setNotifications((prev) =>
-                    prev.map((n) => ({ ...n, isRead: true }))
-                );
-                setAllRead(true);
+                setNotifications((prev) => {
+                    const updated = prev.map((n) => ({ ...n, isRead: true }));
+                    setUnreadCount(0); // 👈 todo leído
+                    setAllRead(true);
+                    return updated;
+                });
             } else {
                 await fetch(`http://localhost:3001/api/notifications/mark-all-unread/${userId}`, {
                     method: 'PATCH',
                 });
 
-                setNotifications((prev) =>
-                    prev.map((n) => ({ ...n, isRead: false }))
-                );
-                setAllRead(false);
+                setNotifications((prev) => {
+                    const updated = prev.map((n) => ({ ...n, isRead: false }));
+                    setUnreadCount(updated.length); // 👈 todo no leído
+                    setAllRead(false);
+                    return updated;
+                });
             }
         } catch (err) {
             console.error("Error al alternar estado de todas:", err);

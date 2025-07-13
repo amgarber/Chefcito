@@ -5,7 +5,6 @@ import MultipleSelectionTag from "./MultipleSelectionTag";
 import '../css/MultipleSelectionTag.css';
 import IngredientsCarousel from './IngredientsCarousel';
 import PinterestLayout from "./PinterestLayout";
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import NotificationBell from "./NotificationBell";
 import { ToastContainer, toast } from "react-toastify";

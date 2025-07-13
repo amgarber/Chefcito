@@ -32,7 +32,7 @@ app.use('/api', approvalRoutes);
 app.use('/api', recipeRoutes);
 app.use('/api/planner', plannerRoutes);
 app.use('/api', require('./routes/approvalRoutes'));
-app.use('/', emailApprovalRoutes);
+app.use('/api', emailApprovalRoutes);
 app.use('/api/chatbot', require('./routes/chatbotRoutes'));
 
 app.listen(PORT, () => {
