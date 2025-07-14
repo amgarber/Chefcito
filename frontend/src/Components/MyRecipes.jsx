@@ -16,11 +16,13 @@ function MyRecipes() {
     const [requestingPublic, setRequestingPublic] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        const tokenData = JSON.parse(localStorage.getItem("tokenData"));
-        const userId = tokenData?.userId;
+    const token = localStorage.getItem("token");
+    const tokenData = JSON.parse(localStorage.getItem("tokenData"));
+    const role = localStorage.getItem("role");
+    const isAdmin = role === "ADMIN";
+    const userId = tokenData?.userId;
 
+    useEffect(() => {
         if (!token || !userId) return;
 
         const fetchData = async () => {
@@ -28,8 +30,8 @@ function MyRecipes() {
 
             if (view === 'Public' || view === 'Private') {
                 const endpointMap = {
-                    'Public': 'my-public',
-                    'Private': 'my-private',
+                    'Public': isAdmin ? 'all-public' : 'my-public',
+                    'Private': isAdmin ? 'all-private' : 'my-private',
                 };
 
                 const endpoint = endpointMap[view];
@@ -80,9 +82,6 @@ function MyRecipes() {
     };
 
     const handleRequestPublic = async (recipeId) => {
-        const tokenData = JSON.parse(localStorage.getItem("tokenData"));
-        const userId = tokenData?.userId;
-
         setLoadingRequestId(recipeId);
         setRequestingPublic(true);
 
@@ -121,7 +120,7 @@ function MyRecipes() {
             if (!res.ok) {
                 showFeedback(data.message || "Error al cambiar visibilidad", "error");
             } else {
-                showFeedback("La receta se hizo privada");
+                showFeedback("Recipe is now private");
                 setPublicRecipes((prev) => prev.filter((r) => r.id !== recipeId));
             }
         } catch (err) {
@@ -130,13 +129,34 @@ function MyRecipes() {
         }
     };
 
-    const options = ['Public', 'Private', 'Requests'];
+    const handleMakePublic = async (recipeId) => {
+        try {
+            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/make-public`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                showFeedback(data.message || "Error al publicar receta", "error");
+            } else {
+                showFeedback("Recipe is now public");
+                setPrivateRecipes((prev) => prev.filter((r) => r.id !== recipeId));
+            }
+        } catch (err) {
+            console.error("Error al hacer receta pública:", err);
+            showFeedback("Hubo un error al publicar", "error");
+        }
+    };
+
+    const options = isAdmin ? ['Public', 'Private'] : ['Public', 'Private', 'Requests'];
 
     return (
         <div className="my-recipes-container">
             <div className="my-recipes-header">
                 <i className='bx bx-left-arrow-alt' onClick={() => navigate('/profile')}></i>
-                <h2>My Recipes</h2>
+                <h2>{isAdmin ? "All Recipes" : "My Recipes"}</h2>
             </div>
 
             <SegmentedControl options={options} selected={view} onChange={setView} className="Controls" />
@@ -163,7 +183,7 @@ function MyRecipes() {
                 {/* PUBLIC */}
                 {view === 'Public' && !loading && (
                     publicRecipes.length === 0 ? (
-                        <p>No tenés recetas públicas</p>
+                        <p>No hay recetas públicas</p>
                     ) : (
                         <ul className="favorites-list">
                             {publicRecipes.map((item) => (
@@ -185,7 +205,7 @@ function MyRecipes() {
                                             className="make-private-btn"
                                             onClick={() => handleMakePrivate(item.id)}
                                         >
-                                            Make Recipe Private
+                                            {isAdmin ? "Revoke" : "Make Recipe Private"}
                                         </button>
                                     </div>
                                 </li>
@@ -197,7 +217,7 @@ function MyRecipes() {
                 {/* PRIVATE */}
                 {view === 'Private' && !loading && (
                     privateRecipes.length === 0 ? (
-                        <p>No tenés recetas privadas</p>
+                        <p>No hay recetas privadas</p>
                     ) : (
                         <ul className="favorites-list">
                             {privateRecipes.map((item) => (
@@ -215,13 +235,22 @@ function MyRecipes() {
                                             <span>⭐ {item.difficulty}</span>
                                             <span>⏱ {item.preparation_time} min</span>
                                         </div>
-                                        <button
-                                            className="request-public-btn"
-                                            onClick={() => handleRequestPublic(item.id)}
-                                            disabled={loadingRequestId === item.id}
-                                        >
-                                            Request Public
-                                        </button>
+                                        {isAdmin ? (
+                                            <button
+                                                className="make-public-btn"
+                                                onClick={() => handleMakePublic(item.id)}
+                                            >
+                                                Make Public
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="request-public-btn"
+                                                onClick={() => handleRequestPublic(item.id)}
+                                                disabled={loadingRequestId === item.id}
+                                            >
+                                                Request Public
+                                            </button>
+                                        )}
                                     </div>
                                 </li>
                             ))}
@@ -230,7 +259,7 @@ function MyRecipes() {
                 )}
 
                 {/* REQUESTS */}
-                {view === 'Requests' && !loading && (
+                {view === 'Requests' && !loading && !isAdmin && (
                     requests.length === 0 ? (
                         <p className="no-requests">You haven't submitted any publication requests.</p>
                     ) : (

@@ -398,6 +398,58 @@ const getRecipeImage = async (req, res) => {
     }
 };
 
+const getAllPublicRecipes = async (req, res) => {
+    try {
+        const recipes = await prisma.recipe.findMany({
+            where: {
+                Privacy_settings: 'PUBLIC'
+            },
+            include: { image: true }
+        });
+
+        res.json(recipes);
+    } catch (err) {
+        console.error("❌ Error al obtener recetas públicas (admin):", err);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
+const getAllPrivateRecipes = async (req, res) => {
+    try {
+        const recipes = await prisma.recipe.findMany({
+            where: {
+                Privacy_settings: 'PRIVATE'
+            },
+            include: { image: true }
+        });
+
+        res.json(recipes);
+    } catch (err) {
+        console.error("❌ Error al obtener recetas privadas (admin):", err);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
+const makeRecipePublic = async (req, res) => {
+    const recipeId = parseInt(req.params.id);
+
+    try {
+        const updated = await prisma.recipe.update({
+            where: { id: recipeId },
+            data: {
+                Privacy_settings: 'PUBLIC',
+                Approval_Status: 'APPROVED'
+            }
+        });
+
+        res.json({ message: "Receta marcada como pública", recipe: updated });
+    } catch (err) {
+        console.error("Error al cambiar a pública:", err);
+        res.status(500).json({ message: "Error interno al cambiar visibilidad" });
+    }
+};
+
+
 
 
 
@@ -408,5 +460,8 @@ module.exports = {
     addIngredientsAndSteps,
     getPublicRecipesByUser,
     getPrivateRecipesByUser,
-    getRecipeImage
+    getRecipeImage,
+    getAllPublicRecipes,
+    getAllPrivateRecipes,
+    makeRecipePublic
 };

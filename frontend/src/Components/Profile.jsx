@@ -10,9 +10,11 @@ function Profile({ FormHandle }) {
 
     useEffect(() => {
         const tokenData = localStorage.getItem('tokenData');
-        if (!tokenData) return;
+        const role = localStorage.getItem("role")
+
+        if (!tokenData || !role) return;
         const decoded = JSON.parse(tokenData);
-        setToken(decoded);
+        setToken({ ...decoded, role });
     }, []);
 
     const handleLogout = () => {
@@ -91,11 +93,14 @@ function Profile({ FormHandle }) {
                     <i className="bx bx-chevron-right chevronIcon"></i>
                 </button>
 
-                <button type="submit" className="ProfileButton" onClick={() => navigate("/My-Recipes")}>
-                    <img className="WhiskIcon" src="/assets/whisk.svg" alt="Whisk icon" />
-                    <h4>My Recipes</h4>
-                    <i className="bx bx-chevron-right chevronIcon"></i>
-                </button>
+                {token && (
+                    <button type="submit" className="ProfileButton" onClick={() => navigate("/My-Recipes")}>
+                        <img className="WhiskIcon" src="/assets/whisk.svg" alt="Whisk icon" />
+                        <h4>{token.role === "ADMIN" ? "All Recipes" : "My Recipes"}</h4>
+                        <i className="bx bx-chevron-right chevronIcon"></i>
+                    </button>
+                )}
+
 
                 <button type="submit" className="ProfileButton" onClick={() => navigate("/My-ShoppingLists")}>
                     <img className="BasketIcon" src="/assets/shopping-basket.svg" alt="Shopping Icon" />

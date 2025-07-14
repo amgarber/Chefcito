@@ -215,6 +215,7 @@ function Register({ FormHandle }) {
 
                     <div className="register-google">
                         <GoogleLogin
+                            locale="en"
                             onSuccess={async credentialResponse => {
                                 const res = await fetch("http://localhost:3001/api/google-login", {
                                     method: "POST",

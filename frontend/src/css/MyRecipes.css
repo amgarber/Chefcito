@@ -44,7 +44,8 @@
     margin-top: 10px;
 }
 .make-private-btn,
-.request-public-btn {
+.request-public-btn,
+.make-public-btn{
     margin-top: 10px;
     padding: 6px 12px;
     background-color: #ffa500;
