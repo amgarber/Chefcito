@@ -4,6 +4,7 @@ import '../../css/ChatbotWindow.css';
 import MessageBubble from './MessageBubble';
 import ChatbotRecipeCard from './ChatbotRecipeCard';
 import TypingBubble from './TypingBubble';
+import baseUrl from "../../api";
 
 
 export default function ChatbotWindow({ onClose }) {
@@ -57,7 +58,7 @@ export default function ChatbotWindow({ onClose }) {
         }
 
         try {
-            const res = await fetch('/api/chatbot/recommend', {
+            const res = await fetch(`${baseUrl}/api/chatbot/recommend`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt: userInput }) // Opción 1 completa
