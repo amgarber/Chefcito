@@ -1,17 +1,26 @@
 .shopping-list-container {
-    padding: 20px;
+    padding: 0; /* quitamos padding general para controlarlo por secciones */
     max-width: 600px;
     margin: auto;
     font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .title {
     text-align: center;
-    margin-bottom: 30px;
+    margin: 0;
+    padding: 20px;
+    background-color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .accordion {
-    width:80vw;
+    width: 80vw;
     max-width: 400px;
     background-color: white;
     border-radius: 12px;
@@ -62,12 +71,99 @@
 }
 
 .chevron.down {
-    transform: rotate(90deg); /* apunta hacia abajo */
+    transform: rotate(90deg);
 }
-.lists-wrapper{
+
+.my-recipes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 40px;
+    font-family: sans-serif;
+    background-color: #f8f8f8;
+    height: 100vh;               /* Antes: min-height */
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;           /* Ocultamos scroll general */
+}
+
+.lists-wrapper {
+    flex: 1;                     /* Que ocupe todo el espacio disponible */
+    overflow-y: auto;           /* Scroll vertical si hay muchas listas */
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-left: 10px;
-    margin-top: 10px;
+    margin-top: 20px;           /* Dejá algo de separación */
+    width: 100%;
+    padding-right: 10px;
+    box-sizing: border-box;
 }
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #d11a2a;
+    margin-left: 10px;
+    transition: transform 0.2s;
+}
+
+.delete-btn:hover {
+    transform: scale(1.2);
+}
+.popup-confirmation {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    padding: 16px 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1000;
+    font-family: sans-serif;
+    animation: fadeIn 0.3s ease;
+}
+
+.popup-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.popup-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.popup-btn.confirm {
+    background-color: #e53935;
+    color: white;
+}
+
+.popup-btn.cancel {
+    background-color: #ddd;
+    color: #333;
+}
+
+.popup-btn.confirm:hover {
+    background-color: #c62828;
+}
+
+.popup-btn.cancel:hover {
+    background-color: #ccc;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+

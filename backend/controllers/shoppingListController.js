@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 
-// ✅ ADD INGREDIENTS
+
 const addIngredientsToList = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
     const { name, ingredients } = req.body;
@@ -146,10 +146,36 @@ const toggleBoughtStatus = async (req, res) => {
         res.status(500).json({ message: "Error interno del servidor" });
     }
 };
+const deleteShoppingList = async (req, res) => {
+    const listId = parseInt(req.params.id);
+
+    try {
+        // 1. Eliminar ingredientes asociados a la lista
+        await prisma.shopping_List_Ingredient.deleteMany({
+            where: {
+                id_ShoppingList: listId
+            }
+        });
+
+        // 2. Eliminar la lista de compras
+        await prisma.shopping_List.delete({
+            where: {
+                id: listId
+            }
+        });
+
+        res.status(200).json({ message: "Lista eliminada correctamente" });
+
+    } catch (err) {
+        console.error("❌ Error al eliminar la lista:", err);
+        res.status(500).json({ message: "Error interno al eliminar la lista" });
+    }
+};
 
 
 module.exports = {
     addIngredientsToList,
     getShoppingLists,
-    toggleBoughtStatus
+    toggleBoughtStatus,
+    deleteShoppingList
 };

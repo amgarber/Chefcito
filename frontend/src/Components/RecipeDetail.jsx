@@ -35,8 +35,16 @@ function RecipeDetail() {
     const [sheetPosition, setSheetPosition] = useState(240);
     const [selected, setSelected] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [message, setMessage] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (message) {
+            const timeout = setTimeout(() => setMessage(null), 3000);
+            return () => clearTimeout(timeout);
+        }
+    }, [message]);
 
     const tabs = [
         { id: "tab1", label: "Ingredients" },
@@ -67,11 +75,13 @@ function RecipeDetail() {
         setSheetPosition(Math.max(120, Math.min(newPosition, window.innerHeight * 0.8)));
     };
 
-    if (loading) return <div className="recipe-detail-container"><LoadingChef message="Loading a delicious recipe..." />;</div>;
-    if (!recipe) return <div className="recipe-detail-container"><h2>Receta no disponible</h2><p>No se encontró la receta con ID: {id}</p><button onClick={() => navigate('/')}>Volver al inicio</button></div>;
+    if (loading) return <div className="recipe-detail-container"><LoadingChef message="Loading a delicious recipe..." /></div>;
+    if (!recipe) return <div className="recipe-detail-container"><h2>Recipe not available</h2><p>No recipe found with ID: {id}</p><button onClick={() => navigate('/')}>Go back</button></div>;
 
     return (
         <div className="recipe-box">
+            {message && <div className="custom-alert">{message}</div>}
+
             <button type="submit" className="exit-button-RD">
                 <img className="exit" src="/assets/exit.svg" alt="exit" onClick={() => navigate("/home")} />
             </button>
@@ -140,15 +150,18 @@ function RecipeDetail() {
 
                                             const data = await res.json();
                                             if (res.ok) {
-                                                alert("¡Ingredientes agregados a tu lista!");
-                                                setSelected([]);
-                                                setShowModal(false);
+                                                setMessage("Ingredients added to your shopping list!");
+                                                setTimeout(() => {
+                                                    setSelected([]);
+                                                    setShowModal(false);
+                                                }, 500);
                                             } else {
                                                 console.error("Error:", data);
-                                                alert("Hubo un problema al agregar.");
+                                                setMessage("There was a problem adding the ingredients.");
                                             }
                                         } catch (err) {
                                             console.error("❌ Error al enviar ingredientes:", err);
+                                            setMessage("Unexpected error. Please try again later.");
                                         }
                                     }}
                                 />
