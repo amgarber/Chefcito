@@ -3,6 +3,7 @@ import '../css/UserNotificationsPage.css';
 import { useNavigate } from 'react-router-dom';
 import LoadingChef from './LoadingChef';
 import { useNotification } from './NotificationContext';
+import baseUrl from "../api";
 
 function UserNotificationsPage() {
     const [notifications, setNotifications] = useState([]);
@@ -25,7 +26,7 @@ function UserNotificationsPage() {
             }
 
             try {
-                const res = await fetch(`http://localhost:3001/api/users/${userId}/approval-status`);
+                const res = await fetch(`${baseUrl}/api/users/${userId}/approval-status`);
                 const data = await res.json();
                 setNotifications(data);
 
@@ -50,7 +51,7 @@ function UserNotificationsPage() {
 
     const handleMarkAsRead = async (notifId) => {
         try {
-            await fetch(`http://localhost:3001/api/notifications/${notifId}/read`, {
+            await fetch(`${baseUrl}/api/notifications/${notifId}/read`, {
                 method: 'PATCH',
             });
 
@@ -75,7 +76,7 @@ function UserNotificationsPage() {
 
         try {
             if (!allRead) {
-                await fetch(`http://localhost:3001/api/notifications/read-all/${userId}`, {
+                await fetch(`${baseUrl}/api/notifications/read-all/${userId}`, {
                     method: 'PATCH',
                 });
 
@@ -86,7 +87,7 @@ function UserNotificationsPage() {
                     return updated;
                 });
             } else {
-                await fetch(`http://localhost:3001/api/notifications/mark-all-unread/${userId}`, {
+                await fetch(`${baseUrl}/api/notifications/mark-all-unread/${userId}`, {
                     method: 'PATCH',
                 });
 

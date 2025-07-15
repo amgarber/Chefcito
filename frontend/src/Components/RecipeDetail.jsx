@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import FavoriteButton from "./FavoriteButton";
 import ShoppingListModal from "./ShoppingListModal";
 import LoadingChef from "./LoadingChef";
+import baseUrl from "../api";
 
 function formatTime(minutes) {
     const hours = Math.floor(minutes / 60);
@@ -61,7 +62,7 @@ function RecipeDetail() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://localhost:3001/api/recipes/${id}`)
+        axios.get(`${baseUrl}/api/recipes/${id}`)
             .then(res => { setRecipe(res.data); setLoading(false); })
             .catch(err => { console.error('Error al traer la receta:', err); setLoading(false); });
     }, [id]);
@@ -139,7 +140,7 @@ function RecipeDetail() {
                                             }));
 
                                         try {
-                                            const res = await fetch("http://localhost:3001/api/shopping-list/add-ingredients", {
+                                            const res = await fetch(`${baseUrl}/api/shopping-list/add-ingredients`, {
                                                 method: 'POST',
                                                 headers: {
                                                     'Content-Type': 'application/json',

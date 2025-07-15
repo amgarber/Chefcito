@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../css/FavoriteRecipes.css';
+import baseUrl from "../api";
 
 const FavoriteRecipes = () => {
     const [favorites, setFavorites] = useState([]);
@@ -12,7 +13,7 @@ const FavoriteRecipes = () => {
             if (!token) return;
 
             try {
-                const res = await fetch("http://localhost:3001/api/favorites", {
+                const res = await fetch(`${baseUrl}/api/favorites`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -34,7 +35,7 @@ const FavoriteRecipes = () => {
     const handleRemoveFavorite = async (recipeId) => {
         const token = localStorage.getItem("token");
         try {
-            const res = await fetch(`http://localhost:3001/api/favorites/${recipeId}`, {
+            const res = await fetch(`${baseUrl}/api/favorites/${recipeId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`

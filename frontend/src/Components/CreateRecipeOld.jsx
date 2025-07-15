@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../css/CreateRecipe.css";
 import RecipeImageUploader from "./RecipeImageUploader";
 import { useNavigate } from "react-router-dom";
+import baseUrl from "../api";
 
 function CreateRecipeOld() {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ function CreateRecipeOld() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch("http://localhost:3001/api/recipes", {
+            const response = await fetch(`${baseUrl}/api/recipes`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,

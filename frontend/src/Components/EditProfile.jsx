@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../css/EditProfile.css';
+import baseUrl from "../api";
 
 function EditProfile() {
     const [newUsername, setNewUsername] = useState('');
@@ -29,7 +30,7 @@ function EditProfile() {
         try {
             setErrorMessage(''); // Limpiar error anterior
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/api/edit-profile', {
+            const response = await fetch(`${baseUrl}/api/edit-profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

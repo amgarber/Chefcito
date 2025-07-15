@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import '../css/MyShoppingLists.css';
 import '../css/MyRecipes.css';
+import baseUrl from "../api";
 
 function MyShoppingLists(){
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ function MyShoppingLists(){
     useEffect(() => {
         const fetchLists = async () => {
             const token = localStorage.getItem('token');
-            const res = await fetch("http://localhost:3001/api/shopping-list", {
+            const res = await fetch(`${baseUrl}/api/shopping-list`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();
@@ -33,7 +34,7 @@ function MyShoppingLists(){
 
     const toggleBought = async (listId, ingredientId, currentState) => {
         const token = localStorage.getItem('token');
-        await fetch("http://localhost:3001/api/shopping-list/toggle-bought", {
+        await fetch(`${baseUrl}/api/shopping-list/toggle-bought`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -61,7 +62,7 @@ function MyShoppingLists(){
         const token = localStorage.getItem('token');
 
         try {
-            const res = await fetch(`http://localhost:3001/api/shopping-list/${listId}`, {
+            const res = await fetch(`${baseUrl}/api/shopping-list/${listId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`

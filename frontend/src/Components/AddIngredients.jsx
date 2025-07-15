@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../css/IngredientSelector.css";
+import baseUrl from "../api";
 
 const availableImages = [
     { url: "https://em-content.zobj.net/source/apple/391/red-apple_1f34e.png", name: "Red Apple" },
@@ -58,7 +59,7 @@ const IngredientSelector = () => {
         }
 
         try {
-            await axios.post('http://localhost:3001/api/ingredients/create', {
+            await axios.post(`${baseUrl}/api/ingredients/create`, {
                 name: ingredientName,
                 imageUrl: selectedImageUrl,
             });

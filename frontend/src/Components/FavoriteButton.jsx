@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import baseUrl from "../api";
 
 const FavoriteButton = ({ recipeId }) => {
     const [isFavorite, setIsFavorite] = useState(false);
@@ -10,7 +11,7 @@ const FavoriteButton = ({ recipeId }) => {
             if (!token) return;
 
             try {
-                const res = await fetch(`http://localhost:3001/api/favorites/${recipeId}`, {
+                const res = await fetch(`${baseUrl}/api/favorites/${recipeId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -30,7 +31,7 @@ const FavoriteButton = ({ recipeId }) => {
         if (!token) return;
 
         try {
-            const res = await fetch(`http://localhost:3001/api/favorites`, {
+            const res = await fetch(`${baseUrl}/api/favorites`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

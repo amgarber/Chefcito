@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import baseUrl from "../api";
 
 function EmailApprovalHandler() {
     const { token, action } = useParams();
@@ -57,7 +58,7 @@ function EmailApprovalHandler() {
 
     const processApproval = async (jwt) => {
         try {
-            const res = await fetch(`http://localhost:3001/api/email/request/${token}/${action}`, {
+            const res = await fetch(`${baseUrl}/api/email/request/${token}/${action}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import baseUrl from "../api";
 
 const NotificationContext = createContext();
 
@@ -15,7 +16,7 @@ export function NotificationProvider({ children }) {
         if (!userId || role === 'ADMIN') return;
 
         try {
-            const res = await fetch(`http://localhost:3001/api/users/${userId}/approval-status?unread=true`);
+            const res = await fetch(`${baseUrl}/api/users/${userId}/approval-status?unread=true`);
             const data = await res.json();
             setUnreadCount(data.length);
         } catch (err) {

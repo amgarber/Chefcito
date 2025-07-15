@@ -10,6 +10,7 @@ import NotificationBell from "./NotificationBell";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ChatbotWidget from "./Chatbot/ChatbotWidget";
+import baseUrl from "../api";
 
 function HomePage({ FormHandle }) {
     const navigate = useNavigate();
@@ -57,7 +58,7 @@ function HomePage({ FormHandle }) {
                 };
 
                 console.log("Buscando recetas con:", params);
-                const res = await axios.get('http://localhost:3001/api/recipes', { params });
+                const res = await axios.get(`${baseUrl}/api/recipes`, { params });
                 setRecipes(res.data);
             } catch (err) {
                 console.error('Error al traer recetas:', err);

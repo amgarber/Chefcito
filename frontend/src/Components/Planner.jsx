@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import baseUrl from "../api";
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -29,7 +30,7 @@ export const Planner = () => {
             const dateString = new Date(selectedDay.year, selectedDay.month, selectedDay.day).toISOString().split("T")[0];
 
             try {
-                const res = await fetch(`http://localhost:3001/api/planner/day?date=${dateString}`, {
+                const res = await fetch(`${baseUrl}/api/planner/day?date=${dateString}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -348,7 +349,7 @@ export const Planner = () => {
                                 setRecipeSearch(query);
                                 const token = localStorage.getItem("token");
                                 if (query.length > 1) {
-                                    const res = await fetch(`http://localhost:3001/api/recipes?search=${query}`, {
+                                    const res = await fetch(`${baseUrl}/api/recipes?search=${query}`, {
                                         headers: { Authorization: `Bearer ${token}` }
                                     });
                                     const data = await res.json();
@@ -385,7 +386,7 @@ export const Planner = () => {
                                     const token = localStorage.getItem("token");
 
                                     try {
-                                        const res = await fetch("http://localhost:3001/api/planner", {
+                                        const res = await fetch(`${baseUrl}/api/planner`, {
                                             method: "POST",
                                             headers: {
                                                 "Content-Type": "application/json",

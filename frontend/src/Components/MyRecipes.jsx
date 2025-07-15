@@ -4,6 +4,7 @@ import SegmentedControl from './SegmentedControl';
 import '../css/MyRecipes.css';
 import '../css/FavoriteRecipes.css';
 import LoadingAnimation from "./LoadingAnimation";
+import baseUrl from "../api";
 
 function MyRecipes() {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ function MyRecipes() {
                 if (!endpoint) return;
 
                 try {
-                    const res = await fetch(`http://localhost:3001/api/recipes/${endpoint}`, {
+                    const res = await fetch(`${baseUrl}/api/recipes/${endpoint}`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -62,7 +63,7 @@ function MyRecipes() {
 
             } else if (view === 'Requests') {
                 try {
-                    const res = await fetch(`http://localhost:3001/api/users/${userId}/requests`);
+                    const res = await fetch(`${baseUrl}/api/users/${userId}/requests`);
                     const data = await res.json();
                     setRequests(data);
                 } catch (err) {
@@ -86,7 +87,7 @@ function MyRecipes() {
         setRequestingPublic(true);
 
         try {
-            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/request-approval`, {
+            const res = await fetch(`${baseUrl}/api/recipes/${recipeId}/request-approval`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: parseInt(userId) })
@@ -110,7 +111,7 @@ function MyRecipes() {
 
     const handleMakePrivate = async (recipeId) => {
         try {
-            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/make-private`, {
+            const res = await fetch(`${baseUrl}/api/recipes/${recipeId}/make-private`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -131,7 +132,7 @@ function MyRecipes() {
 
     const handleMakePublic = async (recipeId) => {
         try {
-            const res = await fetch(`http://localhost:3001/api/recipes/${recipeId}/make-public`, {
+            const res = await fetch(`${baseUrl}/api/recipes/${recipeId}/make-public`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' }
             });

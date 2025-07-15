@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import baseUrl from "../api";
 
 function UserNotifications({ userId }) {
     const [notifications, setNotifications] = useState([]);
@@ -15,7 +16,7 @@ function UserNotifications({ userId }) {
             }
 
             try {
-                const res = await fetch(`http://localhost:3001/api/users/${userId}/approval-status`);
+                const res = await fetch(`${baseUrl}/api/users/${userId}/approval-status`);
                 const data = await res.json();
                 setNotifications(data);
 

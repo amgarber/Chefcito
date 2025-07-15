@@ -5,6 +5,7 @@ import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
+import baseUrl from "../api";
 
 function Register({ FormHandle }) {
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ function Register({ FormHandle }) {
                 formData.append("picture", selectedFile);
             }
 
-            const response = await fetch("http://localhost:3001/api/register", {
+            const response = await fetch(`${baseUrl}/api/register`, {
                 method: "POST",
                 body: formData,
             });
@@ -217,7 +218,7 @@ function Register({ FormHandle }) {
                         <GoogleLogin
                             locale="en"
                             onSuccess={async credentialResponse => {
-                                const res = await fetch("http://localhost:3001/api/google-login", {
+                                const res = await fetch(`${baseUrl}/api/google-login`, {
                                     method: "POST",
                                     headers: {"Content-Type": "application/json"},
                                     body: JSON.stringify({credential: credentialResponse.credential}),

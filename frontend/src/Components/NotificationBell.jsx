@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/NotificationBell.css';
+import baseUrl from "../api";
 
 function NotificationBell() {
     const [unreadCount, setUnreadCount] = useState(0);
@@ -15,7 +16,7 @@ function NotificationBell() {
             if (!userId || role === 'ADMIN') return; // los admin no tienen notificaciones de aprobación
 
             try {
-                const res = await fetch(`http://localhost:3001/api/users/${userId}/approval-status?unread=true`);
+                const res = await fetch(`${baseUrl}/api/users/${userId}/approval-status?unread=true`);
                 const data = await res.json();
                 setUnreadCount(data.length);
             } catch (err) {

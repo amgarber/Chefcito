@@ -7,6 +7,7 @@ import { eye } from 'react-icons-kit/feather/eye';
 import { jwtDecode } from 'jwt-decode';
 import { GoogleLogin } from '@react-oauth/google';
 import { toast } from 'react-toastify';
+import baseUrl from "../api";
 
 const Login = ({ FormHandle }) => {
     const navigate = useNavigate();
@@ -42,7 +43,7 @@ const Login = ({ FormHandle }) => {
         setFormMessage({ text: '', type: '' });
 
         try {
-            const response = await fetch('http://localhost:3001/api/login', {
+            const response = await fetch(`${baseUrl}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -168,7 +169,7 @@ const Login = ({ FormHandle }) => {
                     <div className="login-google">
                         <GoogleLogin
                             onSuccess={async credentialResponse => {
-                                const res = await fetch("http://localhost:3001/api/google-login", {
+                                const res = await fetch(`${baseUrl}/api/google-login`, {
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify({ credential: credentialResponse.credential }),
