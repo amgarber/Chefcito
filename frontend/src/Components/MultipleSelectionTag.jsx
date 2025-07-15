@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../css/MultipleSelectionTag.css'; // si tenés estilos
+import '../css/MultipleSelectionTag.css';
+import baseUrl from "../api"; // si tenés estilos
 
 function MultipleSelectionTag({ onChange }) {
   const [selectedTags, setSelectedTags] = useState({});
@@ -8,7 +9,7 @@ function MultipleSelectionTag({ onChange }) {
 
   useEffect(() => {
     const fetchTags = async () => {
-      const response = await axios.get('/api/filters');
+      const response = await axios.get(`${baseUrl}/api/filters`);
       setAvailableTags(response.data.map(f => f.Name));
     };
     fetchTags();
