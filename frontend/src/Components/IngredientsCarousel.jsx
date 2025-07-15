@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../css/IngredientsCarousel.css';
+import baseUrl from "../api";
 
 function IngredientSelectorCarousel({ onChange }) {
     const [ingredients, setIngredients] = useState([]);
@@ -15,7 +16,7 @@ function IngredientSelectorCarousel({ onChange }) {
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
-                const res = await axios.get('/api/ingredients/all');
+                const res = await axios.get(`${baseUrl}/api/ingredients/all`);
                 const all = res.data;
                 setIngredients(all);
                 setVisibleIngredients(pickRandomIngredients(all));
